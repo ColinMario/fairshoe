@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src '%SCRIPT_HASH%'; style-src 'unsafe-inline'; img-src data:; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>fairshoe verifier</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf7;
+  --fg: #1d1d1b;
+  --muted: #5d5b55;
+  --line: #d9d6cc;
+  --panel: #ffffff;
+  --good: #1f6f3a;
+  --good-bg: #e5f3e8;
+  --warn: #7a5300;
+  --warn-bg: #fbf0d6;
+  --bad: #a1261b;
+  --bad-bg: #fbe4e1;
+  --wait: #3d4f75;
+  --wait-bg: #e6ebf5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161614;
+    --fg: #ecebe6;
+    --muted: #a8a69e;
+    --line: #3a3934;
+    --panel: #1f1f1c;
+    --good: #8fd6a5;
+    --good-bg: #17301f;
+    --warn: #f0c768;
+    --warn-bg: #352a10;
+    --bad: #f3a196;
+    --bad-bg: #3d1915;
+    --wait: #a9bce6;
+    --wait-bg: #1c2438;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 52rem; margin: 0 auto; padding: 2rem 1rem 3rem; }
+h1 { font-size: 1.6rem; margin: 0 0 0.5rem; }
+h2 { font-size: 1.1rem; margin: 2rem 0 0.5rem; }
+p, li { max-width: 70ch; }
+code, pre, textarea { font: 0.9rem/1.45 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+.lead { color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+label { display: block; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+label:first-child { margin-top: 0; }
+#drop { border: 2px dashed var(--line); border-radius: 8px; padding: 1rem; margin: 0.75rem 0; color: var(--muted); text-align: center; overflow-wrap: anywhere; }
+#drop.over { border-color: var(--good); color: var(--fg); }
+textarea { width: 100%; min-height: 9rem; resize: vertical; padding: 0.5rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.buttons { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+button { font: inherit; padding: 0.45rem 1.1rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--wait); outline-offset: 2px; }
+.verdict { padding: 0.75rem 1rem; border-radius: 6px; font-weight: 600; margin: 0 0 1rem; }
+.verdict.provable { background: var(--good-bg); color: var(--good); }
+.verdict.ok { background: var(--warn-bg); color: var(--warn); }
+.verdict.failed { background: var(--bad-bg); color: var(--bad); }
+.verdict.pending { background: var(--wait-bg); color: var(--wait); }
+ol#checks { list-style: none; padding: 0; margin: 0; }
+li.check { padding: 0.5rem 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+li.check:first-child { border-top: none; }
+.status { display: inline-block; min-width: 5.5rem; margin-right: 0.5rem; padding: 0 0.4rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 0.03em; }
+.provable .status { background: var(--good-bg); color: var(--good); }
+.ok .status { background: var(--warn-bg); color: var(--warn); }
+.failed .status { background: var(--bad-bg); color: var(--bad); }
+.pending .status { background: var(--wait-bg); color: var(--wait); }
+ul.reasons { margin: 0.25rem 0 0 6rem; padding-left: 1rem; font-size: 0.92rem; }
+ul.reasons .error { color: var(--bad); }
+ul.reasons .unproven { color: var(--muted); }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 30rem; overflow: auto; background: var(--bg); padding: 0.5rem; border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+td { border-top: 1px solid var(--line); padding: 0.35rem 0.5rem 0.35rem 0; vertical-align: top; }
+td:first-child { white-space: nowrap; }
+footer { margin-top: 2rem; color: var(--muted); font-size: 0.85rem; }
+@media (max-width: 36rem) { ul.reasons { margin-left: 0; } .status { min-width: 0; } }
+</style>
+</head>
+<body>
+<main>
+<h1>fairshoe verifier</h1>
+<p class="lead">Checks records of provably fair rounds and card shoes against the pair you kept before sending your client seed and against your own records. Everything runs on this page: it loads nothing and sends nothing, so it works offline.</p>
+
+<section class="panel" aria-label="Records to verify">
+<label for="files">JSON files</label>
+<input id="files" type="file" accept=".json,application/json" multiple>
+<div id="drop">or drop JSON files here</div>
+<label for="text">or paste JSON: a bundle, one record, or an array of records</label>
+<textarea id="text" spellcheck="false" autocomplete="off"></textarea>
+<div class="buttons"><button id="verify" class="primary" type="button">Verify</button><button id="clear" type="button">Clear</button></div>
+</section>
+
+<section id="result" class="panel" aria-live="polite" hidden>
+<p id="verdict" class="verdict"></p>
+<ol id="checks"></ol>
+<details><summary>The report as JSON</summary><pre id="json"></pre></details>
+</section>
+
+<h2>What to give</h2>
+<p>All files and the pasted text together make one bundle of one seed pair. A file is a bundle with any of the keys below, or one record as the server hands it out (a round proof, a shoe record, a pair's reveal, its record list), or an array of records.</p>
+<table>
+<tr><td><code>kept</code></td><td>the pair as it was shown before you sent your client seed (seed id, game, server seed hash, root, commitment time), with the client seed you sent and the time the server set it</td></tr>
+<tr><td><code>own</code></td><td>your own records of the pair: the proof ids and shoe ids you received, the nonce you last saw, the cuts you asked for, the hands you saw dealt, the table of each round</td></tr>
+<tr><td><code>seed</code></td><td>the pair's reveal, after the rotation</td></tr>
+<tr><td><code>proofs</code></td><td>the pair's round proofs</td></tr>
+<tr><td><code>shoes</code></td><td>shoe records, each <code>{ "commit": …, "reveal": … }</code></td></tr>
+<tr><td><code>pairs</code></td><td>your other kept pairs of the game (earlier pairs whose shoes dealt rounds of this one)</td></tr>
+<tr><td><code>later</code></td><td>proofs of later pairs dealt from this pair's shoes after the rotation</td></tr>
+<tr><td><code>records</code></td><td>the server's list of the pair's proofs and shoes</td></tr>
+</table>
+<p><strong>provable</strong>: the check is ok and bound to what you kept. <strong>ok</strong>: the records agree with each other, but something only you know is missing (the page lists it); the server could have chosen it. <strong>failed</strong>: the records contradict each other or what you kept. <strong>pending</strong>: not checkable yet (a shoe still in play, a pair not revealed).</p>
+
+<footer>%VERSION%, MIT license. The rules are in SPEC.md; the same checks run on the command line: <code>node bin/fairshoe-verify</code>.</footer>
+</main>
+<script>%SCRIPT%</script>
+</body>
+</html>

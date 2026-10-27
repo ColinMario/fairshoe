@@ -1,0 +1,235 @@
+{
+  "note": "A Dragon Tiger shoe the player cut at 200: two rounds and a free hand, then a reshuffle ended it (status shuffled); the pair was rotated. With the pair as kept and the player's own records: provable.",
+  "kept": {
+    "seedId": "sd_vectordragon01",
+    "gameId": "dragon-tiger",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "root": {
+      "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+      "lines": [
+        "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+      ]
+    },
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "committedAt": 1000,
+    "clientSeedAt": 2000
+  },
+  "own": {
+    "proofs": [
+      "pf_vectordragon01",
+      "pf_vectordragon03"
+    ],
+    "shoes": [
+      "sh_vectordragon01"
+    ],
+    "nonce": 0,
+    "cuts": {
+      "sh_vectordragon01": {
+        "at": 200
+      }
+    },
+    "hands": {
+      "sh_vectordragon01": [
+        {
+          "roundId": "R-1",
+          "from": 11,
+          "to": 13
+        },
+        {
+          "roundId": null,
+          "from": 13,
+          "to": 15
+        },
+        {
+          "roundId": "R-2",
+          "from": 15,
+          "to": 17
+        }
+      ]
+    }
+  },
+  "seed": {
+    "seedId": "sd_vectordragon01",
+    "gameId": "dragon-tiger",
+    "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "lastNonce": -1,
+    "lastShoes": [
+      {
+        "table": 1,
+        "shoeNo": 1
+      }
+    ],
+    "root": {
+      "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+      "lines": [
+        "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+      ]
+    },
+    "committedAt": 1000,
+    "clientSeedAt": 2000,
+    "revealedAt": 9000
+  },
+  "proofs": [
+    {
+      "v": 1,
+      "alg": "fairshoe/v1",
+      "lib": "fairshoe@1.1.0",
+      "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "clientSeed": "player-seed-01",
+      "clientSeedBy": "player",
+      "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "engineVersion": 1,
+      "at": 5000,
+      "id": "pf_vectordragon01",
+      "gameId": "dragon-tiger",
+      "roundId": "R-1",
+      "seedId": "sd_vectordragon01",
+      "steps": [],
+      "shoes": [
+        {
+          "shoe": "sh_vectordragon01",
+          "table": 1,
+          "from": 11,
+          "to": 13
+        }
+      ],
+      "outcome": {
+        "result": {
+          "kind": "side",
+          "side": "dragon"
+        },
+        "detail": {
+          "shoe": 1,
+          "hand": 1,
+          "cards": {
+            "dragon": "8S",
+            "tiger": "5S"
+          },
+          "winner": "dragon",
+          "suited": false
+        }
+      }
+    },
+    {
+      "v": 1,
+      "alg": "fairshoe/v1",
+      "lib": "fairshoe@1.1.0",
+      "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "clientSeed": "player-seed-01",
+      "clientSeedBy": "player",
+      "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "engineVersion": 1,
+      "at": 5000,
+      "id": "pf_vectordragon03",
+      "gameId": "dragon-tiger",
+      "roundId": "R-2",
+      "seedId": "sd_vectordragon01",
+      "steps": [],
+      "shoes": [
+        {
+          "shoe": "sh_vectordragon01",
+          "table": 1,
+          "from": 15,
+          "to": 17
+        }
+      ],
+      "outcome": {
+        "result": {
+          "kind": "side",
+          "side": "tiger"
+        },
+        "detail": {
+          "shoe": 1,
+          "hand": 3,
+          "cards": {
+            "dragon": "4C",
+            "tiger": "10S"
+          },
+          "winner": "tiger",
+          "suited": false
+        }
+      }
+    }
+  ],
+  "shoes": [
+    {
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectordragon01",
+        "gameId": "dragon-tiger",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectordragon01",
+          "chainId": "ch_vectordragon01",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "360d4e0aac519a446405b49e067d302b707e7054bd51dc436c30ae6f563cbaea",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 197,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectordragon01",
+        "status": "shuffled",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "6bb3554d161feae62e3ea696705cf9da9b235a974d80334ffd8b147269fb528b",
+        "order": "CRJfDTlplyoassOnNIDGBaMZBvYhLmCLczfdaHGmFChmazcgFUKjdEZPzOxszmSrJToNTZEWxFJbTtyXmKjNhDVKiRDwQkiMjtWuIAPdCaxjtXVQYTESZxONZxMIAPDkrqXUZlGLFQrbXSOVGdljxvmaGkzjIPvvphfmwQggnkWXWaHgRCirVYqSLyKntYuSyOqkpEHBwnnbhwVMdJSHEpEqJOkgAqHdVBIlSJpWnrcwbkXnNvUBTCDRDtZUfFbzyQQfxheNQtFffZgENMRAlhAjkUHuuOepWoPYyJqvluHsSLBLQBjAFowsTywTutbdVePapWiRuUeENIqYoGsrUnitsYmgeizscOCPMoIoHCcXKLKVgvzcAyuboKiLcRPDJxGFcrplKhXeBqUReWYwvfdieMGbrIAM",
+        "cut": {
+          "at": 200,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 11,
+          "shown": "10C"
+        },
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 11,
+            "to": 13
+          },
+          {
+            "roundId": null,
+            "from": 13,
+            "to": 15
+          },
+          {
+            "roundId": "R-2",
+            "from": 15,
+            "to": 17
+          }
+        ],
+        "at": 8000
+      }
+    }
+  ],
+  "records": {
+    "seedId": "sd_vectordragon01",
+    "gameId": "dragon-tiger",
+    "proofs": [
+      "pf_vectordragon01",
+      "pf_vectordragon03"
+    ],
+    "shoes": [
+      "sh_vectordragon01"
+    ]
+  }
+}

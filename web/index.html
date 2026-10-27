@@ -1,0 +1,2870 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-dysji5Pffd3g0L70k4RiAlPreMn7XycWtV/jCTaIZOg='; style-src 'unsafe-inline'; img-src data:; form-action 'none'; base-uri 'none'">
+<meta name="referrer" content="no-referrer">
+<title>fairshoe verifier</title>
+<style>
+:root {
+  color-scheme: light dark;
+  --bg: #fbfaf7;
+  --fg: #1d1d1b;
+  --muted: #5d5b55;
+  --line: #d9d6cc;
+  --panel: #ffffff;
+  --good: #1f6f3a;
+  --good-bg: #e5f3e8;
+  --warn: #7a5300;
+  --warn-bg: #fbf0d6;
+  --bad: #a1261b;
+  --bad-bg: #fbe4e1;
+  --wait: #3d4f75;
+  --wait-bg: #e6ebf5;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #161614;
+    --fg: #ecebe6;
+    --muted: #a8a69e;
+    --line: #3a3934;
+    --panel: #1f1f1c;
+    --good: #8fd6a5;
+    --good-bg: #17301f;
+    --warn: #f0c768;
+    --warn-bg: #352a10;
+    --bad: #f3a196;
+    --bad-bg: #3d1915;
+    --wait: #a9bce6;
+    --wait-bg: #1c2438;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+main { max-width: 52rem; margin: 0 auto; padding: 2rem 1rem 3rem; }
+h1 { font-size: 1.6rem; margin: 0 0 0.5rem; }
+h2 { font-size: 1.1rem; margin: 2rem 0 0.5rem; }
+p, li { max-width: 70ch; }
+code, pre, textarea { font: 0.9rem/1.45 ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+.lead { color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1rem; margin: 1.5rem 0; }
+label { display: block; font-weight: 600; margin: 0.75rem 0 0.25rem; }
+label:first-child { margin-top: 0; }
+#drop { border: 2px dashed var(--line); border-radius: 8px; padding: 1rem; margin: 0.75rem 0; color: var(--muted); text-align: center; overflow-wrap: anywhere; }
+#drop.over { border-color: var(--good); color: var(--fg); }
+textarea { width: 100%; min-height: 9rem; resize: vertical; padding: 0.5rem; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.buttons { display: flex; gap: 0.5rem; margin-top: 0.75rem; }
+button { font: inherit; padding: 0.45rem 1.1rem; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); cursor: pointer; }
+button.primary { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:focus-visible, input:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--wait); outline-offset: 2px; }
+.verdict { padding: 0.75rem 1rem; border-radius: 6px; font-weight: 600; margin: 0 0 1rem; }
+.verdict.provable { background: var(--good-bg); color: var(--good); }
+.verdict.ok { background: var(--warn-bg); color: var(--warn); }
+.verdict.failed { background: var(--bad-bg); color: var(--bad); }
+.verdict.pending { background: var(--wait-bg); color: var(--wait); }
+ol#checks { list-style: none; padding: 0; margin: 0; }
+li.check { padding: 0.5rem 0; border-top: 1px solid var(--line); overflow-wrap: anywhere; }
+li.check:first-child { border-top: none; }
+.status { display: inline-block; min-width: 5.5rem; margin-right: 0.5rem; padding: 0 0.4rem; border-radius: 4px; font-size: 0.8rem; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 0.03em; }
+.provable .status { background: var(--good-bg); color: var(--good); }
+.ok .status { background: var(--warn-bg); color: var(--warn); }
+.failed .status { background: var(--bad-bg); color: var(--bad); }
+.pending .status { background: var(--wait-bg); color: var(--wait); }
+ul.reasons { margin: 0.25rem 0 0 6rem; padding-left: 1rem; font-size: 0.92rem; }
+ul.reasons .error { color: var(--bad); }
+ul.reasons .unproven { color: var(--muted); }
+pre { white-space: pre-wrap; overflow-wrap: anywhere; max-height: 30rem; overflow: auto; background: var(--bg); padding: 0.5rem; border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+td { border-top: 1px solid var(--line); padding: 0.35rem 0.5rem 0.35rem 0; vertical-align: top; }
+td:first-child { white-space: nowrap; }
+footer { margin-top: 2rem; color: var(--muted); font-size: 0.85rem; }
+@media (max-width: 36rem) { ul.reasons { margin-left: 0; } .status { min-width: 0; } }
+</style>
+</head>
+<body>
+<main>
+<h1>fairshoe verifier</h1>
+<p class="lead">Checks records of provably fair rounds and card shoes against the pair you kept before sending your client seed and against your own records. Everything runs on this page: it loads nothing and sends nothing, so it works offline.</p>
+
+<section class="panel" aria-label="Records to verify">
+<label for="files">JSON files</label>
+<input id="files" type="file" accept=".json,application/json" multiple>
+<div id="drop">or drop JSON files here</div>
+<label for="text">or paste JSON: a bundle, one record, or an array of records</label>
+<textarea id="text" spellcheck="false" autocomplete="off"></textarea>
+<div class="buttons"><button id="verify" class="primary" type="button">Verify</button><button id="clear" type="button">Clear</button></div>
+</section>
+
+<section id="result" class="panel" aria-live="polite" hidden>
+<p id="verdict" class="verdict"></p>
+<ol id="checks"></ol>
+<details><summary>The report as JSON</summary><pre id="json"></pre></details>
+</section>
+
+<h2>What to give</h2>
+<p>All files and the pasted text together make one bundle of one seed pair. A file is a bundle with any of the keys below, or one record as the server hands it out (a round proof, a shoe record, a pair's reveal, its record list), or an array of records.</p>
+<table>
+<tr><td><code>kept</code></td><td>the pair as it was shown before you sent your client seed (seed id, game, server seed hash, root, commitment time), with the client seed you sent and the time the server set it</td></tr>
+<tr><td><code>own</code></td><td>your own records of the pair: the proof ids and shoe ids you received, the nonce you last saw, the cuts you asked for, the hands you saw dealt, the table of each round</td></tr>
+<tr><td><code>seed</code></td><td>the pair's reveal, after the rotation</td></tr>
+<tr><td><code>proofs</code></td><td>the pair's round proofs</td></tr>
+<tr><td><code>shoes</code></td><td>shoe records, each <code>{ "commit": …, "reveal": … }</code></td></tr>
+<tr><td><code>pairs</code></td><td>your other kept pairs of the game (earlier pairs whose shoes dealt rounds of this one)</td></tr>
+<tr><td><code>later</code></td><td>proofs of later pairs dealt from this pair's shoes after the rotation</td></tr>
+<tr><td><code>records</code></td><td>the server's list of the pair's proofs and shoes</td></tr>
+</table>
+<p><strong>provable</strong>: the check is ok and bound to what you kept. <strong>ok</strong>: the records agree with each other, but something only you know is missing (the page lists it); the server could have chosen it. <strong>failed</strong>: the records contradict each other or what you kept. <strong>pending</strong>: not checkable yet (a shoe still in play, a pair not revealed).</p>
+
+<footer>fairshoe/v1 (fairshoe@1.1.0), MIT license. The rules are in SPEC.md; the same checks run on the command line: <code>node bin/fairshoe-verify</code>.</footer>
+</main>
+<script>
+// fairshoe 1.1.0: src/ and bin/report.ts, built by web/build.mjs.
+'use strict';
+const fairshoe = (() => {
+// src/bytes.ts
+const m0 = (() => {
+
+/** Byte helpers: UTF-8, lower-case hex, concatenation, constant-time comparison. No platform APIs. */
+
+/** UTF-8 bytes of a string (lone surrogates become U+FFFD, as TextEncoder does). */
+function utf8(text        )             {
+  const out           = [];
+  for (let i = 0; i < text.length; i++) {
+    let c = text.charCodeAt(i);
+    if (c >= 0xd800 && c <= 0xdbff && i + 1 < text.length) {
+      const d = text.charCodeAt(i + 1);
+      if (d >= 0xdc00 && d <= 0xdfff) {
+        c = 0x10000 + ((c - 0xd800) << 10) + (d - 0xdc00);
+        i++;
+      } else c = 0xfffd;
+    } else if (c >= 0xd800 && c <= 0xdfff) c = 0xfffd;
+    if (c < 0x80) out.push(c);
+    else if (c < 0x800) out.push(0xc0 | (c >> 6), 0x80 | (c & 63));
+    else if (c < 0x10000) out.push(0xe0 | (c >> 12), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+    else out.push(0xf0 | (c >> 18), 0x80 | ((c >> 12) & 63), 0x80 | ((c >> 6) & 63), 0x80 | (c & 63));
+  }
+  return Uint8Array.from(out);
+}
+
+const HEX = '0123456789abcdef';
+
+function toHex(bytes            )         {
+  let s = '';
+  for (let i = 0; i < bytes.length; i++) s += HEX[bytes[i]  >> 4]  + HEX[bytes[i]  & 15] ;
+  return s;
+}
+
+/** Lower-case hex of an even length. */
+function isHex(value         , bytes         )                  {
+  if (typeof value !== 'string' || value.length % 2 !== 0 || !/^[0-9a-f]*$/.test(value)) return false;
+  return bytes === undefined || value.length === bytes * 2;
+}
+
+function fromHex(hex        )             {
+  if (!isHex(hex)) throw new Error('not lower-case hex of an even length');
+  const out = new Uint8Array(hex.length / 2);
+  for (let i = 0; i < out.length; i++) out[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}
+
+function concatBytes(...parts              )             {
+  let n = 0;
+  for (const p of parts) n += p.length;
+  const out = new Uint8Array(n);
+  let at = 0;
+  for (const p of parts) {
+    out.set(p, at);
+    at += p.length;
+  }
+  return out;
+}
+
+/** Equal without an early exit (for comparing secrets with values a client sent). */
+function equalBytes(a            , b            )          {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a[i]  ^ b[i] ;
+  return diff === 0;
+}
+return Object.freeze({ utf8, toHex, isHex, fromHex, concatBytes, equalBytes });
+})();
+// src/domains.ts
+const m1 = (() => {
+
+/**
+ * Names, versions and the HMAC messages of fairshoe/v1 (SPEC.md section 3). Every use of a key has its own prefix,
+ * so no two purposes can ever produce the same message: round stream, shoe stream, shoe salt, automatic cut, bots.
+ */
+
+/** Algorithm id; part of every record. */
+const ALG = 'fairshoe/v1';
+/** This library (records name it as `fairshoe@<version>`). */
+const LIB_VERSION = '1.1.0';
+const LIB = `fairshoe@${LIB_VERSION}`;
+
+/** Game ids: lower-case letters, digits, '_' and '-', 1 to 64 characters, never ':' (the id is part of every message). */
+const GAME_ID = /^[a-z0-9][a-z0-9_-]{0,63}$/;
+/** Client seeds: 1 to 64 characters of [A-Za-z0-9_-], so ':' and ',' are safe separators. */
+const CLIENT_SEED = /^[A-Za-z0-9_-]{1,64}$/;
+
+function isGameId(value         )                  {
+  return typeof value === 'string' && GAME_ID.test(value);
+}
+
+function isClientSeed(value         )                  {
+  return typeof value === 'string' && CLIENT_SEED.test(value);
+}
+
+/**
+ * A table: its number at the game (1, 2, ...; one table = 1). Only numbers in v1: a table id written as text would
+ * give the same message as the number ("1" and 1), so shared lounge tables will get a domain of their own.
+ */
+                              
+
+function isTableRef(value         )                    {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 1;
+}
+
+/** A nonce, a shoe number or a block index. */
+function isCounter(value         )                  {
+  return typeof value === 'number' && Number.isSafeInteger(value) && value >= 0;
+}
+
+function check(ok         , what        )       {
+  if (!ok) throw new Error(`fairshoe: bad ${what}`);
+}
+
+/** The HMAC messages (UTF-8). */
+const message = {
+  /** Round stream, key = server seed: every draw of a game step. */
+  stream(gameId        , clientSeed        , nonce        , block        )         {
+    return `${ALG}/stream:${gameId}:${clientSeed}:${nonce}:${block}`;
+  },
+  /** Shoe stream, key = chain link `shoeNo`: the shuffle of that shoe and nothing else. */
+  shoe(gameId        , table          , clientSeed        , shoeNo        , block        )         {
+    return `${ALG}/shoe:${gameId}:${table}:${clientSeed}:${shoeNo}:${block}`;
+  },
+  /** Salt of the shoe commitment, key = chain link `shoeNo` (one HMAC, 32 bytes). */
+  salt(gameId        , table          , clientSeed        , shoeNo        )         {
+    return `${ALG}/salt:${gameId}:${table}:${clientSeed}:${shoeNo}`;
+  },
+  /** Automatic cut, key = UTF-8 of the client seed: known before the shuffle, independent of the order. */
+  cutAuto(gameId        , table          , shoeNo        , block        )         {
+    return `${ALG}/cut-auto:${gameId}:${table}:${shoeNo}:${block}`;
+  },
+  /** Lounge bots (reserved for shared tables), key = chain link `shoeNo`. */
+  bots(table          , clientSeed        , shoeNo        , block        )         {
+    return `${ALG}/bots:${table}:${clientSeed}:${shoeNo}:${block}`;
+  },
+};
+
+/** Throws when an input of a message is outside its character set (a ':' would make messages ambiguous). */
+function checkInputs(inputs                                                                                )       {
+  if ('gameId' in inputs) check(isGameId(inputs.gameId), 'game id');
+  if ('clientSeed' in inputs) check(isClientSeed(inputs.clientSeed), 'client seed');
+  if ('table' in inputs) check(isTableRef(inputs.table), 'table');
+  if ('counter' in inputs) check(isCounter(inputs.counter), 'nonce or shoe number');
+}
+return Object.freeze({ ALG, LIB_VERSION, LIB, isGameId, isClientSeed, isTableRef, isCounter, message, checkInputs });
+})();
+// src/sha256.ts
+const m2 = (() => {
+
+/**
+ * SHA-256 (FIPS 180-4) and HMAC-SHA256 (RFC 2104) in plain TypeScript: synchronous, no dependencies, the same in
+ * Node, browsers and workers. The tests check both against node:crypto and the RFC 4231 vectors.
+ */
+
+const K = new Uint32Array([
+  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5, 0xd807aa98, 0x12835b01,
+  0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174, 0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc,
+  0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da, 0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147,
+  0x06ca6351, 0x14292967, 0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+  0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070, 0x19a4c116, 0x1e376c08,
+  0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3, 0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208,
+  0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+]);
+
+const H0 = new Uint32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
+
+/** Message schedule, shared by all instances (the hash is synchronous, so no two blocks are ever in flight). */
+const W = new Uint32Array(64);
+
+function compress(state             , block            , offset        )       {
+  for (let i = 0; i < 16; i++) {
+    const j = offset + i * 4;
+    W[i] = ((block[j]  << 24) | (block[j + 1]  << 16) | (block[j + 2]  << 8) | block[j + 3] ) >>> 0;
+  }
+  for (let i = 16; i < 64; i++) {
+    const a = W[i - 15] ;
+    const b = W[i - 2] ;
+    const s0 = ((a >>> 7) | (a << 25)) ^ ((a >>> 18) | (a << 14)) ^ (a >>> 3);
+    const s1 = ((b >>> 17) | (b << 15)) ^ ((b >>> 19) | (b << 13)) ^ (b >>> 10);
+    W[i] = (W[i - 16]  + s0 + W[i - 7]  + s1) >>> 0;
+  }
+  let a = state[0] ;
+  let b = state[1] ;
+  let c = state[2] ;
+  let d = state[3] ;
+  let e = state[4] ;
+  let f = state[5] ;
+  let g = state[6] ;
+  let h = state[7] ;
+  for (let i = 0; i < 64; i++) {
+    const S1 = ((e >>> 6) | (e << 26)) ^ ((e >>> 11) | (e << 21)) ^ ((e >>> 25) | (e << 7));
+    const ch = (e & f) ^ (~e & g);
+    const t1 = (h + S1 + ch + K[i]  + W[i] ) >>> 0;
+    const S0 = ((a >>> 2) | (a << 30)) ^ ((a >>> 13) | (a << 19)) ^ ((a >>> 22) | (a << 10));
+    const maj = (a & b) ^ (a & c) ^ (b & c);
+    const t2 = (S0 + maj) >>> 0;
+    h = g;
+    g = f;
+    f = e;
+    e = (d + t1) >>> 0;
+    d = c;
+    c = b;
+    b = a;
+    a = (t1 + t2) >>> 0;
+  }
+  state[0] = (state[0]  + a) >>> 0;
+  state[1] = (state[1]  + b) >>> 0;
+  state[2] = (state[2]  + c) >>> 0;
+  state[3] = (state[3]  + d) >>> 0;
+  state[4] = (state[4]  + e) >>> 0;
+  state[5] = (state[5]  + f) >>> 0;
+  state[6] = (state[6]  + g) >>> 0;
+  state[7] = (state[7]  + h) >>> 0;
+}
+
+/** Incremental SHA-256. */
+class Sha256 {
+                   state = new Uint32Array(H0);
+                   buffer = new Uint8Array(64);
+          filled = 0;
+  /** Bytes hashed so far (messages here are far below 2^53 bytes). */
+          length = 0;
+          done = false;
+
+  update(data            )       {
+    if (this.done) throw new Error('sha256: update after digest');
+    let i = 0;
+    this.length += data.length;
+    if (this.filled > 0) {
+      const take = Math.min(64 - this.filled, data.length);
+      this.buffer.set(data.subarray(0, take), this.filled);
+      this.filled += take;
+      i = take;
+      if (this.filled < 64) return this;
+      compress(this.state, this.buffer, 0);
+      this.filled = 0;
+    }
+    for (; i + 64 <= data.length; i += 64) compress(this.state, data, i);
+    if (i < data.length) {
+      this.buffer.set(data.subarray(i), 0);
+      this.filled = data.length - i;
+    }
+    return this;
+  }
+
+  digest()             {
+    if (this.done) throw new Error('sha256: digest twice');
+    this.done = true;
+    const bits = this.length * 8;
+    const buf = this.buffer;
+    buf[this.filled++] = 0x80;
+    if (this.filled > 56) {
+      buf.fill(0, this.filled);
+      compress(this.state, buf, 0);
+      this.filled = 0;
+    }
+    buf.fill(0, this.filled, 56);
+    const high = Math.floor(bits / 0x1_0000_0000);
+    const low = bits >>> 0;
+    buf[56] = high >>> 24;
+    buf[57] = (high >>> 16) & 0xff;
+    buf[58] = (high >>> 8) & 0xff;
+    buf[59] = high & 0xff;
+    buf[60] = low >>> 24;
+    buf[61] = (low >>> 16) & 0xff;
+    buf[62] = (low >>> 8) & 0xff;
+    buf[63] = low & 0xff;
+    compress(this.state, buf, 0);
+    const out = new Uint8Array(32);
+    for (let i = 0; i < 8; i++) {
+      const v = this.state[i] ;
+      out[i * 4] = v >>> 24;
+      out[i * 4 + 1] = (v >>> 16) & 0xff;
+      out[i * 4 + 2] = (v >>> 8) & 0xff;
+      out[i * 4 + 3] = v & 0xff;
+    }
+    return out;
+  }
+
+  /** A copy of the running state (HMAC keeps the keyed inner and outer states and copies them per message). */
+  clone()         {
+    const c = new Sha256();
+    c.state.set(this.state);
+    c.buffer.set(this.buffer);
+    c.filled = this.filled;
+    c.length = this.length;
+    c.done = this.done;
+    return c;
+  }
+}
+
+/** SHA-256 of `data` (32 bytes). */
+function sha256(data            )             {
+  return new Sha256().update(data).digest();
+}
+
+/**
+ * HMAC-SHA256 with a fixed key. The key's inner and outer pads are hashed once; each message then costs only its
+ * own blocks plus one outer block (the shoe and round streams compute thousands of messages under one key).
+ */
+class HmacSha256 {
+                   inner        ;
+                   outer        ;
+
+  constructor(key            ) {
+    const block = new Uint8Array(64);
+    block.set(key.length > 64 ? sha256(key) : key);
+    const pad = new Uint8Array(64);
+    for (let i = 0; i < 64; i++) pad[i] = block[i]  ^ 0x36;
+    this.inner = new Sha256().update(pad);
+    for (let i = 0; i < 64; i++) pad[i] = block[i]  ^ 0x5c;
+    this.outer = new Sha256().update(pad);
+  }
+
+  mac(message            )             {
+    const inner = this.inner.clone().update(message).digest();
+    return this.outer.clone().update(inner).digest();
+  }
+}
+
+/** HMAC-SHA256(key, message), 32 bytes. */
+function hmacSha256(key            , message            )             {
+  return new HmacSha256(key).mac(message);
+}
+return Object.freeze({ Sha256, sha256, HmacSha256, hmacSha256 });
+})();
+// src/chain.ts
+const m3 = (() => {
+const { toHex, utf8 } = m0;
+const { checkInputs } = m1;
+const { sha256 } = m2;
+/**
+ * Hash chains for shoes (SPEC.md section 5). One chain per player, game and table: from a secret s of 32 random bytes,
+ * link i = SHA-256^(N - i)(s) for i = 0 ... N. Link 0 (the terminal hash) is published before the client seed; shoe
+ * number i of the table is shuffled under link i (i >= 1), and SHA-256(link i) = link i - 1. Revealing link i at the
+ * end of shoe i opens that shoe (and the earlier ones, already open) but never a later shoe of any table.
+ * The terminal hashes of all tables of a seed pair are bound in one root, published with the pair's hash.
+ */
+
+
+
+
+/** Default chain length: shoes per table and seed pair. */
+const CHAIN_LENGTH = 2000;
+
+/**
+ * A SHA-256 implementation (bytes in, 32 bytes out). Chains take thousands of hashes, so a server may pass a native
+ * one (node:crypto); the result is the same as the package's own `sha256`.
+ */
+                                                        
+
+/** Link `index` of the chain of `secret` with `length` links after the terminal: SHA-256 applied length - index times. */
+function chainLink(secret            , length        , index        , hash           = sha256)             {
+  if (secret.length !== 32) throw new Error('fairshoe: a chain secret has 32 bytes');
+  if (!Number.isSafeInteger(length) || length < 1 || !Number.isSafeInteger(index) || index < 0 || index > length) {
+    throw new Error('fairshoe: bad chain index');
+  }
+  let h = secret;
+  for (let k = 0; k < length - index; k++) h = hash(h);
+  return h === secret ? secret.slice() : h;
+}
+
+/** Link 0, published before the first shoe. */
+function chainTerminal(secret            , length        , hash           = sha256)             {
+  return chainLink(secret, length, 0, hash);
+}
+
+/** Hashing `link` `steps` times gives `target` (link i, i steps -> the terminal; 1 step -> link i - 1). */
+function linkReaches(link            , steps        , target        , hash           = sha256)          {
+  if (!Number.isSafeInteger(steps) || steps < 0) return false;
+  let h = link;
+  for (let k = 0; k < steps; k++) h = hash(h);
+  return toHex(h) === target;
+}
+
+/** One line of a shoe root: `{gameId}:{table}:{terminal hex}`. */
+function rootLine(gameId        , table          , terminal        )         {
+  checkInputs({ gameId, table });
+  return `${gameId}:${table}:${terminal}`;
+}
+
+/**
+ * The root over the terminal hashes of a seed pair's chains: SHA-256 of the lines sorted by their UTF-8 bytes (all
+ * lines are ASCII, so that is the plain code unit order: "baccarat:10:..." before "baccarat:1:..."), joined with '\n'.
+ */
+function shoeRoot(lines                   )                                    {
+  const sorted = [...lines].sort((a, b) => (a < b ? -1 : a > b ? 1 : 0));
+  return { hash: toHex(sha256(utf8(sorted.join('\n')))), lines: sorted };
+}
+return Object.freeze({ CHAIN_LENGTH, chainLink, chainTerminal, linkReaches, rootLine, shoeRoot });
+})();
+// src/stream.ts
+const m4 = (() => {
+const { utf8 } = m0;
+const { HmacSha256 } = m2;
+/**
+ * The random stream of fairshoe/v1: HMAC-SHA256 blocks under one key, block b over the UTF-8 message message(b),
+ * read as unsigned big-endian 32-bit words (8 per block). Integers in [0, n) by rejection sampling, so every value is
+ * exactly equally likely; no floating point anywhere.
+ */
+
+
+
+const TWO_32 = 0x1_0000_0000;
+
+/** A source of uniform unsigned 32-bit words. */
+                             
+                   
+                           
+                         
+ 
+
+/** Words of HMAC-SHA256(key, message(b)) for b = 0, 1, 2, ... */
+class HmacStream                       {
+                   hmac            ;
+                   message                           ;
+          block             = new Uint8Array(0);
+          pos = 0;
+          b = 0;
+          count = 0;
+
+  constructor(key            , message                           ) {
+    this.hmac = new HmacSha256(key);
+    this.message = message;
+  }
+
+  get words()         {
+    return this.count;
+  }
+
+  /** Blocks computed so far. */
+  get blocks()         {
+    return this.b;
+  }
+
+  next32()         {
+    if (this.pos >= this.block.length) {
+      this.block = this.hmac.mac(utf8(this.message(this.b++)));
+      this.pos = 0;
+    }
+    const k = this.block;
+    const p = this.pos;
+    this.pos += 4;
+    this.count++;
+    return ((k[p]  << 24) | (k[p + 1]  << 16) | (k[p + 2]  << 8) | k[p + 3] ) >>> 0;
+  }
+}
+
+/** True for the range of int(n): an integer 1 <= n <= 2^32. */
+function isIntRange(n         )              {
+  return typeof n === 'number' && Number.isInteger(n) && n >= 1 && n <= TWO_32;
+}
+
+/**
+ * Uniform integer in [0, n): n = 1 gives 0 without reading; otherwise words are read until one is below
+ * limit = 2^32 - (2^32 mod n), and the result is that word mod n.
+ */
+function uniformInt(source            , n        )         {
+  if (!isIntRange(n)) throw new RangeError(`int: n must be an integer in [1, 2^32], got ${String(n)}`);
+  if (n === 1) return 0;
+  const limit = TWO_32 - (TWO_32 % n);
+  for (;;) {
+    const w = source.next32();
+    if (w < limit) return w % n;
+  }
+}
+
+/** One draw of a stream: int(n) gave v. */
+                       
+            
+            
+ 
+
+/** The interface of a game engine's random source (`Rng { int(n) }`) plus the tape of what was drawn. */
+                          
+                         
+                                                                
+                                  
+                                                
+                         
+ 
+
+function tapeRng(source            )          {
+  const draws         = [];
+  return {
+    int(n        )         {
+      const v = uniformInt(source, n);
+      draws.push({ n, v });
+      return v;
+    },
+    draws,
+    get words() {
+      return source.words;
+    },
+  };
+}
+return Object.freeze({ HmacStream, isIntRange, uniformInt, tapeRng });
+})();
+// src/shoe.ts
+const m5 = (() => {
+const { concatBytes, fromHex, isHex, toHex, utf8 } = m0;
+const { checkInputs, message } = m1;
+const { hmacSha256, sha256 } = m2;
+const { HmacStream, tapeRng, uniformInt } = m4;
+/**
+ * Shoes (SPEC.md section 6): the starting order, the shuffle from the shoe stream, the salted commitment, the
+ * automatic cut, the rotation by the cut and the burn rules.
+ *
+ * Life of a shoe: shuffle (order O) -> commit (shoe hash over a secret salt and O) -> cut k (a player's input after
+ * the commit, or the automatic cut kAuto) -> dealing order D[i] = O[(i + k) mod size] -> burn -> deal -> reveal of the
+ * chain link, the salt and O. A rotation of a uniformly shuffled order by any k that does not depend on O leaves it
+ * uniform, so the cut changes the order, never the odds.
+ */
+
+
+
+
+
+                              
+
+/** Suits and ranks in deck order: S, H, D, C, each A, 2 ... 10, J, Q, K (the ten is written "10"). */
+const SUITS = ['S', 'H', 'D', 'C']         ;
+const RANKS = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K']         ;
+/** The 52 cards of one deck in deck order. */
+const DECK_CODES                      = Object.freeze(SUITS.flatMap((s) => RANKS.map((r) => `${r}${s}`)));
+
+/** Compact order: one letter per card, letter i ('A'-'Z', 'a'-'z') is DECK_CODES[i]. */
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+const INDEX_OF_CODE = new Map                  (DECK_CODES.map((c, i) => [c, i]));
+
+/** Cut range of an eight-deck shoe: at least one deck stays in front and behind (SPEC.md 6.4). */
+const CUT_MIN = 52;
+const CUT_MAX = 364;
+
+                      
+                                        
+          
+                                       
+                 
+                                                                                                                        
+                
+
+const BURN_RULES                      = ['none', 'bj-one-down', 'bac-value'];
+
+function isCardCode(value         )                    {
+  return typeof value === 'string' && INDEX_OF_CODE.has(value);
+}
+
+/** Letters of an order (for records: 416 characters instead of 1,200). */
+function lettersOf(order                     )         {
+  let s = '';
+  for (const c of order) {
+    const i = INDEX_OF_CODE.get(c);
+    if (i === undefined) throw new Error(`fairshoe: not a card code: ${c}`);
+    s += LETTERS[i];
+  }
+  return s;
+}
+
+function codesOf(letters        )             {
+  const out             = [];
+  for (const ch of letters) {
+    const i = LETTERS.indexOf(ch);
+    if (i < 0) throw new Error(`fairshoe: not a card letter: ${ch}`);
+    out.push(DECK_CODES[i] );
+  }
+  return out;
+}
+
+/** `decks` decks in deck order, one after the other. */
+function buildOrder(decks        )             {
+  if (!Number.isSafeInteger(decks) || decks < 1 || decks > 64) throw new Error('fairshoe: bad deck count');
+  const out             = [];
+  for (let d = 0; d < decks; d++) out.push(...DECK_CODES);
+  return out;
+}
+
+/** Fisher-Yates (Durstenfeld): for i = length - 1 down to 1, j = int(i + 1), swap a[i] and a[j]. */
+function shuffleInPlace   (a     , rng                            )      {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = rng.int(i + 1);
+    const t = a[i] ;
+    a[i] = a[j] ;
+    a[j] = t;
+  }
+  return a;
+}
+
+/** What identifies a shoe: the game, the table, the client seed and the shoe number (chain index). */
+                             
+                 
+                  
+                     
+                                                      
+                 
+ 
+
+function checkShoe(s            )       {
+  checkInputs({ gameId: s.gameId, table: s.table, clientSeed: s.clientSeed, counter: s.shoeNo });
+}
+
+/** The shuffled order O of a shoe and the draws of its shuffle (secret until the shoe is revealed). */
+function shoeOrder(link            , inputs            , decks        )                                                      {
+  checkShoe(inputs);
+  const { gameId, table, clientSeed, shoeNo } = inputs;
+  const rng = tapeRng(new HmacStream(link, (b) => message.shoe(gameId, table, clientSeed, shoeNo, b)));
+  const order = shuffleInPlace(buildOrder(decks), rng);
+  return { order, draws: rng.draws.slice(), words: rng.words };
+}
+
+/** The secret salt of the commitment (32 bytes): HMAC-SHA256(link, salt message). */
+function shoeSalt(link            , inputs            )             {
+  checkShoe(inputs);
+  return hmacSha256(link, utf8(message.salt(inputs.gameId, inputs.table, inputs.clientSeed, inputs.shoeNo)));
+}
+
+/** Shoe hash = SHA-256(salt as 32 raw bytes || UTF-8 of the card codes of O joined with ','), hex. */
+function shoeHash(salt                     , order                     )         {
+  const raw = typeof salt === 'string' ? fromHex(salt) : salt;
+  if (raw.length !== 32) throw new Error('fairshoe: a salt has 32 bytes');
+  for (const c of order) if (!isCardCode(c)) throw new Error(`fairshoe: not a card code: ${c}`);
+  return toHex(sha256(concatBytes(raw, utf8(order.join(',')))));
+}
+
+/**
+ * The automatic cut kAuto = min + int(max - min + 1) over the cut-auto stream (key: the client seed). It depends only
+ * on values fixed before the shuffle, so it is independent of O and the server cannot steer it.
+ */
+function autoCut(inputs            , min = CUT_MIN, max = CUT_MAX)         {
+  checkShoe(inputs);
+  if (!Number.isSafeInteger(min) || !Number.isSafeInteger(max) || min < 0 || max < min) throw new Error('fairshoe: bad cut range');
+  const { gameId, table, clientSeed, shoeNo } = inputs;
+  const stream = new HmacStream(utf8(clientSeed), (b) => message.cutAuto(gameId, table, shoeNo, b));
+  return min + uniformInt(stream, max - min + 1);
+}
+
+/** The cut: the first k cards go to the back. D[i] = O[(i + k) mod size]. */
+function rotate   (order              , k        )      {
+  if (!Number.isSafeInteger(k) || k < 0 || k >= Math.max(1, order.length)) throw new Error('fairshoe: bad cut');
+  return [...order.slice(k), ...order.slice(0, k)];
+}
+
+/** Baccarat value: A 1, 2 to 9 by number, 10 J Q K 0. */
+function baccaratValue(code          )         {
+  const rank = code.slice(0, -1);
+  if (rank === 'A') return 1;
+  if (rank === '10' || rank === 'J' || rank === 'Q' || rank === 'K') return 0;
+  return Number(rank);
+}
+
+/** The burn of a shoe: cards that leave the dealing order D before the first round (D[0] onwards), and the one shown. */
+                       
+                
+                         
+ 
+
+/** The burn a rule gives for a dealing order D. */
+function burnOf(rule          , dealing                     )       {
+  switch (rule) {
+    case 'none':
+      return { cards: 0, shown: null };
+    case 'bj-one-down':
+      return { cards: 1, shown: null };
+    case 'bac-value': {
+      const first = dealing[0];
+      if (first === undefined) throw new Error('fairshoe: empty shoe');
+      return { cards: 1 + (baccaratValue(first) || 10), shown: first };
+    }
+  }
+}
+
+/** True for a 32-byte value written as hex (links, salts, hashes). */
+function isDigest(value         )                  {
+  return isHex(value, 32);
+}
+return Object.freeze({ SUITS, RANKS, DECK_CODES, LETTERS, CUT_MIN, CUT_MAX, BURN_RULES, isCardCode, lettersOf, codesOf, buildOrder, shuffleInPlace, shoeOrder, shoeSalt, shoeHash, autoCut, rotate, baccaratValue, burnOf, isDigest });
+})();
+// src/games.ts
+const m6 = (() => {
+const { baccaratValue } = m5;
+/**
+ * Game mappings (SPEC.md section 9): what the draws and cards of a round mean, recomputed and compared with the
+ * outcome a proof states. A mapping fixes the whole draw plan of a round: which steps draw and exactly what they
+ * draw. Anything else (a draw before or after the plan, a second drawing step, a draw outside a round) is an error:
+ * the server writes the draws down itself, and with extra draws it could pick the value the game reads. A finished
+ * round of a mapped game must state its outcome (`outcome.detail`): a proof that leaves it out is an error, never an
+ * unchecked round.
+ *
+ * The card games deal by their published rules, part of v1: baccarat by the punto banco tableau (a hand takes four to
+ * six cards, the third-card rules decide), Dragon Tiger and Card Duel one card per side. The cards, the totals and the
+ * winner are recomputed from the round's own slice; every hand a shoe dealt (free hands too) must have the length
+ * these rules give (handRule, checked by verifyShoe).
+ *
+ * The multiplier variants of baccarat get their tableau compared (an error when it differs), but their outcome is not
+ * checked: the strike draws and their weight tables are not mapped yet. For every other game the draws (and cards)
+ * are verified, the outcome is not (OutcomeCheck.checked false), so a verifier must not call that outcome checked.
+ */
+                                                          
+
+
+                               
+     
+                                                                                                                  
+                                                                                                          
+                                                                                                                  
+     
+                   
+                                                                                                      
+                         
+                   
+ 
+
+/** Cards dealt to the round itself (dealing order), one list per slice of the round. */
+                                                          
+
+                  
+                         
+ 
+
+const TWO_32 = 0x1_0000_0000;
+
+/** High Flyer: the fly-away point in hundredths for a draw r of int(2^32): floor(97 * 2^32 / (2^32 - r)), 1.00x to 20,000x. */
+function crashPoint(r        )         {
+  const q = (97n * BigInt(TWO_32)) / (BigInt(TWO_32) - BigInt(r));
+  return Number(q < 100n ? 100n : q > 2_000_000n ? 2_000_000n : q);
+}
+
+function detailOf(proof            )                {
+  const o = proof.outcome                               ;
+  return o && typeof o === 'object' && o.detail && typeof o.detail === 'object' && !Array.isArray(o.detail) ? (o.detail          ) : null;
+}
+
+function same(a         , b         )          {
+  return JSON.stringify(a) === JSON.stringify(b);
+}
+
+/** Baccarat family: only plain baccarat is fully mapped (the variants also draw strikes from the round stream). */
+const BACCARAT_FULL = new Set(['baccarat']);
+const BACCARAT_VARIANTS = new Set(['blitz-baccarat', 'gold-baccarat', 'jade-baccarat', 'blitz-baccarat-max']);
+
+                     
+                                                       
+                                   
+                                     
+              
+                                                                                         
+              
+ 
+
+const DUELS                                      = {
+  'dragon-tiger': { sides: ['dragon', 'tiger'], tie: 'tie', ace: 1 },
+  'card-duel': { sides: ['home', 'away'], tie: 'draw', ace: 14 },
+};
+
+/** Games whose round deals from a committed shoe: their proof must hold the round's own slice. */
+const CARD_GAMES                    = Object.freeze([...BACCARAT_FULL, ...BACCARAT_VARIANTS, ...Object.keys(DUELS)].sort());
+
+// ------------------------------------------------------------------------------------------------ card rules
+
+/** One hand of punto banco, recomputed from the dealing order. */
+                               
+                     
+                     
+                      
+                      
+                                      
+                                               
+                                                             
+                
+ 
+
+const handTotal = (cards                     )         => cards.reduce((t, c) => t + baccaratValue(c), 0) % 10;
+
+/**
+ * Does the Banker draw? `playerThird` is the baccarat value of the Player's third card, null when the Player stood.
+ * Player stood: 0 to 5. Player drew: 0 to 2 always; 3 unless 8; 4 on 2 to 7; 5 on 4 to 7; 6 on 6 or 7; 7 never.
+ */
+function bankerDraws(total        , playerThird               )          {
+  if (playerThird === null) return total <= 5;
+  if (total <= 2) return true;
+  if (total === 3) return playerThird !== 8;
+  if (total === 4) return playerThird >= 2 && playerThird <= 7;
+  if (total === 5) return playerThird >= 4 && playerThird <= 7;
+  if (total === 6) return playerThird === 6 || playerThird === 7;
+  return false;
+}
+
+/**
+ * The punto banco tableau on the dealing order from a hand's first card: P1, B1, P2, B2; no more cards when either
+ * hand has 8 or 9 (a natural); else the Player draws on 0 to 5, then the Banker by bankerDraws. Null when `cards`
+ * runs out before the hand is complete.
+ */
+function baccaratHand(cards                     )                      {
+  if (cards.length < 4) return null;
+  const player = [cards[0] , cards[2] ];
+  const banker = [cards[1] , cards[3] ];
+  let next = 4;
+  const p2 = handTotal(player);
+  const b2 = handTotal(banker);
+  const pNat = p2 >= 8;
+  const bNat = b2 >= 8;
+  if (!pNat && !bNat) {
+    let third                = null;
+    if (p2 <= 5) {
+      const c = cards[next++];
+      if (c === undefined) return null;
+      player.push(c);
+      third = baccaratValue(c);
+    }
+    if (bankerDraws(b2, third)) {
+      const c = cards[next++];
+      if (c === undefined) return null;
+      banker.push(c);
+    }
+  }
+  const playerTotal = handTotal(player);
+  const bankerTotal = handTotal(banker);
+  return {
+    player,
+    banker,
+    playerTotal,
+    bankerTotal,
+    winner: playerTotal > bankerTotal ? 'player' : bankerTotal > playerTotal ? 'banker' : 'tie',
+    natural: pNat && bNat ? 'both' : pNat ? 'player' : bNat ? 'banker' : null,
+    cards: next,
+  };
+}
+
+/** Rank of a card in a duel game (ace low or high). */
+function duelRank(code          , ace        )         {
+  const r = code.slice(0, -1);
+  return r === 'A' ? ace : r === 'J' ? 11 : r === 'Q' ? 12 : r === 'K' ? 13 : Number(r);
+}
+
+/**
+ * The fixed hand of a card game (section 9): how many cards one hand takes from the dealing order at `from` (null
+ * when the order runs out first). Null for a game whose hands depend on the player's decisions (blackjack) or that
+ * has no shoe. verifyShoe checks every hand a shoe dealt against it, free hands included: a hand longer than the
+ * rules would let the server skip cards.
+ */
+function handRule(gameId        )                                                                         {
+  if (BACCARAT_FULL.has(gameId) || BACCARAT_VARIANTS.has(gameId)) return (dealing, from) => baccaratHand(dealing.slice(from, from + 6))?.cards ?? null;
+  if (DUELS[gameId]) return (dealing, from) => (from + 2 <= dealing.length ? 2 : null);
+  return null;
+}
+
+// ------------------------------------------------------------------------------------------------ draw plans
+
+/**
+ * The draw plan of a round: exactly one applied step draws, and it draws exactly `plan` (the ranges n in order).
+ * Discarded steps are not part of it (they are counted by verifyPair). `none`: a round may also have no drawing step
+ * (a void round that never drew). Returns the draws (empty for none), or the errors.
+ */
+function planned(proof            , plan                   , what        , none = false)                                         {
+  const drawing = proof.steps.filter((s           ) => s.status === 'ok' && Array.isArray(s.draws) && s.draws.length > 0);
+  if (drawing.length === 0) return none ? { v: [] } : { errors: [`no draw: no ${what} in this round`] };
+  if (drawing.length > 1) return { errors: [`${drawing.length} steps drew (nonces ${drawing.map((s) => s.nonce).join(', ')}): the ${what} is one step`] };
+  const draws = drawing[0] .draws;
+  const want = plan.map((n) => (n === TWO_32 ? 'int(2^32)' : `int(${n})`)).join(', ');
+  const got = draws.map((d) => (d.n === TWO_32 ? 'int(2^32)' : `int(${d.n})`)).join(', ');
+  if (draws.length !== plan.length || draws.some((d, i) => d.n !== plan[i])) return { errors: [`the ${what} draws ${want}, the step drew ${got}`] };
+  return { v: draws.map((d) => d.v) };
+}
+
+/** Pocket of a roulette wheel for the spin's int(n): 0 ... 36, and on the double-zero wheel 37 = "00". */
+function pocketOf(n        , v        )                {
+  return n === 38 && v === 37 ? '00' : v;
+}
+
+                       
+                                                      
+                          
+                                             
+               
+                                                                
+                                                                                       
+ 
+
+const roulette = (n        )              => ({
+  plan: [n],
+  what: 'spin',
+  map: (v, detail) => {
+    const pocket = pocketOf(n, v[0] );
+    return { summary: `pocket ${pocket}`, errors: same(detail.pocket, pocket) ? [] : [`the draws give pocket ${pocket}, the proof says ${JSON.stringify(detail.pocket)}`] };
+  },
+});
+
+/** Games whose outcome comes from the round stream alone. */
+const DRAW_MAPPINGS                                        = {
+  roulette: roulette(37),
+  'american-roulette': roulette(38),
+  'high-flyer': {
+    // The takeoff is one step drawing exactly int(2^32); the detail states the multiplier (1.79 for 179 hundredths).
+    plan: [TWO_32],
+    what: 'flight',
+    map: (v, detail) => {
+      const crash = crashPoint(v[0] );
+      const stated = typeof detail.crash === 'number' ? Math.round(detail.crash * 100) : NaN;
+      return { summary: `crash ${(crash / 100).toFixed(2)}x`, errors: stated === crash ? [] : [`the draw gives a crash at ${(crash / 100).toFixed(2)}x, the proof says ${JSON.stringify(detail.crash)}`] };
+    },
+  },
+  'dice-baccarat': {
+    // The roll is one step drawing exactly four int(6): Player die 1, die 2, Banker die 1, die 2.
+    plan: [6, 6, 6, 6],
+    what: 'roll',
+    map: (v, detail) => {
+      const dice = v.map((x) => x + 1);
+      const want = { player: dice.slice(0, 2), banker: dice.slice(2, 4) };
+      return { summary: `player ${want.player.join('+')}, banker ${want.banker.join('+')}`, errors: same(detail.dice, want) ? [] : [`the draws give ${JSON.stringify(want)}, the proof says ${JSON.stringify(detail.dice)}`] };
+    },
+  },
+};
+
+// ------------------------------------------------------------------------------------------------ card mappings
+
+/** The round's own hand: exactly one slice (verifyRound passes the slices the shoes list under the round's id). */
+function ownHand(cards                   )                                                        {
+  if (!cards || cards.length === 0) return { errors: ['no shoe slice for the hand'] };
+  if (cards.length > 1) return { errors: [`${cards.length} shoe slices for one hand`] };
+  return { dealt: cards[0]  };
+}
+
+/** Baccarat family: the hand replayed by the tableau from the round's own slice; cards, totals and winner must agree. */
+function baccaratOutcome(detail        , cards                   )                                        {
+  const hand = ownHand(cards);
+  if ('errors' in hand) return { summary: 'no cards', errors: hand.errors };
+  const played = baccaratHand(hand.dealt);
+  const stated = `player ${Array.isArray(detail.player) ? detail.player.join(' ') : String(detail.player)}, banker ${Array.isArray(detail.banker) ? detail.banker.join(' ') : String(detail.banker)}`;
+  if (!played) return { summary: stated, errors: [`the tableau takes more than ${hand.dealt.length} cards here, the shoe dealt ${hand.dealt.length} (${hand.dealt.join(' ')})`] };
+  const summary = `player ${played.player.join(' ')} (${played.playerTotal}), banker ${played.banker.join(' ')} (${played.bankerTotal}), ${played.winner}`;
+  const errors           = [];
+  if (played.cards !== hand.dealt.length) errors.push(`the tableau takes ${played.cards} cards here, the shoe dealt ${hand.dealt.length} (${hand.dealt.join(' ')})`);
+  if (!same(detail.player, played.player) || !same(detail.banker, played.banker)) errors.push(`the tableau deals ${summary}, the proof says ${stated}`);
+  if (detail.playerTotal !== played.playerTotal || detail.bankerTotal !== played.bankerTotal) errors.push(`the totals are ${played.playerTotal} and ${played.bankerTotal}, the proof says ${JSON.stringify(detail.playerTotal)} and ${JSON.stringify(detail.bankerTotal)}`);
+  if (detail.winner !== played.winner) errors.push(`the winner is ${played.winner}, the proof says ${JSON.stringify(detail.winner)}`);
+  if ('natural' in detail && !same(detail.natural, played.natural)) errors.push(`the natural is ${String(played.natural)}, the proof says ${JSON.stringify(detail.natural)}`);
+  return { summary, errors };
+}
+
+/** Dragon Tiger and Card Duel: one card to the first side, then one to the second; the higher rank wins. */
+function duelOutcome(rules           , detail        , cards                   )                                        {
+  const hand = ownHand(cards);
+  if ('errors' in hand) return { summary: 'no cards', errors: hand.errors };
+  const [first, second] = rules.sides;
+  const c = (detail.cards && typeof detail.cards === 'object' ? detail.cards : {})                           ;
+  const stated = `${first} ${String(c[first])}, ${second} ${String(c[second])}`;
+  if (hand.dealt.length !== 2) return { summary: stated, errors: [`a hand is 2 cards, the shoe dealt ${hand.dealt.length} (${hand.dealt.join(' ')})`] };
+  const [a, b] = hand.dealt                        ;
+  const ra = duelRank(a, rules.ace);
+  const rb = duelRank(b, rules.ace);
+  const winner = ra > rb ? first : rb > ra ? second : rules.tie;
+  const suited = a === b;
+  const summary = `${first} ${a}, ${second} ${b}, ${winner}`;
+  const errors           = [];
+  if (!same([c[first], c[second]], hand.dealt)) errors.push(`the shoe dealt ${first} ${a}, ${second} ${b}, the proof says ${stated}`);
+  if (detail.winner !== winner) errors.push(`the winner is ${winner}, the proof says ${JSON.stringify(detail.winner)}`);
+  if (detail.suited !== suited) errors.push(`suited is ${String(suited)}, the proof says ${JSON.stringify(detail.suited)}`);
+  return { summary, errors };
+}
+
+// ------------------------------------------------------------------------------------------------ checkOutcome
+
+/** A round with an outcome to check: it has a round id, finished (not void) and states a detail. */
+function outcomeDetail(proof            )                {
+  if (!finished(proof)) return null;
+  return detailOf(proof);
+}
+
+/** The proof is of a round that finished: a round id, an outcome, not void. */
+function finished(proof            )          {
+  return proof.roundId !== null && proof.outcome !== null && proof.outcome !== undefined && (proof.outcome                      ).void !== true;
+}
+
+/**
+ * Recompute a round's outcome from its draws and, for card games, the cards of its own shoe slice (null when the
+ * shoes were not checked). A game without a mapping is not checked. A void round and the steps outside a round are
+ * not checked either, but a game with a draw plan still holds them to it: a step outside a round must not draw, a
+ * void round draws its plan or nothing.
+ */
+function checkOutcome(proof            , cards                   )               {
+  const unchecked               = { checked: false, summary: null, errors: [] };
+  const draws = DRAW_MAPPINGS[proof.gameId];
+  if (!finished(proof)) {
+    if (!draws || !Array.isArray(proof.steps)) return unchecked;
+    if (proof.roundId === null) {
+      // The game draws only in its rounds: a draw outside one could be a filler before the next spin.
+      const drew = proof.steps.filter((s) => s.status === 'ok' && Array.isArray(s.draws) && s.draws.length > 0);
+      return { ...unchecked, errors: drew.map((s) => `nonce ${s.nonce} drew outside a round: ${proof.gameId} draws only its ${draws.what}`) };
+    }
+    const p = planned(proof, draws.plan, draws.what, true);
+    return { ...unchecked, errors: 'errors' in p ? p.errors : [] };
+  }
+  const isBaccarat = BACCARAT_FULL.has(proof.gameId) || BACCARAT_VARIANTS.has(proof.gameId);
+  const duel = DUELS[proof.gameId];
+  if (!draws && !isBaccarat && !duel) return unchecked;
+  const detail = detailOf(proof);
+  // A mapped round that states no outcome would switch its checks off: the engines always state it.
+  if (!detail) return { ...unchecked, errors: ['the proof states no outcome detail: the round of a mapped game must state its outcome'] };
+  if (isBaccarat) {
+    if (!cards) return unchecked;
+    const r = baccaratOutcome(detail, cards);
+    // A variant: the tableau is compared, the multipliers (strike draws) are not mapped, so the outcome is not checked.
+    const full = BACCARAT_FULL.has(proof.gameId);
+    return { checked: full, summary: full ? r.summary : `${r.summary} (multipliers not mapped)`, errors: r.errors };
+  }
+  if (duel) {
+    if (!cards) return unchecked;
+    const r = duelOutcome(duel, detail, cards);
+    return { checked: true, summary: r.summary, errors: r.errors };
+  }
+  const m = draws ;
+  const p = planned(proof, m.plan, m.what);
+  if ('errors' in p) return { checked: true, summary: `not the ${m.what} of the game`, errors: p.errors };
+  const r = m.map(p.v, detail);
+  return { checked: true, summary: r.summary, errors: r.errors };
+}
+
+/** Games whose outcome the verifier recomputes in full (the others: draws and cards only). */
+const MAPPED_GAMES                    = Object.freeze([...Object.keys(DRAW_MAPPINGS), ...BACCARAT_FULL, ...Object.keys(DUELS)].sort());
+return Object.freeze({ crashPoint, CARD_GAMES, baccaratHand, handRule, outcomeDetail, checkOutcome, MAPPED_GAMES });
+})();
+// src/records.ts
+const m7 = (() => {
+
+/**
+ * The records a server publishes and a verifier checks (SPEC.md section 7): the proof of a round, and a shoe's
+ * commitment and reveal. Plain JSON; times are milliseconds since 1970 (UTC).
+ */
+                                             
+                                                    
+                                        
+
+/**
+ * Who set a pair's client seed. 'player': sent by the player after the pair's hash and root were shown, so the server
+ * seed was fixed before it. 'server': the player sent none before the first draw or shoe of the pair and the server
+ * picked one; the server could then have tried client seeds until it liked the outcomes, so such records are not
+ * provable against the operator (the verifiers say so).
+ */
+                                               
+
+/** Who may cut a shoe: 'player' (anywhere in the range, or automatically at kAuto) or 'auto' (only kAuto). */
+                                          
+
+/** One step of a game that drew from the round stream: it spent exactly one nonce. */
+                            
+                
+                                                                                         
+               
+                                                                                                                       
+                             
+                                           
+                
+                                            
+                
+ 
+
+/** Cards [from, to) of a shoe's dealing order that went to a round, at table `table` of the game. */
+                            
+               
+                                                                                      
+                
+               
+             
+ 
+
+/** The proof of one round (or of a step outside a round: roundId null). */
+                             
+       
+              
+                                                            
+              
+                                     
+             
+                                                                             
+                 
+                                                                       
+                         
+                 
+                         
+                     
+                                                                                           
+                             
+                                                                         
+                            
+                     
+                                                                                                      
+                     
+                                                                                            
+                   
+                        
+             
+ 
+
+/** Where a shoe's order comes from: link `index` of a chain. */
+                             
+                
+                                                                                                                 
+                 
+                  
+                  
+                
+                                                                                                              
+                   
+                                              
+                   
+                                                                                            
+               
+ 
+
+/** Published before anybody can cut (event shoe_commit). */
+                             
+              
+               
+                 
+                  
+                 
+                
+                     
+                     
+                                                                                       
+                             
+                   
+                                                       
+                             
+                                                           
+                       
+                  
+                                                                                                                                        
+                       
+                     
+             
+ 
+
+                                                       
+                                                  
+
+/** Published when the shoe is over (event shoe_reveal): everything needed to recompute it. */
+                             
+               
+                  
+                                                    
+               
+               
+                                          
+                
+                                        
+                                                         
+                                                                                  
+                                                                      
+             
+ 
+
+/** A shoe's commitment and, once it is over, its reveal. */
+                             
+                     
+                            
+ 
+
+/** A revealed seed pair. */
+                             
+                 
+                 
+                     
+                         
+                            
+                                                                              
+                                    
+                                                     
+                    
+     
+                                                                                                                    
+                                                                                   
+     
+                                                      
+                                                 
+                      
+                              
+                     
+ 
+
+/**
+ * Everything on record for a pair, as the server lists it: the ids of all its round proofs (void ones and those of
+ * steps outside a round included) and of all shoes of its chains (aborted ones included). A gap between listed records
+ * shows; a record missing at the end shows only against the player's own records (verifyPair `own`).
+ */
+return Object.freeze({  });
+})();
+// src/rules.ts
+const m8 = (() => {
+const { CUT_MAX, CUT_MIN } = m5;
+/**
+ * The published shoe rules of every game with a shoe (SPEC.md section 6). A shoe commitment states its rules,
+ * and a verifier compares them with this table: a server cannot pick a cut range, a cut card or a burn per shoe (a
+ * different cut range would even move kAuto), nor give a pair more chains than the game has tables. The rules always
+ * come from the game the player plays (the pair's or the proof's game id), never from a commitment. Changing a row is
+ * a change of the specification.
+ */
+                                              
+
+
+                              
+                                                                                                                       
+                 
+                
+                                                       
+                                      
+                                                                                                               
+                       
+                 
+                                                                                                                
+                       
+ 
+
+/** Baccarat (12 tables), the four multiplier variants, Dragon Tiger, Card Duel (one table each). */
+const cardFamily = (tables        )              => Object.freeze({ tables, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX]         ), endAt: 364, burn: 'bac-value', cutPolicy: 'player' });
+/** Solo blackjack: one table, a committed shoe per round, cut automatically at kAuto, no burn, no cut card. */
+const SOLO_BLACKJACK              = Object.freeze({ tables: 1, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX]         ), endAt: null, burn: 'none', cutPolicy: 'auto' });
+
+/** Game id -> shoe rules (fairshoe/v1). */
+const SHOE_GAMES_V1                                        = Object.freeze({
+  baccarat: cardFamily(12),
+  'blitz-baccarat': cardFamily(1),
+  'gold-baccarat': cardFamily(1),
+  'jade-baccarat': cardFamily(1),
+  'blitz-baccarat-max': cardFamily(1),
+  'dragon-tiger': cardFamily(1),
+  'card-duel': cardFamily(1),
+  'solo-classic': SOLO_BLACKJACK,
+  'blitz-solo': SOLO_BLACKJACK,
+  'freebet-solo': SOLO_BLACKJACK,
+  'solo-vip': SOLO_BLACKJACK,
+});
+
+/** The published rules of a game's shoes, null for a game without a shoe (or unknown to v1). */
+function shoeRulesFor(gameId        )                     {
+  return Object.prototype.hasOwnProperty.call(SHOE_GAMES_V1, gameId) ? SHOE_GAMES_V1[gameId]  : null;
+}
+
+/** What a commitment says about its rules. */
+                                  
+                
+                                      
+                       
+                     
+                       
+ 
+
+/** Differences between a commitment's rules and the published ones (empty: they agree). */
+function shoeRulesDiff(stated                 , rules             )           {
+  const out           = [];
+  if (stated.decks !== rules.decks) out.push(`decks ${String(stated.decks)}, the rules say ${rules.decks}`);
+  const [min, max] = Array.isArray(stated.cutRange) ? stated.cutRange : [NaN, NaN];
+  if (min !== rules.cutRange[0] || max !== rules.cutRange[1]) out.push(`cut range ${String(min)} to ${String(max)}, the rules say ${rules.cutRange[0]} to ${rules.cutRange[1]}`);
+  if (stated.endAt !== rules.endAt) out.push(`cut card at ${String(stated.endAt)}, the rules say ${String(rules.endAt)}`);
+  if (stated.burnRule !== rules.burn) out.push(`burn ${String(stated.burnRule)}, the rules say ${rules.burn}`);
+  if (stated.cutPolicy !== rules.cutPolicy) out.push(`cut policy ${String(stated.cutPolicy)}, the rules say ${rules.cutPolicy}`);
+  return out;
+}
+
+const TERMINAL = /^[0-9a-f]{64}$/;
+
+/**
+ * What is wrong with a pair's root lines for a game with `tables` tables (empty: nothing). The lines must be exactly
+ * `{gameId}:{t}:{terminal}` for t = 1 ... tables, one each: a line of another game or an extra table would let the
+ * server pick per round between several chains it fixed in advance.
+ */
+function rootLineErrors(gameId        , lines                   , tables        )           {
+  if (!Array.isArray(lines)) return ['the root lines are not a list'];
+  const out           = [];
+  const seen = new Set        ();
+  for (const line of lines) {
+    const parts = typeof line === 'string' ? line.split(':') : [];
+    const t = parts.length === 3 && /^[1-9][0-9]*$/.test(parts[1] ) ? Number(parts[1]) : NaN;
+    if (parts[0] !== gameId || !Number.isSafeInteger(t) || t > tables || !TERMINAL.test(parts[2] )) out.push(`the root line ${String(line)} is not one of ${gameId} tables 1 to ${tables}`);
+    else if (seen.has(t)) out.push(`the root has table ${t} twice`);
+    else seen.add(t);
+  }
+  for (let t = 1; t <= tables; t++) if (!seen.has(t)) out.push(`the root has no line for ${gameId} table ${t}`);
+  return out;
+}
+return Object.freeze({ SHOE_GAMES_V1, shoeRulesFor, shoeRulesDiff, rootLineErrors });
+})();
+// src/seeds.ts
+const m9 = (() => {
+const { fromHex, isHex, toHex } = m0;
+const { checkInputs, message } = m1;
+const { sha256 } = m2;
+const { HmacStream, tapeRng } = m4;
+/**
+ * Seed pairs and the round stream (SPEC.md sections 2 and 4). The server seed is 32 random bytes, written as 64
+ * lower-case hex digits; its commitment is SHA-256 over the 32 bytes. Each step of a game that draws takes one nonce
+ * of the active pair and reads the round stream of that nonce from the start.
+ */
+
+
+
+
+
+function isServerSeed(value         )                  {
+  return isHex(value, 32);
+}
+
+/** A server seed from 32 random bytes (the caller's cryptographic source). */
+function serverSeedFrom(bytes            )         {
+  if (bytes.length !== 32) throw new Error('fairshoe: a server seed needs 32 random bytes');
+  return toHex(bytes);
+}
+
+/** SHA-256 over the 32 bytes of the server seed, hex: published before the seed is used. */
+function serverSeedHash(serverSeed        )         {
+  if (!isServerSeed(serverSeed)) throw new Error('fairshoe: bad server seed');
+  return toHex(sha256(fromHex(serverSeed)));
+}
+
+/** The word stream of one nonce. */
+function roundStream(serverSeed        , gameId        , clientSeed        , nonce        )             {
+  if (!isServerSeed(serverSeed)) throw new Error('fairshoe: bad server seed');
+  checkInputs({ gameId, clientSeed, counter: nonce });
+  return new HmacStream(fromHex(serverSeed), (b) => message.stream(gameId, clientSeed, nonce, b));
+}
+
+/** `Rng { int(n) }` over the round stream of one nonce, recording its draws. */
+function roundRng(serverSeed        , gameId        , clientSeed        , nonce        )          {
+  return tapeRng(roundStream(serverSeed, gameId, clientSeed, nonce));
+}
+return Object.freeze({ isServerSeed, serverSeedFrom, serverSeedHash, roundStream, roundRng });
+})();
+// src/verify.ts
+const m10 = (() => {
+const { fromHex, isHex } = m0;
+const { linkReaches, shoeRoot } = m3;
+const { ALG, isClientSeed, isGameId, isTableRef } = m1;
+const { CARD_GAMES, MAPPED_GAMES, checkOutcome, handRule, outcomeDetail } = m6;
+const { rootLineErrors, shoeRulesDiff, shoeRulesFor } = m8;
+const { isServerSeed, roundRng, serverSeedHash } = m9;
+const { autoCut, BURN_RULES, burnOf, codesOf, isCardCode, isDigest, lettersOf, rotate, shoeHash, shoeOrder, shoeSalt } = m5;
+const { isIntRange } = m4;
+/**
+ * Verifiers (SPEC.md section 8). They recompute everything from the published values and report every mismatch;
+ * nothing here trusts the server. A verifier result lists errors in English, one line per problem; `ok` is true only
+ * when there is none. A record whose client seed the server picked is reported as not provable (an error too): the
+ * arithmetic may check out, but the server could have tried client seeds until it liked the outcome.
+ *
+ * What only the player can know is an input: the pair (seed id, game, hash and root) as shown before the player sent
+ * the client seed, the client seed sent, the cut the player asked for, every hand it saw dealt, the table it bet at,
+ * the reveals it received at the rotations, and the records the player received. Records alone cannot prove those, so
+ * every record is checked against them: a server that swapped the server seed, the client seed, a chain or the root
+ * after the player's client seed, or that dealt hands the player never saw to skip cards, fails here, however
+ * consistent its records are. `provable` is true only when `ok` is, and only against such records: what is missing
+ * for it is listed in `unproven`.
+ */
+
+
+
+
+                                                                                                                        
+
+
+
+
+
+                               
+              
+                   
+ 
+
+/** A hand dealt from a shoe as the player saw it (note shoe_deal): its round (null: a free hand), cards [from, to). */
+                           
+                         
+               
+             
+ 
+
+const NOT_PROVABLE = 'not provable: the server picked the client seed after its commitment';
+
+/** The server seed matches its published hash. */
+function verifyServerSeed(serverSeed        , hash        )          {
+  return isServerSeed(serverSeed) && isHex(hash, 32) && serverSeedHash(serverSeed) === hash;
+}
+
+/** The root hash covers these lines. */
+function verifyRoot(hash        , lines                   )          {
+  return Array.isArray(lines) && lines.every((l) => typeof l === 'string') && shoeRoot(lines).hash === hash;
+}
+
+/**
+ * A seed pair as the player kept it: the `fair` info shown before the player sent the client seed (FairInfo.active,
+ * or FairInfo.next for the pair a rotation activates), with the game id and the client seed the player sent. Nothing
+ * the server sends after that seed may stand in for it (a reveal, a later `fair`, `game_joined` after the seed):
+ * those are the server's claims. The verifier trusts nothing else.
+ */
+                           
+                 
+                                                                                                   
+                 
+                         
+                                                          
+                                                                                              
+                            
+                                     
+                      
+                              
+                                                                                                                   
+                             
+     
+                                                                                                              
+                                                                                                                    
+                             
+     
+                                                                      
+ 
+
+function errorText(err         )         {
+  return err instanceof Error ? err.message : String(err);
+}
+
+function isObject(v         )                               {
+  return !!v && typeof v === 'object';
+}
+
+function isCount(v         )              {
+  return typeof v === 'number' && Number.isSafeInteger(v) && v >= 0;
+}
+
+// ------------------------------------------------------------------------------------------------ shoes
+
+                                    
+     
+                                                                                                                     
+                                                                                                      
+     
+                 
+                                                                                                                 
+                      
+     
+                                                                                                                    
+                                                                                                                      
+                                                                    
+     
+                                        
+     
+                                                                                                                      
+                                                                                                                     
+                                                                                         
+     
+                              
+ 
+
+                                                 
+                                                                          
+                             
+                                                                                                                                  
+                    
+                                                                                                                      
+                      
+ 
+
+const SHOE_ENDS = ['ended', 'shuffled', 'aborted'];
+const CUT_BYS = ['player', 'auto', 'timeout'];
+const CUT_POLICIES                       = ['player', 'auto'];
+
+/** Field checks of a commitment before any computation; its card count (0 for a bad deck count). */
+function commitShape(commit            , errors          )         {
+  if (!isObject(commit)) {
+    errors.push('the commitment is not an object');
+    return 0;
+  }
+  if (commit.alg !== ALG) errors.push(`unknown algorithm ${String(commit.alg)}`);
+  if (typeof commit.shoe !== 'string' || commit.shoe.length === 0) errors.push('bad shoe id');
+  if (!isGameId(commit.gameId) || !isTableRef(commit.table) || !isClientSeed(commit.clientSeed)) errors.push('bad game id, table or client seed');
+  if (commit.clientSeedBy !== 'player' && commit.clientSeedBy !== 'server') errors.push('the commitment does not say who set the client seed');
+  const o = commit.origin;
+  if (!isObject(o) || o.kind !== 'chain' || typeof o.seedId !== 'string' || typeof o.chainId !== 'string' || !isDigest(o.prevLink) || !isDigest(o.terminal) || !isDigest(o.root)) {
+    errors.push('bad origin');
+  }
+  if (!Number.isSafeInteger(commit.shoeNo) || commit.shoeNo < 1 || o?.index !== commit.shoeNo) errors.push('bad shoe number');
+  const decksOk = Number.isSafeInteger(commit.decks) && commit.decks >= 1 && commit.decks <= 64;
+  if (!decksOk) errors.push('bad deck count');
+  const size = decksOk ? commit.decks * 52 : 0;
+  if (!BURN_RULES.includes(commit.burnRule)) errors.push(`unknown burn rule ${String(commit.burnRule)}`);
+  if (!CUT_POLICIES.includes(commit.cutPolicy)) errors.push(`unknown cut policy ${String(commit.cutPolicy)}`);
+  const range = commit.cutRange;
+  if (!Array.isArray(range) || range.length !== 2 || !isCount(range[0]) || !isCount(range[1]) || range[0] > range[1] || range[1] >= size) errors.push('bad cut range');
+  if (commit.endAt !== null && !(isCount(commit.endAt) && commit.endAt < size)) errors.push('bad cut card position');
+  if (!isCount(commit.autoCut)) errors.push('bad automatic cut');
+  if (!isDigest(commit.shoeHash)) errors.push('bad shoe hash');
+  if (typeof commit.at !== 'number' || !Number.isFinite(commit.at)) errors.push('bad commitment time');
+  return size;
+}
+
+/** Field checks before any computation: a malformed record gets errors, never an exception. */
+function shoeShape(commit            , reveal            , errors          )                {
+  if (!isObject(commit) || !isObject(reveal)) {
+    errors.push('the commitment or the reveal is not an object');
+    return null;
+  }
+  const size = commitShape(commit, errors);
+  if (reveal.shoe !== commit.shoe) errors.push('the reveal belongs to another shoe');
+  if (!isDigest(reveal.link) || !isDigest(reveal.salt)) errors.push('bad link or salt');
+  if (!SHOE_ENDS.includes(reveal.status)) errors.push(`unknown end ${String(reveal.status)}`);
+  if (typeof reveal.order !== 'string' || reveal.order.length !== size) errors.push(`the order does not have ${size} cards`);
+  if (reveal.cut !== null && !(isObject(reveal.cut) && Number.isSafeInteger(reveal.cut.at) && CUT_BYS.includes(reveal.cut.by))) errors.push('bad cut');
+  if (reveal.burn !== null && !(isObject(reveal.burn) && isCount(reveal.burn.cards) && (reveal.burn.shown === null || isCardCode(reveal.burn.shown)))) errors.push('bad burn');
+  if (!Array.isArray(reveal.rounds) || !reveal.rounds.every((r) => isObject(r) && (r.roundId === null || typeof r.roundId === 'string'))) errors.push('bad rounds');
+  return errors.length === 0 ? size : null;
+}
+
+/** Root, pair and client seed: the order is bound to values the player kept from before the client seed. */
+function shoeOrigin(commit            , pair          , rules                    , errors          )       {
+  if (commit.clientSeedBy !== 'player') errors.push(NOT_PROVABLE);
+  if (pair.seedId !== commit.origin.seedId) errors.push(`the shoe belongs to pair ${commit.origin.seedId}, not ${pair.seedId}`);
+  const root = pair.root;
+  if (!isObject(root) || !Array.isArray(root.lines)) {
+    errors.push('the pair has no root: it has no shoe chains');
+    return;
+  }
+  if (!verifyRoot(root.hash, root.lines)) errors.push('the root of the pair does not match its lines');
+  if (root.hash !== commit.origin.root) errors.push('the root is not the one of the pair');
+  if (rules) for (const e of rootLineErrors(pair.gameId, root.lines, rules.tables)) errors.push(e);
+  if (!root.lines.includes(`${commit.gameId}:${commit.table}:${commit.origin.terminal}`)) errors.push('the chain terminal is not in the root');
+  if (pair.clientSeed !== commit.clientSeed) errors.push('the client seed is not the one of the pair');
+  if (pair.clientSeedAt === null || !(pair.clientSeedAt > pair.committedAt)) errors.push('the client seed was not set after the pair was shown');
+  else if (commit.at < pair.clientSeedAt) errors.push('the shoe was opened before its client seed was set');
+  if (typeof pair.revealedAt === 'number' && commit.at > pair.revealedAt) errors.push(`the shoe was committed at ${commit.at}, after its pair was revealed at ${pair.revealedAt}`);
+}
+
+/**
+ * A shoe's commitment against its reveal: the rules are the game's published ones; the order is bound to the pair
+ * (the link hashes to the previous link and, after shoeNo steps, to the terminal, which is in the pair's root); the
+ * order is the shuffle of the shoe stream; salt and hash match; the cut is in range, follows the cut policy (an
+ * automatic cut is kAuto) and, when given, is the one the player asked for; the burn follows the rule; the rounds
+ * follow each other without gaps from the first card after the burn, and the round that dealt index endAt was the
+ * last. The kept pair is required: the shoe must be of its game, its chain one of the game's tables in its root, its
+ * client seed the one the player sent. Without it the order could come from any chain and any client seed.
+ */
+function verifyShoe(commit            , reveal            , options                   )            {
+  const errors           = [];
+  const unproven           = [];
+  let dealing                    = null;
+  try {
+    const size = shoeShape(commit, reveal, errors);
+    if (size === null) return { ok: false, errors, dealing: null, provable: false, unproven: [] };
+    const opts                             = options ?? {};
+    const pair = opts.pair;
+    if (!isObject(pair)) {
+      errors.push('no pair: pass the pair as kept before the client seed was sent');
+      return { ok: false, errors, dealing: null, provable: false, unproven: [] };
+    }
+    if (commit.gameId !== pair.gameId) errors.push(`the shoe is of ${commit.gameId}, the pair of ${String(pair.gameId)}`);
+    const rules = opts.rules ?? (isGameId(pair.gameId) ? shoeRulesFor(pair.gameId) : null);
+    if (!rules) errors.push(`no published shoe rules for ${String(pair.gameId)}`);
+    else for (const d of shoeRulesDiff(commit, rules)) errors.push(`the commitment breaks the rules: ${d}`);
+    shoeOrigin(commit, pair, rules, errors);
+
+    const link = fromHex(reveal.link);
+    const origin = commit.origin;
+    if (!linkReaches(link, 1, origin.prevLink)) errors.push('the link does not hash to the previous link');
+    if (!linkReaches(link, commit.shoeNo, origin.terminal)) errors.push('the link does not lead to the chain terminal');
+
+    const inputs = { gameId: commit.gameId, table: commit.table, clientSeed: commit.clientSeed, shoeNo: commit.shoeNo };
+    const order = shoeOrder(link, inputs, commit.decks).order;
+    if (lettersOf(order) !== reveal.order) errors.push('the order is not the shuffle of the shoe stream');
+    if (!sameHex(shoeSalt(link, inputs), reveal.salt)) errors.push('the salt is not the HMAC of the salt message');
+    let revealed             = [];
+    try {
+      revealed = codesOf(reveal.order);
+    } catch {
+      errors.push('the order has a character that is not a card');
+    }
+    if (revealed.length === size && shoeHash(reveal.salt, revealed) !== commit.shoeHash) errors.push('the shoe hash does not match salt and order');
+    const [min, max] = commit.cutRange;
+    if (autoCut(inputs, min, max) !== commit.autoCut) errors.push('the automatic cut is not kAuto');
+    if (!rules || errors.some((e) => e !== NOT_PROVABLE)) return { ok: false, errors, dealing: null, provable: false, unproven: [] };
+
+    dealing = order;
+    // The policy is the game's (the pair's), never the commitment's own word.
+    const autoOnly = rules.cutPolicy === 'auto';
+    const want = opts.expectedCut;
+    if (reveal.cut) {
+      const { at, by } = reveal.cut;
+      if (at < min || at > max) errors.push(`cut ${at} is outside ${min} to ${max}`);
+      else {
+        if (by !== 'player' && at !== commit.autoCut) errors.push(`an automatic cut (${by}) must be ${commit.autoCut}, it was ${at}`);
+        if (autoOnly && by !== 'auto') errors.push(`this game cuts automatically only, the record says ${by}`);
+        dealing = rotate(order, at);
+      }
+      if (want === 'auto' && by !== 'auto') errors.push(`the player asked for the automatic cut, the record says ${by} at ${at}`);
+      if (want && want !== 'auto' && (by !== 'player' || at !== want.at)) errors.push(`the player cut at ${want.at}, the record says ${by} at ${at}`);
+    } else if (opts.expectedCut) errors.push('the player cut, the record has no cut');
+    let next = 0;
+    if (reveal.burn) {
+      if (!reveal.cut) errors.push('a burn before the cut');
+      const want = burnOf(commit.burnRule, dealing);
+      if (want.cards !== reveal.burn.cards || want.shown !== reveal.burn.shown) errors.push(`the burn is not the ${commit.burnRule} rule`);
+      next = reveal.burn.cards;
+    } else if (commit.burnRule !== 'none' && reveal.rounds.length > 0) errors.push('cards dealt without the burn');
+    if (reveal.rounds.length > 0 && !reveal.cut) errors.push('cards dealt before the cut');
+    let lastDealtEnd = false;
+    for (const r of reveal.rounds) {
+      if (lastDealtEnd) errors.push(`round ${String(r.roundId)} after the round that brought the cut card out`);
+      if (!Number.isSafeInteger(r.from) || !Number.isSafeInteger(r.to) || r.from !== next || r.to < r.from || r.to > size) {
+        errors.push(`round ${String(r.roundId)}: cards ${String(r.from)} to ${String(r.to)} do not follow ${next}`);
+        break;
+      }
+      next = r.to;
+      if (commit.endAt !== null && r.from <= commit.endAt && commit.endAt < r.to) lastDealtEnd = true;
+    }
+    if (reveal.status === 'ended' && commit.endAt !== null && !lastDealtEnd) errors.push('the shoe ended before its cut card came out');
+    if (reveal.status !== 'ended' && lastDealtEnd) errors.push(`the cut card came out, the shoe should have ended, not ${reveal.status}`);
+    // A shoe for one round (no cut card): the round it was opened for and nothing else, from the first card after the burn.
+    if (rules.endAt === null) {
+      if (reveal.rounds.length > 1) errors.push(`a shoe for one round lists ${reveal.rounds.length} rounds`);
+      if (reveal.rounds.some((r) => r.roundId === null)) errors.push('a shoe for one round lists a hand outside a round');
+      if (reveal.status === 'ended' && reveal.rounds.length === 0) errors.push('a shoe for one round ended without its round');
+    }
+    // Every hand of a card game takes the cards its rules give (section 9), free hands too: a longer one skips cards.
+    const rule = handRule(pair.gameId);
+    if (rule) {
+      for (const r of reveal.rounds) {
+        if (!Number.isSafeInteger(r.from) || !Number.isSafeInteger(r.to)) continue;
+        const want = rule(dealing, r.from);
+        if (want !== r.to - r.from) errors.push(`${r.roundId === null ? 'the free hand' : `round ${r.roundId}`} at cards ${r.from} to ${r.to} takes ${r.to - r.from} cards, a hand of ${pair.gameId} takes ${String(want)} there`);
+      }
+    }
+    // What the player saw: exactly these hands, no more (a hand nobody asked for skips cards), no fewer, none moved.
+    const seen = opts.hands;
+    if (seen !== undefined) {
+      if (!Array.isArray(seen)) errors.push('the hands seen are not a list');
+      else {
+        const listed = reveal.rounds.map((r) => `${r.roundId === null ? 'free hand' : `round ${r.roundId}`} ${r.from}-${r.to}`);
+        const mine = seen.map((r) => `${isObject(r) && r.roundId === null ? 'free hand' : `round ${String(r?.roundId)}`} ${String(r?.from)}-${String(r?.to)}`);
+        if (listed.join(', ') !== mine.join(', ')) errors.push(`the shoe lists ${listed.join(', ') || 'no hand'}; the player saw ${mine.join(', ') || 'none'}`);
+      }
+    }
+    if (errors.length === 0 && reveal.rounds.length > 0) {
+      if (rules.cutPolicy === 'player' && want === undefined) unproven.push('the cut the player asked for on this shoe is not given');
+      if (rules.endAt !== null && seen === undefined) unproven.push('the hands the player saw dealt from this shoe are not given');
+    }
+  } catch (err) {
+    errors.push(`the record cannot be checked: ${errorText(err)}`);
+    dealing = null;
+  }
+  const ok = errors.length === 0;
+  return { ok, errors, dealing, provable: ok && unproven.length === 0, unproven: ok ? unproven : [] };
+}
+
+/** What a check before the reveal found: errors (a contradiction already), and what it could not bind yet. */
+                                                    
+                                                                                                                          
+                     
+ 
+
+/**
+ * A shoe still in play, before its reveal: what its commitment binds already (SPEC section 8). Its fields; the game,
+ * rules and cut policy of the kept pair's game; its origin (the pair, the root, the terminal among the root lines of
+ * the game's tables), the client seed sent and set after the pair was shown, the commitment after it (and before the
+ * pair's reveal); `clientSeedBy` "player"; kAuto recomputed. The order is still secret: ok says only that nothing
+ * contradicts the kept pair. Without the pair the commitment is checked against the game's rules only.
+ */
+function verifyShoeCommit(commit            , options                                                  = {})               {
+  const errors           = [];
+  const unproven           = [];
+  try {
+    commitShape(commit, errors);
+    if (errors.length > 0) return { ok: false, errors, unproven: [] };
+    const pair = options.pair ?? null;
+    const game = isObject(pair) ? pair.gameId : commit.gameId;
+    if (isObject(pair) && commit.gameId !== pair.gameId) errors.push(`the shoe is of ${commit.gameId}, the pair of ${String(pair.gameId)}`);
+    const rules = options.rules ?? (isGameId(game) ? shoeRulesFor(game) : null);
+    if (!rules) errors.push(`no published shoe rules for ${String(game)}`);
+    else for (const d of shoeRulesDiff(commit, rules)) errors.push(`the commitment breaks the rules: ${d}`);
+    if (isObject(pair)) shoeOrigin(commit, pair, rules, errors);
+    else unproven.push('the pair of its chain as kept before the client seed is not given');
+    const [min, max] = commit.cutRange;
+    const inputs = { gameId: commit.gameId, table: commit.table, clientSeed: commit.clientSeed, shoeNo: commit.shoeNo };
+    if (autoCut(inputs, min, max) !== commit.autoCut) errors.push('the automatic cut is not kAuto');
+  } catch (err) {
+    errors.push(`the commitment cannot be checked: ${errorText(err)}`);
+  }
+  const ok = errors.length === 0;
+  return { ok, errors, unproven: ok ? unproven : [] };
+}
+
+/**
+ * A round proof before its pair is revealed (no server seed yet): what it binds already (SPEC section 8). Its
+ * algorithm and fields; against the kept pair of its seed id the game, the server seed hash and the client seed, set
+ * after the pair was shown and not sent for another kept pair; `clientSeedBy` "player"; nonces increasing, known step
+ * statuses, well-formed shoe slices. Its draws can be checked only with the server seed: ok says only that nothing
+ * contradicts the kept pair.
+ */
+function verifyProofBinding(proof            , options                                                          = {})               {
+  const errors           = [];
+  const unproven           = [];
+  try {
+    if (!isObject(proof)) return { ok: false, errors: ['the proof is not an object'], unproven: [] };
+    if (proof.alg !== ALG) errors.push(`unknown algorithm ${String(proof.alg)}`);
+    if (typeof proof.id !== 'string' || typeof proof.seedId !== 'string') errors.push('bad proof or pair id');
+    if (!isGameId(proof.gameId)) errors.push('bad game id');
+    if (!isClientSeed(proof.clientSeed)) errors.push('bad client seed');
+    if (!isHex(proof.serverSeedHash, 32)) errors.push('bad server seed hash');
+    if (!Array.isArray(proof.steps) || !Array.isArray(proof.shoes)) errors.push('bad steps or shoes');
+    if (errors.length > 0) return { ok: false, errors, unproven: [] };
+    if (proof.clientSeedBy !== 'player') errors.push(proof.clientSeedBy === 'server' ? NOT_PROVABLE : 'the proof does not say who set the client seed');
+    const kept = options.pair ?? options.pairs?.find((p) => p?.seedId === proof.seedId) ?? null;
+    if (kept) {
+      for (const e of keptErrors(kept, proof, 'proof')) errors.push(e);
+      for (const e of reusedSeed(kept, options.pairs)) errors.push(e);
+    } else unproven.push('the pair as kept before the client seed is not given');
+    let last = -1;
+    for (const step of proof.steps) {
+      if (!isObject(step) || !Number.isSafeInteger(step.nonce) || step.nonce <= last) {
+        errors.push(`nonce ${String(step?.nonce)}: not increasing`);
+        continue;
+      }
+      last = step.nonce;
+      if (step.status !== 'ok' && step.status !== 'discarded') errors.push(`nonce ${step.nonce}: unknown status ${String(step.status)}`);
+    }
+    for (const slice of proof.shoes) {
+      if (!isObject(slice) || typeof slice.shoe !== 'string' || !isTableRef(slice.table) || !Number.isSafeInteger(slice.from) || !Number.isSafeInteger(slice.to)) errors.push(`bad shoe slice ${JSON.stringify(slice)}`);
+    }
+  } catch (err) {
+    errors.push(`the proof cannot be checked: ${errorText(err)}`);
+  }
+  const ok = errors.length === 0;
+  return { ok, errors, unproven: ok ? unproven : [] };
+}
+
+// ------------------------------------------------------------------------------------------------ rounds
+
+                                     
+     
+                                                                                                                    
+                                                                                                     
+     
+                  
+                                                                                                                       
+                                
+     
+                                                                                                                    
+                                                                                                                   
+                                                               
+     
+                              
+     
+                                                                                                                    
+                                                                                                                     
+              
+     
+                      
+ 
+
+                                                  
+                                                                                                                                 
+                    
+                                                                                                                              
+                      
+                                                                                                                          
+                             
+                                                                                                                    
+                        
+ 
+
+/** What differs between a record of a pair and the pair as the player kept it. */
+function keptErrors(kept          , rec                                                                                       , what        )           {
+  const out           = [];
+  if (kept.seedId !== rec.seedId) out.push(`the ${what} belongs to pair ${String(rec.seedId)}, not ${String(kept.seedId)}`);
+  if (kept.gameId !== rec.gameId) out.push(`the ${what} is of ${String(rec.gameId)}, the pair of ${String(kept.gameId)}`);
+  if (kept.serverSeedHash !== rec.serverSeedHash) out.push(`the ${what} has another server seed hash than the pair kept before the client seed`);
+  if (kept.clientSeed !== rec.clientSeed) out.push(`the ${what} has another client seed than the one sent (${String(kept.clientSeed)})`);
+  if ((kept.clientSeed !== null || rec.clientSeed !== null) && (kept.clientSeedAt === null || !(kept.clientSeedAt > kept.committedAt))) out.push('the client seed was not set after the pair was shown');
+  return out;
+}
+
+/**
+ * The kept pair's client seed was sent for another kept pair of the game too. A client seed the server knew before it
+ * made a pair lets it try server seeds and chains until it likes the outcomes. One sending that a rotation carried
+ * over to the next pair (committed before it) is not a second use: both pairs keep the same clientSeedAt.
+ */
+function reusedSeed(kept          , pairs                                 )           {
+  if (typeof kept.clientSeed !== 'string') return [];
+  const out           = [];
+  for (const p of pairs ?? []) {
+    if (!isObject(p) || p.seedId === kept.seedId || p.clientSeed !== kept.clientSeed || p.clientSeedAt === kept.clientSeedAt) continue;
+    out.push(`the client seed was sent for pair ${String(p.seedId)} too: a client seed used again proves nothing`);
+  }
+  return out;
+}
+
+/**
+ * A round proof against its server seed (taken from the proof once revealed, or given): the seed matches the hash,
+ * the hash, game and client seed are the kept pair's, every draw of every step is what int(n) gives on the round
+ * stream of the step's nonce (with the same number of words read), every shoe slice is a round of a verified shoe of
+ * the same game and table (the player's table when given), a shoe of an earlier pair lies within that pair's final
+ * shoes, a card game's round has its own slice, and for a mapped game the outcome follows from the draws and cards.
+ * Discarded steps are checked like the others and counted.
+ */
+function verifyRound(proof            , serverSeed                = proof?.serverSeed ?? null, options                     = {})             {
+  const errors           = [];
+  const unproven           = [];
+  const none               = { checked: false, summary: null, errors: [] };
+  const fail = ()             => ({ ok: false, errors, provable: false, unproven: [], cards: null, outcome: none });
+  try {
+    if (!isObject(proof)) {
+      errors.push('the proof is not an object');
+      return fail();
+    }
+    if (proof.alg !== ALG) errors.push(`unknown algorithm ${String(proof.alg)}`);
+    if (!isGameId(proof.gameId)) errors.push('bad game id');
+    if (!isClientSeed(proof.clientSeed)) errors.push('bad client seed');
+    if (!Array.isArray(proof.steps) || !Array.isArray(proof.shoes)) errors.push('bad steps or shoes');
+    if (serverSeed === null || serverSeed === undefined) errors.push('the server seed is not revealed yet');
+    else if (!verifyServerSeed(serverSeed, proof.serverSeedHash)) errors.push('the server seed does not match its hash');
+    if (errors.length > 0) return fail();
+    if (proof.clientSeedBy !== 'player') errors.push(proof.clientSeedBy === 'server' ? NOT_PROVABLE : 'the proof does not say who set the client seed');
+    const kept = options.pair ?? options.pairs?.find((p) => p?.seedId === proof.seedId) ?? null;
+    if (kept) {
+      for (const e of keptErrors(kept, proof, 'proof')) errors.push(e);
+      for (const e of reusedSeed(kept, options.pairs)) errors.push(e);
+    } else unproven.push('the pair as kept before the client seed is not given');
+    let last = -1;
+    for (const step of proof.steps) {
+      if (!isObject(step) || !Number.isSafeInteger(step.nonce) || step.nonce <= last) {
+        errors.push(`nonce ${String(step?.nonce)}: not increasing`);
+        continue;
+      }
+      if (step.status !== 'ok' && step.status !== 'discarded') errors.push(`nonce ${step.nonce}: unknown status ${String(step.status)}`);
+      last = step.nonce;
+      const rng = roundRng(serverSeed          , proof.gameId, proof.clientSeed, step.nonce);
+      let i = 0;
+      const draws = Array.isArray(step.draws) ? step.draws : [];
+      for (const d of draws) {
+        if (!isObject(d) || !isIntRange(d.n)) {
+          errors.push(`nonce ${step.nonce}, draw ${i}: bad range ${String(d?.n)}`);
+          break;
+        }
+        const v = rng.int(d.n);
+        if (v !== d.v) {
+          errors.push(`nonce ${step.nonce}, draw ${i}: int(${d.n}) is ${v}, the proof says ${String(d.v)}`);
+          break;
+        }
+        i++;
+      }
+      if (i === draws.length && rng.words !== step.words) errors.push(`nonce ${step.nonce}: ${rng.words} words read, the proof says ${String(step.words)}`);
+    }
+    // A round of a game with a shoe is dealt from a committed shoe (blackjack: its own): without its slice the cards
+    // it claims are bound to nothing. The card family's mapping checks the one own slice itself (section 9).
+    const rules = shoeRulesFor(proof.gameId);
+    const dealt = rules !== null && proof.roundId !== null && proof.outcome !== null && (proof.outcome                      ).void !== true;
+    if (dealt && proof.shoes.length === 0) errors.push('the round has no shoe slice: its cards are not on record');
+    const slices = proof.shoes.length > 0 ? roundCards(proof, kept, options, errors, unproven) : null;
+    const cards = slices?.cards ?? null;
+    if (dealt && slices?.own && slices.own.length !== 1 && !CARD_GAMES.includes(proof.gameId)) errors.push(`the round has ${slices.own.length} shoe slices of its own, one expected`);
+    // The table of the round: the one the player bet at, the one its hand was dealt at, the one its outcome names.
+    if (slices?.ownTables && proof.roundId !== null) {
+      const bet = options.own?.tables?.[proof.roundId];
+      const named = outcomeDetail(proof)?.table;
+      for (const t of new Set(slices.ownTables)) {
+        if (bet !== undefined && t !== bet) errors.push(`the round was dealt at table ${t}, the player bet at table ${String(bet)}`);
+        if (named !== undefined && named !== t) errors.push(`the outcome names table ${String(named)}, the round was dealt at table ${t}`);
+      }
+      if (dealt && rules.tables > 1 && bet === undefined) unproven.push(`the table the player bet at in round ${proof.roundId} is not given`);
+    }
+    // The round's own hands: the slices its shoes list under its round id (a free hand before it may ride along).
+    const outcome = checkOutcome(proof, slices?.own ?? null);
+    for (const e of outcome.errors) errors.push(`outcome: ${e}`);
+    if (MAPPED_GAMES.includes(proof.gameId) && outcomeDetail(proof) && !outcome.checked) unproven.push('the outcome of this mapped game was not checked');
+    const ok = errors.length === 0;
+    return { ok, errors, provable: ok && unproven.length === 0, unproven: ok ? [...new Set(unproven)] : [], cards, outcome };
+  } catch (err) {
+    errors.push(`the proof cannot be checked: ${errorText(err)}`);
+    return fail();
+  }
+}
+
+/**
+ * The cards of every slice, each checked against its verified shoe (of the proof's game, at the slice's table, under
+ * its kept pair, with the player's cut and hands of that shoe); null (with errors) when one cannot be. `own`: the
+ * slices the shoes list under the proof's round id, `ownTables` their tables. A shoe of another pair than the
+ * proof's: only of an earlier pair whose chains still dealt after its rotation, within the last shoe numbers of its
+ * reveal as the player received it, and never for a game that deals each round from a shoe of its own.
+ */
+function roundCards(
+  proof            ,
+  kept                 ,
+  options                    ,
+  errors          ,
+  unproven          ,
+)                                                                                       {
+  const shoes = options.shoes ?? [];
+  const own = options.own;
+  const checked = new Map                   ();
+  const out               = [];
+  const mine               = [];
+  const tables           = [];
+  let ok = true;
+  for (const slice of proof.shoes) {
+    if (!isObject(slice) || typeof slice.shoe !== 'string' || !isTableRef(slice.table) || !Number.isSafeInteger(slice.from) || !Number.isSafeInteger(slice.to)) {
+      errors.push(`bad shoe slice ${JSON.stringify(slice)}`);
+      ok = false;
+      continue;
+    }
+    const record = shoes.find((s) => s?.commit?.shoe === slice.shoe);
+    if (!record) {
+      errors.push(`shoe ${slice.shoe}: record not given`);
+      ok = false;
+      continue;
+    }
+    if (!record.reveal) {
+      errors.push(`shoe ${slice.shoe} is still running: its cards can be checked once it is revealed`);
+      ok = false;
+      continue;
+    }
+    let check = checked.get(slice.shoe);
+    if (!check) {
+      if (record.commit.gameId !== proof.gameId) errors.push(`shoe ${slice.shoe} is of ${String(record.commit.gameId)}, the round of ${proof.gameId}`);
+      const seedId = record.commit.origin?.seedId;
+      const pair = seedId === proof.seedId ? kept : (options.pairs?.find((p) => p?.seedId === seedId) ?? null);
+      if (!pair) {
+        errors.push(`shoe ${slice.shoe}: the pair ${String(seedId)} of its chain was not given as kept`);
+        ok = false;
+        continue;
+      }
+      if (seedId !== proof.seedId) {
+        // A shoe that ran on across a rotation. Its pair's reveal fixed the last shoe of each chain for good.
+        if (shoeRulesFor(proof.gameId)?.endAt === null) errors.push(`shoe ${slice.shoe} belongs to pair ${String(seedId)}: every round of ${proof.gameId} is dealt from a shoe of its own pair`);
+        const last = Array.isArray(pair.lastShoes) ? pair.lastShoes.find((x) => isObject(x) && x.table === record.commit.table) : undefined;
+        if (!Array.isArray(pair.lastShoes)) unproven.push(`the reveal of pair ${String(seedId)} as received at its rotation (its last shoe numbers) is not given`);
+        else if (!last || record.commit.shoeNo > last.shoeNo) errors.push(`shoe ${slice.shoe} is shoe ${record.commit.shoeNo} of table ${record.commit.table} of pair ${String(seedId)}, whose reveal ended that chain at shoe ${String(last?.shoeNo ?? 0)}`);
+      }
+      const expectedCut = own?.cuts?.[slice.shoe];
+      const hands = own?.hands?.[slice.shoe];
+      check = verifyShoe(record.commit, record.reveal, { pair, ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
+      checked.set(slice.shoe, check);
+      // A shoe under the same server-picked client seed is reported once, for the proof.
+      for (const e of check.errors) if (e !== NOT_PROVABLE || proof.clientSeedBy === 'player') errors.push(`shoe ${slice.shoe}: ${e}`);
+      for (const u of check.unproven ?? []) unproven.push(`shoe ${slice.shoe}: ${u}`);
+    }
+    if (record.commit.table !== slice.table) errors.push(`shoe ${slice.shoe} is at table ${String(record.commit.table)}, the round at table ${slice.table}`);
+    if (!check.dealing) {
+      ok = false;
+      continue;
+    }
+    const round = record.reveal.rounds.find((r) => r.from === slice.from && r.to === slice.to);
+    if (!round) errors.push(`shoe ${slice.shoe}: cards ${slice.from} to ${slice.to} are not a round of the shoe`);
+    else if (round.roundId !== null && round.roundId !== proof.roundId) errors.push(`shoe ${slice.shoe}: cards ${slice.from} to ${slice.to} are round ${round.roundId}, not ${String(proof.roundId)}`);
+    const cards = check.dealing.slice(slice.from, slice.to);
+    out.push(cards);
+    if (round && proof.roundId !== null && round.roundId === proof.roundId) {
+      mine.push(cards);
+      tables.push(slice.table);
+    }
+  }
+  return ok ? { cards: out, own: mine, ownTables: tables } : { cards: null, own: null, ownTables: null };
+}
+
+// ------------------------------------------------------------------------------------------------ pairs
+
+/**
+ * A revealed pair: the seed matches its hash, the root matches its lines, the last shoe numbers name the root's
+ * tables, and the client seed was the player's, set after the pair was shown (an unused pair needs none).
+ */
+function verifySeedReveal(r            )               {
+  const errors           = [];
+  try {
+    if (!isObject(r)) return { ok: false, errors: ['the reveal is not an object'] };
+    if (!verifyServerSeed(r.serverSeed, r.serverSeedHash)) errors.push('the server seed does not match its hash');
+    if (r.root && !verifyRoot(r.root.hash, r.root.lines)) errors.push('the root does not match its lines');
+    if (!Number.isSafeInteger(r.lastNonce) || r.lastNonce < -1) errors.push('bad last nonce');
+    const tables = (r.root?.lines ?? []).map((l) => Number(String(l).split(':')[1]));
+    const last = Array.isArray(r.lastShoes) ? r.lastShoes : null;
+    if (!last || !last.every((x) => isObject(x) && isTableRef(x.table) && isCount(x.shoeNo))) errors.push('bad last shoe numbers');
+    else if (last.length !== tables.length || !tables.every((t) => last.filter((x) => x.table === t).length === 1)) errors.push('the last shoe numbers do not name the tables of the root');
+    if (r.clientSeed === null) {
+      if (r.lastNonce >= 0 || (last ?? []).some((x) => x.shoeNo > 0)) errors.push('nonces or shoes were spent without a client seed');
+    } else {
+      if (!isClientSeed(r.clientSeed)) errors.push('bad client seed');
+      if (r.clientSeedBy !== 'player') errors.push(r.clientSeedBy === 'server' ? NOT_PROVABLE : 'the reveal does not say who set the client seed');
+      if (r.clientSeedAt === null || !(r.clientSeedAt > r.committedAt)) errors.push('the client seed was not set after the pair was shown');
+    }
+  } catch (err) {
+    errors.push(`the reveal cannot be checked: ${errorText(err)}`);
+  }
+  return { ok: errors.length === 0, errors };
+}
+
+/**
+ * What the player received and did, kept on the player's side (the server cannot take it back). It shows a record
+ * that the server leaves out at the end of its lists, where no gap gives it away, and it binds what only the player
+ * knows: the cuts it asked for, the hands it saw dealt, the tables it bet at.
+ */
+                                
+                                                                                                              
+                             
+                                                                                                                     
+                            
+                                                                                                                       
+                 
+                                                                                                          
+                                                           
+     
+                                                                                                                     
+                                                                                                         
+     
+                                                        
+                                                                                                                  
+                                            
+ 
+
+                                    
+                                                                                                                            
+                 
+     
+                                                                                                                       
+                                                                                                                           
+     
+                              
+     
+                                                                                                                     
+                                                                          
+     
+                                
+                                                                                                                   
+                      
+ 
+
+                                                 
+                                                                                                              
+                    
+                                                               
+                      
+           
+                   
+                                                                               
+                  
+                      
+                                                                 
+                   
+                  
+                  
+                     
+                    
+                                                                                                                 
+                    
+                                                                                   
+                  
+    
+ 
+
+/** The same last shoe numbers (in any order). */
+function sameLastShoes(a                                                  , b         )          {
+  if (!Array.isArray(b)) return false;
+  const key = (l                                                  )         => l.map((x) => `${String(x?.table)}:${String(x?.shoeNo)}`).sort().join(',');
+  return key(a) === key(b                                            );
+}
+
+/**
+ * Everything on record for a revealed pair (PairRecords: every proof and every shoe of its chains), against the pair
+ * as the player kept it: the reveal verifies and is the kept pair (seed id, game, hash, root, client seed, and the
+ * last shoe numbers and time of the reveal received at the rotation when kept); every proof verifies under it; every
+ * nonce 0 ... lastNonce is in exactly one proof; the shoes of each table are numbered 1 ... the reveal's last shoe
+ * number without a gap, each verified against the kept pair (with the player's cut and hands), at most two of them
+ * (the running one and one committed ahead) still in play at the reveal; every round a shoe lists under the id of one
+ * of the proofs is in that proof, and every round a shoe of the pair lists is in a proof; the client seed was not
+ * sent for another kept pair; and everything in the player's own records is there. Discarded steps, void rounds,
+ * free hands and aborted shoes are counted: the verifier cannot tell why the server discarded or aborted them.
+ * `shoes` may include shoes of earlier pairs that rounds of this pair were dealt from; `pairs` names those pairs.
+ */
+function verifyPair(seed            , proofs                       , shoes                       , options                   )            {
+  const errors           = [];
+  const unproven           = [];
+  const counts                      = { proofs: 0, steps: 0, discarded: 0, voided: 0, shoes: 0, ended: 0, shuffled: 0, aborted: 0, running: 0, free: 0 };
+  try {
+    for (const e of verifySeedReveal(seed).errors) errors.push(`pair: ${e}`);
+    const kept = options?.pair;
+    if (!isObject(kept)) {
+      errors.push('no pair: pass the pair as kept before the client seed was sent');
+      return { ok: false, provable: false, unproven: [], errors, counts };
+    }
+    for (const e of keptErrors(kept, seed, 'reveal')) errors.push(`pair: ${e}`);
+    if ((kept.root?.hash ?? null) !== (seed.root?.hash ?? null)) errors.push('pair: the revealed root is not the one kept before the client seed');
+    // The reveal received at the rotation is the player's record: a later one must say the same.
+    if (Array.isArray(kept.lastShoes) && !sameLastShoes(kept.lastShoes, seed.lastShoes)) errors.push('pair: the last shoe numbers are not those of the reveal received at the rotation');
+    if (typeof kept.revealedAt === 'number' && kept.revealedAt !== seed.revealedAt) errors.push('pair: the reveal time is not that of the reveal received at the rotation');
+    for (const e of reusedSeed(kept, options.pairs)) errors.push(`pair: ${e}`);
+    const rules = shoeRulesFor(kept.gameId);
+    if (rules && kept.root) for (const e of rootLineErrors(kept.gameId, kept.root.lines, rules.tables)) errors.push(`pair: ${e}`);
+    const own = options.own;
+    // The kept pair, now with its reveal time: no shoe of its chains may be committed after it.
+    const pair           = { ...kept, revealedAt: seed.revealedAt };
+    const pairs             = [pair, ...(options.pairs ?? []).filter((p) => p?.seedId !== pair.seedId)];
+    const seen = new Map                ();
+    const mine               = [];
+    for (const p of proofs) {
+      counts.proofs++;
+      if (p.seedId !== seed.seedId || p.serverSeedHash !== seed.serverSeedHash) {
+        errors.push(`proof ${p.id}: belongs to another pair`);
+        continue;
+      }
+      mine.push(p);
+      if ((p.outcome                             )?.void === true) counts.voided++;
+      for (const s of p.steps) {
+        counts.steps++;
+        if (s.status === 'discarded') counts.discarded++;
+        seen.set(s.nonce, (seen.get(s.nonce) ?? 0) + 1);
+      }
+      const r = verifyRound(p, seed.serverSeed, { pair, shoes, pairs, ...(own ? { own } : {}) });
+      for (const e of r.errors) if (e !== NOT_PROVABLE) errors.push(`proof ${p.id}: ${e}`);
+      for (const u of r.unproven ?? []) unproven.push(`proof ${p.id}: ${u}`);
+    }
+    // Nonces 0 ... lastNonce, each in one proof; a run missing from the proofs is one line (a hostile lastNonce of
+    // millions costs no loop over it).
+    const lastNonce = Number.isSafeInteger(seed.lastNonce) ? seed.lastNonce : -1;
+    const spent = [...seen.keys()].filter((n) => n >= 0 && n <= lastNonce).sort((a, b) => a - b);
+    const missing = (from        , to        )       => {
+      if (from <= to) errors.push(from === to ? `nonce ${from} is in no proof` : `nonces ${from} to ${to} are in no proof`);
+    };
+    let next = 0;
+    for (const n of spent) {
+      missing(next, n - 1);
+      const c = seen.get(n) ;
+      if (c > 1) errors.push(`nonce ${n} is in ${c} proofs`);
+      next = n + 1;
+    }
+    missing(next, lastNonce);
+    for (const n of seen.keys()) if (n > lastNonce || n < 0) errors.push(`nonce ${n} is outside 0 to ${String(seed.lastNonce)}`);
+    const byTable = new Map                  ();
+    for (const s of shoes) {
+      if (s.commit.origin?.seedId !== seed.seedId) continue;
+      counts.shoes++;
+      byTable.set(s.commit.table, [...(byTable.get(s.commit.table) ?? []), s.commit.shoeNo]);
+      if (!s.reveal) {
+        counts.running++;
+        continue;
+      }
+      counts[s.reveal.status]++;
+      counts.free  += Array.isArray(s.reveal.rounds) ? s.reveal.rounds.filter((r) => r?.roundId === null).length : 0;
+      const id = s.commit.shoe;
+      const expectedCut = own?.cuts?.[id];
+      const hands = own?.hands?.[id];
+      const check = verifyShoe(s.commit, s.reveal, { pair, ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
+      for (const e of check.errors) if (e !== NOT_PROVABLE) errors.push(`shoe ${id}: ${e}`);
+      for (const u of check.unproven ?? []) unproven.push(`shoe ${id}: ${u}`);
+    }
+    // At the reveal at most the running shoe of a table and one committed ahead were still in play (section 5): any
+    // more would let the server choose between the old chain and the new one.
+    const inPlay = new Map                ();
+    for (const s of shoes) if (s.commit.origin?.seedId === seed.seedId && (!s.reveal || s.reveal.at > seed.revealedAt)) inPlay.set(s.commit.table, (inPlay.get(s.commit.table) ?? 0) + 1);
+    for (const [table, n] of inPlay) if (n > 2) errors.push(`table ${table}: ${n} shoes of the pair were still in play at its reveal, at most the running one and one committed ahead`);
+    // Shoes 1 ... the last number the reveal gives for each chain, each exactly once.
+    const last = new Map                ((Array.isArray(seed.lastShoes) ? seed.lastShoes : []).map((x) => [x.table, x.shoeNo]));
+    for (const table of byTable.keys()) if (!last.has(table)) errors.push(`table ${table}: shoes of a chain the reveal does not list`);
+    for (const [table, lastNo] of last) {
+      const sorted = [...(byTable.get(table) ?? [])].sort((a, b) => a - b);
+      for (let no = 1; no <= Math.max(lastNo, sorted.length); no++) {
+        if (sorted[no - 1] !== no || no > lastNo) {
+          errors.push(`table ${table}: shoes 1 to ${lastNo} expected, found ${sorted.join(', ') || 'none'}`);
+          break;
+        }
+      }
+    }
+    // Every round a shoe lists under the id of one of the proofs is a slice of that proof; every round a shoe of this
+    // pair lists is a round on record (of this pair, or of a later one given): a round without a proof binds nothing.
+    const later = (options.later ?? []).filter((p) => isObject(p) && p.seedId !== seed.seedId);
+    for (const s of shoes) {
+      if (!s.reveal) continue;
+      const ofPair = s.commit.origin?.seedId === seed.seedId;
+      for (const r of s.reveal.rounds) {
+        if (r.roundId === null) continue;
+        const p = mine.find((x) => x.roundId === r.roundId) ?? (ofPair ? later.find((x) => x.roundId === r.roundId) : undefined);
+        if (p && !p.shoes.some((x) => x.shoe === s.commit.shoe && x.from === r.from && x.to === r.to)) errors.push(`proof ${p.id}: shoe ${s.commit.shoe} dealt cards ${r.from} to ${r.to} to round ${r.roundId}, the proof does not list them`);
+        if (!p && ofPair) errors.push(`shoe ${s.commit.shoe} dealt cards ${r.from} to ${r.to} to round ${r.roundId}, which is in no proof given`);
+      }
+    }
+    // What the player received must be on record.
+    const proofIds = new Set(proofs.map((p) => p.id));
+    for (const id of own?.proofs ?? []) if (!proofIds.has(id)) errors.push(`proof ${id}: received by the player, not on record`);
+    const shoeIds = new Set(shoes.map((s) => s.commit.shoe));
+    for (const id of own?.shoes ?? []) if (!shoeIds.has(id)) errors.push(`shoe ${id}: its commitment was received by the player, not on record`);
+    if (own?.nonce !== undefined && (!Number.isSafeInteger(own.nonce) || seed.lastNonce < own.nonce - 1)) errors.push(`nonces 0 to ${String(own.nonce - 1)} were spent before the rotation, the reveal says 0 to ${seed.lastNonce}`);
+    if (!own) unproven.push("the player's own records (proofs and shoes received, the nonce before the rotation) are not given");
+    else {
+      const missing = [own.proofs === undefined ? 'the proofs received' : '', own.shoes === undefined ? 'the shoe commitments received' : '', own.nonce === undefined ? 'the nonce before the rotation' : ''].filter(Boolean);
+      if (missing.length > 0) unproven.push(`the player's own records lack ${missing.join(', ')}`);
+    }
+  } catch (err) {
+    errors.push(`the pair cannot be checked: ${errorText(err)}`);
+  }
+  // One line per missing shoe number is enough.
+  const unique = [...new Set(errors)];
+  const ok = unique.length === 0;
+  const open = ok ? [...new Set(unproven)] : [];
+  return { ok, provable: ok && open.length === 0, unproven: open, errors: unique, counts };
+}
+
+function sameHex(bytes            , hex        )          {
+  const other = isHex(hex) ? fromHex(hex) : null;
+  if (!other || other.length !== bytes.length) return false;
+  for (let i = 0; i < bytes.length; i++) if (bytes[i] !== other[i]) return false;
+  return true;
+}
+return Object.freeze({ verifyServerSeed, verifyRoot, verifyShoe, verifyShoeCommit, verifyProofBinding, verifyRound, verifySeedReveal, verifyPair });
+})();
+// src/index.ts
+const m11 = (() => {
+
+/**
+ * fairshoe: provably fair random streams, committed card shoes and their verifiers, algorithm fairshoe/v1 (SPEC.md).
+ * Self-contained on purpose: it imports no other package, its own server's or a third party's, so it is published on
+ * its own as the public repository `fairshoe` and runs unchanged in Node, browsers and a static verifier page.
+ */
+return Object.freeze({ ...m0, ...m3, ...m1, ...m6, ...m7, ...m8, ...m9, ...m2, ...m5, ...m4, ...m10 });
+})();
+// bin/report.ts
+const m12 = (() => {
+const { ALG, LIB, verifyPair, verifyProofBinding, verifyRound, verifySeedReveal, verifyShoe, verifyShoeCommit } = m11;
+/**
+ * What fairshoe-verify does, without files or a terminal (the page in web/ runs the same code): sort JSON values into
+ * one bundle (what the player kept, what the server revealed), run the verifiers on everything in it and report every
+ * check as provable, ok (but not provable), failed or pending (not checkable yet), with the reasons. The whole bundle
+ * is provable only when at least one shoe, proof or pair was checked and every check is provable; a bundle whose
+ * shoes and proofs all wait for their reveal is pending. A pending shoe or proof is still checked for what it binds
+ * already (verifyShoeCommit, verifyProofBinding): a contradiction with the kept pair fails before any reveal.
+ *
+ * A bundle is an object with any of these keys (all optional, at least one record to check):
+ *
+ *   kept     PairSeen        the pair as the player kept it before sending the client seed, with that seed
+ *   own      PlayerRecords   the player's own records of that pair (proofs and shoes received, nonce, cuts, hands, tables)
+ *   pairs    [PairSeen]      other kept pairs of the game (earlier pairs whose shoes dealt rounds of this one)
+ *   seed     SeedReveal      the pair's reveal
+ *   proofs   [RoundProof]    the pair's round proofs
+ *   shoes    [ShoeRecord]    shoes ({ commit, reveal }) of the pair's chains and of earlier pairs that dealt its rounds
+ *   later    [RoundProof]    proofs of later pairs dealt from this pair's shoes after the rotation
+ *   records  PairRecords     the server's list of the pair's proofs and shoes
+ *   note     string          a comment, ignored
+ *
+ * A value may also be one record as a server hands it out (a round proof, a shoe record, a reveal, a record list) or
+ * an array of them. Several values make one bundle: lists are joined, a record given twice must be the same.
+ */
+
+
+                         
+                  
+                      
+                     
+                    
+                        
+                       
+                       
+                        
+ 
+
+const SINGLE = ['kept', 'own', 'seed', 'records']         ;
+const LISTS = ['pairs', 'proofs', 'shoes', 'later']         ;
+const KEYS                    = [...SINGLE, ...LISTS, 'note'];
+
+/** The input cannot be read as a bundle (exit code 3): nothing was verified. */
+class InputError extends Error {}
+
+/** provable: ok and bound to the player's records; ok: the records agree, not provable; pending: not checkable yet. */
+                                                              
+
+                        
+                                                                  
+             
+                                        
+                
+                 
+              
+                                                                                       
+                           
+                   
+                                                
+                     
+ 
+
+                         
+              
+              
+                                                                               
+                 
+              
+                    
+                  
+ 
+
+/** Exit codes of fairshoe-verify: ok and pending share 2 (not provable, nothing failed); 4 is a fault of the verifier itself. */
+const EXIT = { provable: 0, failed: 1, ok: 2, pending: 2, input: 3, internal: 4 }         ;
+
+// ------------------------------------------------------------------------------------------------ input
+
+                                   
+
+const isObj = (v         )           => typeof v === 'object' && v !== null && !Array.isArray(v);
+
+/** JSON with sorted keys: the same record in two files compares equal whatever the key order. */
+function canonical(v         )         {
+  if (Array.isArray(v)) return `[${v.map(canonical).join(',')}]`;
+  if (isObj(v)) return `{${Object.keys(v).sort().map((k) => `${JSON.stringify(k)}:${canonical(v[k])}`).join(',')}}`;
+  return JSON.stringify(v) ?? 'null';
+}
+
+const isIds = (x         )                => Array.isArray(x) && x.every((s) => typeof s === 'string');
+
+                                                        
+
+/** What a single record is, by its fields. */
+function recordKind(v     )                    {
+  const keys = Object.keys(v);
+  if (Array.isArray(v.steps) && typeof v.seedId === 'string') return 'proof';
+  if (isObj(v.commit) && keys.every((k) => k === 'commit' || k === 'reveal')) return 'shoe';
+  if (typeof v.serverSeed === 'string' && typeof v.lastNonce === 'number' && typeof v.seedId === 'string') return 'seed';
+  if (typeof v.seedId === 'string' && isIds(v.proofs) && isIds(v.shoes)) return 'records';
+  return null;
+}
+
+const idOf = {
+  pairs: (p         ) => String((p       )?.seedId),
+  proofs: (p         ) => String((p       )?.id),
+  later: (p         ) => String((p       )?.id),
+  shoes: (s         ) => String(((s       )?.commit                   )?.shoe),
+};
+
+/** What each list holds, at least: an entry without it is an input error, not a record to check. */
+const ENTRY                                         = {
+  pairs: 'a kept pair (no "seedId")',
+  proofs: 'a round proof (no "id", "seedId" or "steps")',
+  later: 'a round proof (no "id", "seedId" or "steps")',
+  shoes: 'a shoe record (no "commit")',
+};
+
+function fits(key                        , v     )          {
+  if (key === 'pairs') return typeof v.seedId === 'string';
+  if (key === 'shoes') return isObj(v.commit);
+  return typeof v.id === 'string' && typeof v.seedId === 'string' && Array.isArray(v.steps);
+}
+
+const WHAT                         = {
+  kept: 'kept pair',
+  own: 'set of own records',
+  seed: 'reveal',
+  records: 'record list',
+  pairs: 'kept pair',
+  proofs: 'proof',
+  later: 'proof',
+  shoes: 'shoe',
+};
+
+/**
+ * One bundle from JSON values (`name`: where each came from, for the messages). Throws InputError for a value that is
+ * neither a bundle nor a record, for a field of the wrong kind and for two different values of one record.
+ */
+function collect(inputs                                                 )         {
+  const out                          = {};
+  const from = new Map                ();
+  const single = (key                         , value         , name        )       => {
+    if (!isObj(value)) throw new InputError(`${name}: "${key}" is not an object`);
+    if (key === 'records' && (!isIds(value.proofs) || !isIds(value.shoes))) throw new InputError(`${name}: a record list needs "proofs" and "shoes", lists of ids`);
+    const had = out[key];
+    if (had !== undefined && canonical(had) !== canonical(value))
+      throw new InputError(`${name}: a second ${WHAT[key]} that differs from the one in ${from.get(key)}: verify one pair at a time`);
+    if (had === undefined) {
+      out[key] = value;
+      from.set(key, name);
+    }
+  };
+  const list = (key                        , values         , name        )       => {
+    if (!Array.isArray(values)) throw new InputError(`${name}: "${key}" is not an array`);
+    const have = (out[key] ??= [])             ;
+    for (const v of values) {
+      if (!isObj(v)) throw new InputError(`${name}: an entry of "${key}" is not an object`);
+      if (!fits(key, v)) throw new InputError(`${name}: an entry of "${key}" is not ${ENTRY[key]}`);
+      const id = idOf[key](v);
+      const twin = have.find((x) => idOf[key](x) === id);
+      if (twin === undefined) {
+        have.push(v);
+        from.set(`${key}:${id}`, name);
+      } else if (canonical(twin) !== canonical(v)) throw new InputError(`${name}: ${WHAT[key]} ${id} differs from the one in ${from.get(`${key}:${id}`)}`);
+    }
+  };
+  const take = (value         , name        , nested         )       => {
+    if (Array.isArray(value)) {
+      if (nested) throw new InputError(`${name}: an array inside an array`);
+      value.forEach((v, i) => take(v, `${name}[${i}]`, true));
+      return;
+    }
+    if (!isObj(value)) throw new InputError(`${name}: neither a bundle nor a record of ${ALG}`);
+    const keys = Object.keys(value);
+    if (keys.length > 0 && keys.every((k) => KEYS.includes(k))) {
+      if (nested) throw new InputError(`${name}: a bundle inside an array`);
+      for (const k of SINGLE) if (value[k] !== undefined) single(k, value[k], name);
+      for (const k of LISTS) if (value[k] !== undefined) list(k, value[k], name);
+      return;
+    }
+    const kind = recordKind(value);
+    if (kind === 'proof') list('proofs', [value], name);
+    else if (kind === 'shoe') list('shoes', [value], name);
+    else if (kind === 'seed') single('seed', value, name);
+    else if (kind === 'records') single('records', value, name);
+    else {
+      const unknown = keys.filter((k) => !KEYS.includes(k));
+      const not = unknown.length > 0 ? `; not ${unknown.slice(0, 5).join(', ')}` : '';
+      throw new InputError(`${name}: neither a bundle (keys ${KEYS.join(', ')}${not}) nor a record of ${ALG}`);
+    }
+  };
+  for (const { name, value } of inputs) take(value, name, false);
+  const b = out          ;
+  if (!b.seed && !b.proofs?.length && !b.shoes?.length) throw new InputError('nothing to verify: no reveal, no proof, no shoe');
+  return b;
+}
+
+// ------------------------------------------------------------------------------------------------ checks
+
+function statusOf(ok         , provable                )         {
+  return !ok ? 'failed' : provable === false ? 'ok' : 'provable';
+}
+
+const NO_KEPT = 'the pair as kept before the client seed was sent is not given';
+
+function shoeLabel(s            )         {
+  const c = (s?.commit ?? {})                                 ;
+  const r = s?.reveal;
+  const base = `shoe ${String(c.shoe)} (${String(c.gameId)} table ${String(c.table)}, shoe ${String(c.shoeNo)}`;
+  if (!r) return `${base}, still in play: checkable once it is over)`;
+  const cut = r.cut ? `cut ${String(r.cut.at)} by ${String(r.cut.by)}` : 'no cut';
+  const hands = Array.isArray(r.rounds) ? r.rounds.length : 0;
+  return `${base}, ${String(r.status)}, ${cut}, ${hands} ${hands === 1 ? 'hand' : 'hands'})`;
+}
+
+function proofLabel(p            , outcome               )         {
+  const steps = Array.isArray(p?.steps) ? p.steps : [];
+  const nonces = steps.length === 0 ? 'no nonce' : `${steps.length === 1 ? 'nonce' : 'nonces'} ${steps.map((s) => String(s?.nonce)).join(', ')}`;
+  const what = p?.roundId === null ? 'steps outside a round' : `round ${String(p?.roundId)}`;
+  return `proof ${String(p?.id)} (${String(p?.gameId)} ${what}, ${nonces}${outcome ? `, ${outcome}` : ''})`;
+}
+
+function outcomeText(p            , checked         , summary               )                {
+  if ((p?.outcome                             )?.void === true) return 'void round';
+  if (p?.roundId === null || p?.outcome === null) return null;
+  return checked ? `outcome checked: ${summary ?? ''}`.trim() : 'outcome not checked: no mapping for this game yet (its draws and cards are checked)';
+}
+
+/**
+ * Runs the verifiers on everything in the bundle: each shoe (with the player's cut and hands of it), each proof (with
+ * its pair's server seed), the reveal, the pair with everything on record, and the server's record list against the
+ * records given. Without a kept pair the reveal stands in for it: the records are checked against each other, nothing
+ * is provable.
+ */
+function verifyBundle(b        )         {
+  const checks          = [];
+  const seed = b.seed ?? null;
+  const own = b.own;
+  const shoes = b.shoes ?? [];
+  const proofs = b.proofs ?? [];
+  const later = b.later ?? [];
+  const pairs = b.pairs ?? [];
+  // Stand-in from the reveal: the server's word, so it binds nothing.
+  const stand                  =
+    !b.kept && seed
+      ? { seedId: seed.seedId, gameId: seed.gameId, serverSeedHash: seed.serverSeedHash, root: seed.root, clientSeed: seed.clientSeed, clientSeedBy: seed.clientSeedBy, committedAt: seed.committedAt, clientSeedAt: seed.clientSeedAt }
+      : null;
+  const kept = b.kept ?? stand;
+  // The kept pair with its reveal time once revealed (no shoe of its chains is committed after it), as verifyPair does.
+  const main                  = kept && seed && seed.seedId === kept.seedId ? { ...kept, revealedAt: kept.revealedAt ?? seed.revealedAt } : kept;
+  const all             = [...(main ? [main] : []), ...pairs.filter((p) => p?.seedId !== main?.seedId)];
+  const keptOf = (seedId         )                       => all.find((p) => p?.seedId === seedId);
+  const add = (c       )       => {
+    checks.push(c);
+  };
+
+  if (!b.kept)
+    add({
+      kind: 'kept',
+      id: '',
+      label: 'kept pair',
+      status: 'ok',
+      ok: true,
+      provable: null,
+      errors: [],
+      unproven: [stand ? `${NO_KEPT}: the records are checked against the reveal, which is the server's word` : `${NO_KEPT}: nothing is bound to what the player saw`],
+    });
+
+  for (const s of shoes) {
+    const id = String(s?.commit?.shoe);
+    if (!s?.reveal) {
+      // Still in play: its commitment against the kept pair of its chain already.
+      const r = verifyShoeCommit(s.commit, { pair: keptOf(s.commit?.origin?.seedId) ?? null });
+      add({ kind: 'shoe', id, label: shoeLabel(s), status: r.ok ? 'pending' : 'failed', ok: r.ok, provable: null, errors: r.errors, unproven: r.unproven });
+      continue;
+    }
+    const expectedCut = own?.cuts?.[id];
+    const hands = own?.hands?.[id];
+    const r = verifyShoe(s.commit, s.reveal, {
+      pair: keptOf(s.commit?.origin?.seedId)            ,
+      ...(expectedCut !== undefined ? { expectedCut } : {}),
+      ...(hands !== undefined ? { hands } : {}),
+    });
+    add({ kind: 'shoe', id, label: shoeLabel(s), status: statusOf(r.ok, r.provable), ok: r.ok, provable: r.provable, errors: r.errors, unproven: r.unproven ?? [] });
+  }
+
+  for (const p of [...proofs, ...later]) {
+    const id = String(p?.id);
+    const serverSeed = p?.serverSeed ?? (seed && seed.seedId === p?.seedId ? seed.serverSeed : null);
+    if (serverSeed === null || serverSeed === undefined) {
+      // Not revealed yet: what it binds against the kept pair already.
+      const r = verifyProofBinding(p, { pair: keptOf(p?.seedId) ?? null, pairs: all });
+      add({ kind: 'proof', id, label: proofLabel(p, 'server seed not revealed yet: checkable after the rotation'), status: r.ok ? 'pending' : 'failed', ok: r.ok, provable: null, errors: r.errors, unproven: r.unproven });
+      continue;
+    }
+    const pair = keptOf(p?.seedId);
+    const r = verifyRound(p, serverSeed, { ...(pair ? { pair } : {}), shoes, pairs: all, ...(own ? { own } : {}) });
+    add({
+      kind: 'proof',
+      id,
+      label: proofLabel(p, outcomeText(p, r.outcome.checked, r.outcome.summary)),
+      status: statusOf(r.ok, r.provable),
+      ok: r.ok,
+      provable: r.provable,
+      errors: r.errors,
+      unproven: r.unproven ?? [],
+    });
+  }
+
+  if (seed) {
+    const r = verifySeedReveal(seed);
+    add({ kind: 'reveal', id: String(seed.seedId), label: `reveal ${String(seed.seedId)} (${String(seed.gameId)})`, status: r.ok ? 'ok' : 'failed', ok: r.ok, provable: null, errors: r.errors, unproven: [] });
+    if (kept) {
+      const r2 = verifyPair(seed, proofs, shoes, { pair: kept, pairs, ...(later.length ? { later } : {}), ...(own ? { own } : {}) });
+      const n = r2.counts;
+      const label =
+        `pair ${String(seed.seedId)} (${String(seed.gameId)}): ${n.proofs} ${n.proofs === 1 ? 'proof' : 'proofs'}, ${n.steps} ${n.steps === 1 ? 'step' : 'steps'}` +
+        `${n.discarded ? ` (${n.discarded} discarded)` : ''}${n.voided ? `, ${n.voided} void` : ''}, ${n.shoes} ${n.shoes === 1 ? 'shoe' : 'shoes'}` +
+        `${n.running ? ` (${n.running} in play)` : ''}${n.free ? `, ${n.free} free ${n.free === 1 ? 'hand' : 'hands'}` : ''}`;
+      add({ kind: 'pair', id: String(seed.seedId), label, status: statusOf(r2.ok, r2.provable), ok: r2.ok, provable: r2.provable, errors: r2.errors, unproven: r2.unproven ?? [] });
+    }
+  } else if (b.kept) {
+    add({ kind: 'pair', id: String(b.kept.seedId), label: `pair ${String(b.kept.seedId)} (${String(b.kept.gameId)}): not revealed yet, checkable after the rotation`, status: 'pending', ok: true, provable: null, errors: [], unproven: [] });
+  }
+
+  if (b.records) {
+    const rec = b.records;
+    const errors           = [];
+    const unproven           = [];
+    const pairId = seed?.seedId ?? b.kept?.seedId;
+    if (pairId !== undefined && rec.seedId !== pairId) errors.push(`the record list is of pair ${String(rec.seedId)}, the records given of ${String(pairId)}`);
+    const proofIds = new Set(proofs.map((p) => p?.id));
+    const shoeIds = new Set(shoes.filter((s) => s?.commit?.origin?.seedId === rec.seedId).map((s) => s?.commit?.shoe));
+    for (const id of rec.proofs) if (!proofIds.has(id)) unproven.push(`the server lists proof ${id}: not given here`);
+    for (const id of rec.shoes) if (!shoeIds.has(id)) unproven.push(`the server lists shoe ${id}: not given here`);
+    for (const p of proofs) if (p?.seedId === rec.seedId && !rec.proofs.includes(p.id)) errors.push(`proof ${String(p.id)} of the pair is not in the server's list`);
+    for (const id of shoeIds) if (!rec.shoes.includes(id          )) errors.push(`shoe ${String(id)} of the pair's chains is not in the server's list`);
+    const ok = errors.length === 0;
+    const provable = ok && unproven.length === 0;
+    add({
+      kind: 'records',
+      id: String(rec.seedId),
+      label: `record list of pair ${String(rec.seedId)}: ${rec.proofs.length} ${rec.proofs.length === 1 ? 'proof' : 'proofs'}, ${rec.shoes.length} ${rec.shoes.length === 1 ? 'shoe' : 'shoes'}`,
+      status: statusOf(ok, provable),
+      ok,
+      provable,
+      errors,
+      unproven,
+    });
+  }
+
+  // Without a kept pair nothing is provable, however well the records agree.
+  if (!b.kept)
+    for (const c of checks)
+      if (c.provable === true) {
+        c.provable = false;
+        c.status = 'ok';
+        c.unproven = [...c.unproven, NO_KEPT];
+      }
+
+  const ok = checks.every((c) => c.ok);
+  // Only a shoe, a proof or a pair proves something: the record list, the reveal and the kept pair only add to them.
+  const checked = checks.filter((c) => (c.kind === 'shoe' || c.kind === 'proof' || c.kind === 'pair') && c.status !== 'pending');
+  const judged = checks.filter((c) => c.status !== 'pending' && c.provable !== null);
+  const provable = ok && !!b.kept && checked.length > 0 && judged.every((c) => c.provable === true);
+  const status         = !ok ? 'failed' : provable ? 'provable' : checked.length === 0 && checks.some((c) => c.status === 'pending') ? 'pending' : 'ok';
+  return { alg: ALG, lib: LIB, status, ok, provable, checks };
+}
+
+// ------------------------------------------------------------------------------------------------ text
+
+const WORD                         = { provable: 'provable', ok: 'ok', failed: 'FAILED', pending: 'pending' };
+
+/**
+ * The reasons to show for each check (in the order of report.checks): the check of the whole pair repeats what the
+ * checks of its shoes, proofs and reveal found, so a reason already shown there is left out there.
+ */
+function reasons(report        )                                                  {
+  const shown = new Set        ();
+  for (const c of report.checks) {
+    if (c.kind !== 'shoe' && c.kind !== 'proof' && c.kind !== 'reveal') continue;
+    const prefix = c.kind === 'reveal' ? 'pair' : `${c.kind} ${c.id}`;
+    for (const e of [...c.errors, ...c.unproven]) shown.add(`${prefix}: ${e}`);
+  }
+  return report.checks.map((c) => {
+    const fresh = (e        )          => c.kind !== 'pair' || !shown.has(e);
+    return { errors: c.errors.filter(fresh), unproven: c.ok ? c.unproven.filter(fresh) : [] };
+  });
+}
+
+/** The report as lines of text, as fairshoe-verify prints it. */
+function formatReport(report        )           {
+  const lines           = [`${report.alg} (${report.lib})`];
+  const why = reasons(report);
+  report.checks.forEach((c, i) => {
+    lines.push(`  ${WORD[c.status].padEnd(9)} ${c.label}`);
+    for (const e of why[i] .errors) lines.push(`              error: ${e}`);
+    for (const u of why[i] .unproven) lines.push(`              ${c.status === 'pending' ? 'pending' : 'not provable'}: ${u}`);
+  });
+  const failed = report.checks.filter((c) => c.status === 'failed').length;
+  const pending = report.checks.filter((c) => c.status === 'pending').length;
+  const tail = pending ? `, ${pending} pending` : '';
+  if (report.status === 'failed') lines.push(`result: FAILED (${failed} of ${report.checks.length} checks)${tail}`);
+  else if (report.status === 'provable') lines.push(`result: provable${tail}`);
+  else if (report.status === 'pending') lines.push(`result: pending (no shoe, proof or pair checkable yet)${tail}`);
+  else lines.push(`result: ok, not provable${tail}`);
+  return lines;
+}
+return Object.freeze({ InputError, EXIT, collect, verifyBundle, reasons, formatReport });
+})();
+for (const k of Object.keys(m12)) if (k in m11) throw new Error('two exports named ' + k);
+return Object.freeze({ ...m11, ...m12 });
+})();
+// The verifier page (web/build.mjs puts it after the library): reads the files chosen or dropped and the pasted
+// text, runs fairshoe.collect and fairshoe.verifyBundle on them, as fairshoe-verify does, and shows the report.
+// Records are data from a server: they are shown as text, never as markup.
+(() => {
+  const $ = (id) => document.getElementById(id);
+  const picker = $('files');
+  const drop = $('drop');
+  const pasted = $('text');
+  const result = $('result');
+  const verdict = $('verdict');
+  const list = $('checks');
+  const json = $('json');
+  /** Files dropped on the page: { name, text }. */
+  let dropped = [];
+
+  const el = (tag, className, text) => {
+    const node = document.createElement(tag);
+    if (className) node.className = className;
+    if (text !== undefined) node.textContent = text;
+    return node;
+  };
+
+  const noteDropped = () => {
+    drop.textContent = dropped.length === 0 ? 'or drop JSON files here' : `${dropped.map((f) => f.name).join(', ')} (dropped)`;
+  };
+
+  const say = (status, text) => {
+    result.hidden = false;
+    verdict.className = `verdict ${status}`;
+    verdict.textContent = text;
+  };
+
+  const show = (report) => {
+    const failed = report.checks.filter((c) => c.status === 'failed').length;
+    const pending = report.checks.filter((c) => c.status === 'pending').length;
+    const more = pending ? ` ${pending} not checkable yet (pending).` : '';
+    if (report.status === 'provable') say('provable', `Provable: every check is ok and bound to what you kept.${more}`);
+    else if (report.status === 'ok') say('ok', `ok, not provable: the records agree, but something only you know is missing (listed below).${more}`);
+    else if (report.status === 'pending') say('pending', `Pending: nothing contradicts what you kept, but no shoe, round or pair can be checked before its reveal.${more}`);
+    else say('failed', `FAILED: ${failed} of ${report.checks.length} checks found a problem (listed below).${more}`);
+    const why = fairshoe.reasons(report);
+    list.replaceChildren(
+      ...report.checks.map((c, i) => {
+        const item = el('li', `check ${c.status}`);
+        item.append(el('span', 'status', c.status === 'failed' ? 'FAILED' : c.status), el('span', 'label', c.label));
+        const reasons = [...why[i].errors.map((e) => ['error', e]), ...why[i].unproven.map((u) => [c.status === 'pending' ? 'pending' : 'not provable', u])];
+        if (reasons.length > 0) {
+          const ul = el('ul', 'reasons');
+          for (const [kind, text] of reasons) ul.append(el('li', kind === 'error' ? 'error' : 'unproven', `${kind}: ${text}`));
+          item.append(ul);
+        }
+        return item;
+      }),
+    );
+    json.textContent = JSON.stringify(report, null, 2);
+  };
+
+  const fail = (message) => {
+    say('failed', message);
+    list.replaceChildren();
+    json.textContent = '';
+  };
+
+  const inputs = async () => {
+    const out = [];
+    for (const f of picker.files ?? []) out.push({ name: f.name, text: await f.text() });
+    out.push(...dropped);
+    if (pasted.value.trim() !== '') out.push({ name: 'pasted text', text: pasted.value });
+    return out;
+  };
+
+  $('verify').addEventListener('click', async () => {
+    try {
+      const texts = await inputs();
+      if (texts.length === 0) {
+        fail('Nothing to verify: choose or drop JSON files, or paste JSON.');
+        return;
+      }
+      const values = texts.map(({ name, text }) => {
+        try {
+          return { name, value: JSON.parse(text) };
+        } catch (err) {
+          throw new fairshoe.InputError(`${name}: not JSON (${err instanceof Error ? err.message : String(err)})`);
+        }
+      });
+      show(fairshoe.verifyBundle(fairshoe.collect(values)));
+    } catch (err) {
+      fail(err instanceof fairshoe.InputError ? `The input could not be read: ${err.message}` : `Unexpected error: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  });
+
+  $('clear').addEventListener('click', () => {
+    picker.value = '';
+    pasted.value = '';
+    dropped = [];
+    noteDropped();
+    result.hidden = true;
+    list.replaceChildren();
+    json.textContent = '';
+  });
+
+  for (const type of ['dragenter', 'dragover']) {
+    drop.addEventListener(type, (event) => {
+      event.preventDefault();
+      drop.classList.add('over');
+    });
+  }
+  drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+  drop.addEventListener('drop', async (event) => {
+    event.preventDefault();
+    drop.classList.remove('over');
+    for (const f of event.dataTransfer?.files ?? []) dropped.push({ name: f.name, text: await f.text() });
+    noteDropped();
+  });
+
+  noteDropped();
+})();
+</script>
+</body>
+</html>

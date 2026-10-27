@@ -1,0 +1,97 @@
+{
+  "note": "A roulette pair with one round: a discarded step (nonce 0) and the spin (nonce 1). Provable.",
+  "kept": {
+    "seedId": "sd_vectorroulett1",
+    "gameId": "roulette",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "root": null,
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "committedAt": 1000,
+    "clientSeedAt": 2000
+  },
+  "own": {
+    "proofs": [
+      "pf_vectorroulett1"
+    ],
+    "shoes": [],
+    "nonce": 2
+  },
+  "seed": {
+    "seedId": "sd_vectorroulett1",
+    "gameId": "roulette",
+    "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "lastNonce": 1,
+    "lastShoes": [],
+    "root": null,
+    "committedAt": 1000,
+    "clientSeedAt": 2000,
+    "revealedAt": 9000
+  },
+  "proofs": [
+    {
+      "v": 1,
+      "alg": "fairshoe/v1",
+      "lib": "fairshoe@1.1.0",
+      "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "clientSeed": "player-seed-01",
+      "clientSeedBy": "player",
+      "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "engineVersion": 1,
+      "at": 5000,
+      "id": "pf_vectorroulett1",
+      "gameId": "roulette",
+      "roundId": "R-1",
+      "seedId": "sd_vectorroulett1",
+      "steps": [
+        {
+          "nonce": 0,
+          "kind": "act",
+          "status": "discarded",
+          "draws": [
+            {
+              "n": 37,
+              "v": 27
+            }
+          ],
+          "words": 1
+        },
+        {
+          "nonce": 1,
+          "kind": "act",
+          "status": "ok",
+          "draws": [
+            {
+              "n": 37,
+              "v": 0
+            }
+          ],
+          "words": 1
+        }
+      ],
+      "shoes": [],
+      "outcome": {
+        "result": {
+          "kind": "number",
+          "n": 0
+        },
+        "detail": {
+          "wheel": "single",
+          "pocket": 0,
+          "strikes": []
+        }
+      }
+    }
+  ],
+  "records": {
+    "seedId": "sd_vectorroulett1",
+    "gameId": "roulette",
+    "proofs": [
+      "pf_vectorroulett1"
+    ],
+    "shoes": []
+  }
+}

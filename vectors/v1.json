@@ -1,0 +1,2686 @@
+{
+  "alg": "fairshoe/v1",
+  "lib": "fairshoe@1.1.0",
+  "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+  "clientSeed": "player-seed-01",
+  "chainSecret": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+  "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+  "streamBlock0": {
+    "gameId": "roulette",
+    "nonce": 0,
+    "block": 0,
+    "hmac": "bd7a90d18367974f87bff4153b3db51aaf2f48e994c484e532580c544beb5eaa"
+  },
+  "roulette": {
+    "gameId": "roulette",
+    "n": 37,
+    "nonces": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "values": [
+      27,
+      0,
+      12,
+      9,
+      4
+    ]
+  },
+  "americanRoulette": {
+    "gameId": "american-roulette",
+    "n": 38,
+    "nonces": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      72
+    ],
+    "values": [
+      9,
+      35,
+      7,
+      6,
+      34,
+      37
+    ],
+    "pockets": [
+      9,
+      35,
+      7,
+      6,
+      34,
+      "00"
+    ]
+  },
+  "craps": {
+    "gameId": "craps",
+    "nonces": [
+      0,
+      1,
+      2
+    ],
+    "dice": [
+      [
+        5,
+        1
+      ],
+      [
+        2,
+        4
+      ],
+      [
+        3,
+        6
+      ]
+    ]
+  },
+  "highFlyer": {
+    "gameId": "high-flyer",
+    "n": 4294967296,
+    "nonces": [
+      0,
+      1,
+      2
+    ],
+    "values": [
+      1764903212,
+      542947127,
+      3231792394
+    ],
+    "crash": [
+      164,
+      111,
+      391
+    ]
+  },
+  "diceBaccarat": {
+    "gameId": "dice-baccarat",
+    "nonces": [
+      0,
+      1,
+      2
+    ],
+    "dice": [
+      {
+        "player": [
+          2,
+          6
+        ],
+        "banker": [
+          6,
+          4
+        ]
+      },
+      {
+        "player": [
+          1,
+          3
+        ],
+        "banker": [
+          1,
+          4
+        ]
+      },
+      {
+        "player": [
+          6,
+          1
+        ],
+        "banker": [
+          3,
+          6
+        ]
+      }
+    ]
+  },
+  "intEdges": [
+    {
+      "gameId": "edge",
+      "nonce": 0,
+      "n": 1,
+      "v": 0,
+      "words": 0
+    },
+    {
+      "gameId": "edge",
+      "nonce": 0,
+      "n": 2,
+      "v": 1,
+      "words": 1
+    },
+    {
+      "gameId": "edge",
+      "nonce": 0,
+      "n": 3,
+      "v": 1,
+      "words": 1
+    },
+    {
+      "gameId": "edge",
+      "nonce": 0,
+      "n": 2147483649,
+      "v": 258089929,
+      "words": 1
+    },
+    {
+      "gameId": "edge",
+      "nonce": 0,
+      "n": 4294967296,
+      "v": 258089929,
+      "words": 1
+    }
+  ],
+  "rejection": {
+    "gameId": "edge",
+    "nonce": 3,
+    "n": 2147483649,
+    "v": 538604924,
+    "words": 3
+  },
+  "chain": {
+    "length": 3,
+    "links": [
+      "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+      "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+      "72dbb7336c76780023f83da4c355f2eeea85733b13d3477697917790c1229084",
+      "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f"
+    ],
+    "terminal2000": "15437f353c03afe34b26c101d21b578c7405b38b2c1ecf3e6d2ed76c520f0b65",
+    "link1999of2000": "72dbb7336c76780023f83da4c355f2eeea85733b13d3477697917790c1229084"
+  },
+  "root": {
+    "hash": "a9f93a755faae829433ece5cdfcddc0479e8563d489b2f0c09fd73d24dbc6587",
+    "lines": [
+      "baccarat:10:cdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcdcd",
+      "baccarat:1:abababababababababababababababababababababababababababababababab",
+      "baccarat:3:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+    ],
+    "note": "lines sorted by their UTF-8 bytes: baccarat:10 before baccarat:1"
+  },
+  "cutEdges": {
+    "min": 52,
+    "max": 364,
+    "allowed": [
+      52,
+      364
+    ],
+    "refused": [
+      51,
+      365
+    ]
+  },
+  "baccarat": {
+    "gameId": "baccarat",
+    "table": 3,
+    "shoeNo": 1,
+    "decks": 8,
+    "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+    "first10": [
+      "AS",
+      "9D",
+      "6H",
+      "6D",
+      "AS",
+      "3S",
+      "7C",
+      "8D",
+      "QS",
+      "KC"
+    ],
+    "words": 415,
+    "order": "AiSfACthLzYEaUOYUByBGjyxBUlyzkClhaHJWPLJGvWwsNKNaeNnvkjnwgnUXBORxJgwcrHugTULujTSrOfIRVHuNZKnHhvEXmmeiVnkIxfeQLGHBZEqEvLtYryTDFxxjjolsbbuXIbELHcADfCAOlXgKzPGrDJNEfmWEhfJcYFItyesdoKoNFSNWwsoQqZoGYCpMcdvnYUltGqAnpyksdSpyXGuZZzKRtkICdRiuZBjTRbqMAWYgQTqQTkknFMWzfVBYOrUUAFtCjDEkiSbqcTKPwMZVaxVOXphcmzeQgCXboxQhFAdeReRDSCiVaKSqlwWIaPsRmtbFMlsmOJzcmdeMrbGtLwKXgqixDdwMpuFvSdsohTQuIPQiPcHgaHLphavDpZBPvrJWOlJipoPMrVNmfyjzVID",
+    "salt": "0dba515311853380c527c557ed27ef42dceba406f91034935dde5243fc7139c2",
+    "shoeHash": "511737bcb8e35031d13878a42f7c10af785faffc8d0b6978d779918c6b3005f6",
+    "shoeHashHexSalt": "fff82d292f47014c7c800cc0152c1fdc50437f28b386cf5a8e75c52f33c8c71f",
+    "autoCut": 328,
+    "cut": 328,
+    "dealtFirst10": [
+      "5H",
+      "KD",
+      "7C",
+      "2D",
+      "6S",
+      "KS",
+      "QD",
+      "6C",
+      "KD",
+      "2H"
+    ],
+    "burn": {
+      "cards": 6,
+      "shown": "5H"
+    },
+    "endAt": 364,
+    "atEndAtMinus1": "2D",
+    "atEndAt364": "4C"
+  },
+  "blackjack": {
+    "gameId": "solo-classic",
+    "table": 1,
+    "shoeNo": 2,
+    "decks": 8,
+    "link": "72dbb7336c76780023f83da4c355f2eeea85733b13d3477697917790c1229084",
+    "first10": [
+      "10H",
+      "QS",
+      "QC",
+      "7D",
+      "AS",
+      "9S",
+      "9D",
+      "3H",
+      "2H",
+      "KD"
+    ],
+    "words": 415,
+    "salt": "2d2452d6a463415e49bb96db9032a71e2b8c8240d0dd6d3c7f810d527305c3ca",
+    "shoeHash": "a7a2808cea5e22fb3cdbce8440ab75c32ce7a19cc66d026c92fcb590e970c5d9",
+    "autoCut": 78,
+    "cut": 78,
+    "endAt": null,
+    "dealtFirst10": [
+      "4H",
+      "10H",
+      "7S",
+      "8S",
+      "2C",
+      "3D",
+      "JD",
+      "10S",
+      "QH",
+      "QD"
+    ],
+    "at207": "6H",
+    "at208": "4H"
+  },
+  "shuffleRejection": {
+    "key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "gameId": "baccarat",
+    "table": 1,
+    "shoeNo": 3023,
+    "words": 416,
+    "first10": [
+      "JD",
+      "2H",
+      "7D",
+      "6D",
+      "7C",
+      "9C",
+      "3S",
+      "6H",
+      "6C",
+      "7D"
+    ]
+  },
+  "burns": {
+    "ten": {
+      "key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "gameId": "baccarat",
+      "table": 1,
+      "shoeNo": 2,
+      "cut": 230,
+      "first": "QC",
+      "burn": {
+        "cards": 11,
+        "shown": "QC"
+      }
+    },
+    "ace": {
+      "key": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "gameId": "baccarat",
+      "table": 1,
+      "shoeNo": 26,
+      "cut": 223,
+      "first": "AH",
+      "burn": {
+        "cards": 2,
+        "shown": "AH"
+      }
+    }
+  },
+  "autoCutSpan": {
+    "gameId": "baccarat",
+    "table": 1,
+    "clientSeed": "player-seed-01",
+    "shoeNos": [
+      1,
+      2000
+    ],
+    "min": 52,
+    "max": 364,
+    "note": "min and max of kAuto over shoes 1 to 2000 of baccarat table 1, cut range 52 to 364"
+  },
+  "twoChains": {
+    "gameId": "baccarat",
+    "length": 3,
+    "tables": [
+      {
+        "table": 1,
+        "secret": "a596d3ccf46b6a483337407b11540feada4c23cdd167fd13cae4a5ad60fdb16b",
+        "links": [
+          "61dcc6e5c725452d751502ab39dbf173c0d88f1d0b06657e10240dd6c357ca29",
+          "32072554b89da087ab5905d0d92f1104f448052bf9cc737c85c8846e1d5b4cba",
+          "480c658c555fb129278720008451627d66832638286312183fffa46248f64eca",
+          "a596d3ccf46b6a483337407b11540feada4c23cdd167fd13cae4a5ad60fdb16b"
+        ]
+      },
+      {
+        "table": 2,
+        "secret": "6998b1e27d3d579cd28871ca9b5c6fff679c1476999a09616ced3262f9400107",
+        "links": [
+          "35352906e2f66cfe1e252fe080bf45d69c38bb593a0f2c8e99f9d19b1f5f8f17",
+          "3bd395ef7ae9cbcdb0580b9b5f60c8282b074abd68fbc14c6a86796a66119001",
+          "98bc759066b3e1d9dc0c6cb9c44fca5a3b16c52bfafe0f687d68f75b3a88fbdc",
+          "6998b1e27d3d579cd28871ca9b5c6fff679c1476999a09616ced3262f9400107"
+        ]
+      }
+    ],
+    "reveals": [
+      {
+        "table": 1,
+        "shoeNo": 1
+      },
+      {
+        "table": 1,
+        "shoeNo": 2
+      },
+      {
+        "table": 2,
+        "shoeNo": 1
+      }
+    ],
+    "note": "revealed in this order; hashing a revealed link of one table never gives a link of the other"
+  },
+  "records": {
+    "dragonTiger": {
+      "pair": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": -1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+          "lines": [
+            "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+          "lines": [
+            "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectordragon01",
+        "gameId": "dragon-tiger",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectordragon01",
+          "chainId": "ch_vectordragon01",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "360d4e0aac519a446405b49e067d302b707e7054bd51dc436c30ae6f563cbaea",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 197,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectordragon01",
+        "status": "shuffled",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "6bb3554d161feae62e3ea696705cf9da9b235a974d80334ffd8b147269fb528b",
+        "order": "CRJfDTlplyoassOnNIDGBaMZBvYhLmCLczfdaHGmFChmazcgFUKjdEZPzOxszmSrJToNTZEWxFJbTtyXmKjNhDVKiRDwQkiMjtWuIAPdCaxjtXVQYTESZxONZxMIAPDkrqXUZlGLFQrbXSOVGdljxvmaGkzjIPvvphfmwQggnkWXWaHgRCirVYqSLyKntYuSyOqkpEHBwnnbhwVMdJSHEpEqJOkgAqHdVBIlSJpWnrcwbkXnNvUBTCDRDtZUfFbzyQQfxheNQtFffZgENMRAlhAjkUHuuOepWoPYyJqvluHsSLBLQBjAFowsTywTutbdVePapWiRuUeENIqYoGsrUnitsYmgeizscOCPMoIoHCcXKLKVgvzcAyuboKiLcRPDJxGFcrplKhXeBqUReWYwvfdieMGbrIAM",
+        "cut": {
+          "at": 200,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 11,
+          "shown": "10C"
+        },
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 11,
+            "to": 13
+          },
+          {
+            "roundId": null,
+            "from": 13,
+            "to": 15
+          },
+          {
+            "roundId": "R-2",
+            "from": 15,
+            "to": 17
+          }
+        ],
+        "at": 8000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectordragon01",
+          "gameId": "dragon-tiger",
+          "roundId": "R-1",
+          "seedId": "sd_vectordragon01",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectordragon01",
+              "table": 1,
+              "from": 11,
+              "to": 13
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "dragon"
+            },
+            "detail": {
+              "shoe": 1,
+              "hand": 1,
+              "cards": {
+                "dragon": "8S",
+                "tiger": "5S"
+              },
+              "winner": "dragon",
+              "suited": false
+            }
+          }
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectordragon03",
+          "gameId": "dragon-tiger",
+          "roundId": "R-2",
+          "seedId": "sd_vectordragon01",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectordragon01",
+              "table": 1,
+              "from": 15,
+              "to": 17
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "tiger"
+            },
+            "detail": {
+              "shoe": 1,
+              "hand": 3,
+              "cards": {
+                "dragon": "4C",
+                "tiger": "10S"
+              },
+              "winner": "tiger",
+              "suited": false
+            }
+          }
+        }
+      ],
+      "pairRecords": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "proofs": [
+          "pf_vectordragon01",
+          "pf_vectordragon03"
+        ],
+        "shoes": [
+          "sh_vectordragon01"
+        ]
+      }
+    },
+    "soloBlackjack": {
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "auto",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 317,
+          "by": "auto"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 6
+          }
+        ],
+        "at": 8000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorsolo0001",
+          "gameId": "solo-classic",
+          "roundId": "R-1",
+          "seedId": "sd_vectorsolo0001",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "tx",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 4294967296,
+                  "v": 2358936171
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_vectorsolo0001",
+              "table": 1,
+              "from": 0,
+              "to": 6
+            }
+          ],
+          "outcome": {
+            "roundId": "R-1",
+            "cards": [
+              "JS",
+              "8H",
+              "7D",
+              "JS",
+              "AC",
+              "10H"
+            ]
+          }
+        }
+      ],
+      "pairRecords": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ]
+      }
+    },
+    "roulette": {
+      "pair": {
+        "seedId": "sd_vectorroulett1",
+        "gameId": "roulette",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 1,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectorroulett1",
+        "gameId": "roulette",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorroulett1",
+          "gameId": "roulette",
+          "roundId": "R-1",
+          "seedId": "sd_vectorroulett1",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "discarded",
+              "draws": [
+                {
+                  "n": 37,
+                  "v": 27
+                }
+              ],
+              "words": 1
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 37,
+                  "v": 0
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "number",
+              "n": 0
+            },
+            "detail": {
+              "wheel": "single",
+              "pocket": 0,
+              "strikes": []
+            }
+          }
+        }
+      ],
+      "pairRecords": {
+        "seedId": "sd_vectorroulett1",
+        "gameId": "roulette",
+        "proofs": [
+          "pf_vectorroulett1"
+        ],
+        "shoes": []
+      }
+    }
+  },
+  "negative": {
+    "note": "consistent with the round stream, refused by the draw plan of the game (section 9)",
+    "roulette": {
+      "pair": {
+        "seedId": "sd_vectornegativr",
+        "gameId": "roulette",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectornegativr",
+        "gameId": "roulette",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "honestPocket": 27,
+      "padding": 42,
+      "padded": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectornegativ1",
+        "gameId": "roulette",
+        "roundId": "R-1",
+        "seedId": "sd_vectornegativr",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "act",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 37,
+                "v": 0
+              }
+            ],
+            "words": 43
+          }
+        ],
+        "shoes": [],
+        "outcome": {
+          "result": {},
+          "detail": {
+            "wheel": "single",
+            "pocket": 0,
+            "strikes": []
+          }
+        }
+      },
+      "twice": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectornegativ2",
+        "gameId": "roulette",
+        "roundId": "R-1",
+        "seedId": "sd_vectornegativr",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "act",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 37,
+                "v": 27
+              },
+              {
+                "n": 37,
+                "v": 13
+              }
+            ],
+            "words": 2
+          }
+        ],
+        "shoes": [],
+        "outcome": {
+          "result": {},
+          "detail": {
+            "wheel": "single",
+            "pocket": 13,
+            "strikes": []
+          }
+        }
+      }
+    },
+    "highFlyer": {
+      "pair": {
+        "seedId": "sd_vectornegativh",
+        "gameId": "high-flyer",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectornegativh",
+        "gameId": "high-flyer",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "honestCrash": 1.64,
+      "padding": 1,
+      "padded": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectornegativ3",
+        "gameId": "high-flyer",
+        "roundId": "R-1",
+        "seedId": "sd_vectornegativh",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "act",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 4294967296,
+                "v": 483938565
+              }
+            ],
+            "words": 2
+          }
+        ],
+        "shoes": [],
+        "outcome": {
+          "result": {},
+          "detail": {
+            "crash": 1.09
+          }
+        }
+      }
+    }
+  },
+  "ownRecords": {
+    "note": "complete records with the player's own records (cut asked for, hands seen, table bet at): provable only with them",
+    "baccarat": {
+      "pair": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": -1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 0
+          },
+          {
+            "table": 2,
+            "shoeNo": 0
+          },
+          {
+            "table": 3,
+            "shoeNo": 1
+          },
+          {
+            "table": 4,
+            "shoeNo": 0
+          },
+          {
+            "table": 5,
+            "shoeNo": 0
+          },
+          {
+            "table": 6,
+            "shoeNo": 0
+          },
+          {
+            "table": 7,
+            "shoeNo": 0
+          },
+          {
+            "table": 8,
+            "shoeNo": 0
+          },
+          {
+            "table": 9,
+            "shoeNo": 0
+          },
+          {
+            "table": 10,
+            "shoeNo": 0
+          },
+          {
+            "table": 11,
+            "shoeNo": 0
+          },
+          {
+            "table": 12,
+            "shoeNo": 0
+          }
+        ],
+        "root": {
+          "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+          "lines": [
+            "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+            "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+            "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+            "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+            "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+            "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+            "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+            "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+            "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+            "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+            "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+            "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+          "lines": [
+            "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+            "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+            "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+            "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+            "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+            "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+            "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+            "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+            "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+            "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+            "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+            "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorbaccara1",
+        "gameId": "baccarat",
+        "table": 3,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorbaccara1",
+          "chainId": "ch_vectorbaccara3",
+          "index": 1,
+          "prevLink": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "terminal": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "root": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "86379a643b8eebd73a3ff4985a3aa7c51cfd18dd8498eb14db72131cc58806e1",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 328,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorbaccara1",
+        "status": "shuffled",
+        "link": "0efc9869730e32a919f0474770ebd3afe67100078944b5bf63101a103ced4886",
+        "salt": "665556858986cf56af560f355652fc08cf588909e8e4583240389ea86a66b01b",
+        "order": "aihNGkwXycQlDdXpBrcFOqsjTNpmKEFrRXuoWJAqBVvPznelCDgouESZQVWsPSuvSPscNLgcbhKkBYuhcnwoYSmRuitXKlZpQWdMAcLONvMaqRhEfGDnNcEsQPbNxLggywpjGvTyemIJWUmUpALuChtWFHVODkXyyhosLwrTakBbYVcRGSCpzwhELwelAMddUGAYZWihlHxWHToqPVKHjtRHlmjrMmQCJfFCySuTuZJUZVzxBpGgBaYOskUIkDozDFkOLxnzqGYCxOaIawKXiXEEytfaoqeZjUxdvbFMOGQdiWpgrvjbmeAITlUeHmbMIQDAnfsbHrgZfzznqKCftFiiOxzBCPxtdJfeytsjVrLYHVBSMINXvwZrIdPtvKlDJSPRRonNenTFTUJRYMabAEgkKQfjiqIJ",
+        "cut": {
+          "at": 150,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 8,
+          "shown": "7C"
+        },
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 8,
+            "to": 12
+          },
+          {
+            "roundId": "R-1",
+            "from": 12,
+            "to": 17
+          },
+          {
+            "roundId": "R-2",
+            "from": 17,
+            "to": 22
+          }
+        ],
+        "at": 8000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorbaccara1",
+          "gameId": "baccarat",
+          "roundId": "R-1",
+          "seedId": "sd_vectorbaccara1",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectorbaccara1",
+              "table": 3,
+              "from": 12,
+              "to": 17
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "player"
+            },
+            "detail": {
+              "variant": "classic",
+              "table": 3,
+              "shoe": 1,
+              "hand": 2,
+              "player": [
+                "2C",
+                "QS",
+                "5C"
+              ],
+              "banker": [
+                "6C",
+                "10C"
+              ],
+              "playerTotal": 7,
+              "bankerTotal": 6,
+              "winner": "player",
+              "strikes": [],
+              "multiplier": 1,
+              "fee": 0
+            }
+          }
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorbaccara2",
+          "gameId": "baccarat",
+          "roundId": "R-2",
+          "seedId": "sd_vectorbaccara1",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectorbaccara1",
+              "table": 3,
+              "from": 17,
+              "to": 22
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "player"
+            },
+            "detail": {
+              "variant": "classic",
+              "table": 3,
+              "shoe": 1,
+              "hand": 3,
+              "player": [
+                "7H",
+                "JD"
+              ],
+              "banker": [
+                "AD",
+                "2S",
+                "2D"
+              ],
+              "playerTotal": 7,
+              "bankerTotal": 5,
+              "winner": "player",
+              "strikes": [],
+              "multiplier": 1,
+              "fee": 0
+            }
+          }
+        }
+      ],
+      "own": {
+        "proofs": [
+          "pf_vectorbaccara1",
+          "pf_vectorbaccara2"
+        ],
+        "shoes": [
+          "sh_vectorbaccara1"
+        ],
+        "nonce": 0,
+        "cuts": {
+          "sh_vectorbaccara1": {
+            "at": 150
+          }
+        },
+        "hands": {
+          "sh_vectorbaccara1": [
+            {
+              "roundId": null,
+              "from": 8,
+              "to": 12
+            },
+            {
+              "roundId": "R-1",
+              "from": 12,
+              "to": 17
+            },
+            {
+              "roundId": "R-2",
+              "from": 17,
+              "to": 22
+            }
+          ]
+        },
+        "tables": {
+          "R-1": 3,
+          "R-2": 3
+        }
+      },
+      "pairRecords": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "proofs": [
+          "pf_vectorbaccara1",
+          "pf_vectorbaccara2"
+        ],
+        "shoes": [
+          "sh_vectorbaccara1"
+        ]
+      }
+    }
+  },
+  "negativeOwn": {
+    "note": "consistent with the streams and the commitments, refused by the card rules of section 9 or by the player's own records (section 8)",
+    "baccaratWinner": {
+      "kept": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+          "lines": [
+            "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+            "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+            "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+            "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+            "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+            "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+            "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+            "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+            "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+            "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+            "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+            "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorbaccara1",
+        "gameId": "baccarat",
+        "table": 3,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorbaccara1",
+          "chainId": "ch_vectorbaccara3",
+          "index": 1,
+          "prevLink": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "terminal": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "root": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "86379a643b8eebd73a3ff4985a3aa7c51cfd18dd8498eb14db72131cc58806e1",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 328,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorbaccara1",
+        "status": "shuffled",
+        "link": "0efc9869730e32a919f0474770ebd3afe67100078944b5bf63101a103ced4886",
+        "salt": "665556858986cf56af560f355652fc08cf588909e8e4583240389ea86a66b01b",
+        "order": "aihNGkwXycQlDdXpBrcFOqsjTNpmKEFrRXuoWJAqBVvPznelCDgouESZQVWsPSuvSPscNLgcbhKkBYuhcnwoYSmRuitXKlZpQWdMAcLONvMaqRhEfGDnNcEsQPbNxLggywpjGvTyemIJWUmUpALuChtWFHVODkXyyhosLwrTakBbYVcRGSCpzwhELwelAMddUGAYZWihlHxWHToqPVKHjtRHlmjrMmQCJfFCySuTuZJUZVzxBpGgBaYOskUIkDozDFkOLxnzqGYCxOaIawKXiXEEytfaoqeZjUxdvbFMOGQdiWpgrvjbmeAITlUeHmbMIQDAnfsbHrgZfzznqKCftFiiOxzBCPxtdJfeytsjVrLYHVBSMINXvwZrIdPtvKlDJSPRRonNenTFTUJRYMabAEgkKQfjiqIJ",
+        "cut": {
+          "at": 150,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 8,
+          "shown": "7C"
+        },
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 8,
+            "to": 12
+          },
+          {
+            "roundId": "R-1",
+            "from": 12,
+            "to": 17
+          },
+          {
+            "roundId": "R-2",
+            "from": 17,
+            "to": 22
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorbaccara1",
+          "pf_vectorbaccara2"
+        ],
+        "shoes": [
+          "sh_vectorbaccara1"
+        ],
+        "nonce": 0,
+        "cuts": {
+          "sh_vectorbaccara1": {
+            "at": 150
+          }
+        },
+        "hands": {
+          "sh_vectorbaccara1": [
+            {
+              "roundId": null,
+              "from": 8,
+              "to": 12
+            },
+            {
+              "roundId": "R-1",
+              "from": 12,
+              "to": 17
+            },
+            {
+              "roundId": "R-2",
+              "from": 17,
+              "to": 22
+            }
+          ]
+        },
+        "tables": {
+          "R-1": 3,
+          "R-2": 3
+        }
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorbaccara1",
+        "gameId": "baccarat",
+        "roundId": "R-1",
+        "seedId": "sd_vectorbaccara1",
+        "steps": [],
+        "shoes": [
+          {
+            "shoe": "sh_vectorbaccara1",
+            "table": 3,
+            "from": 12,
+            "to": 17
+          }
+        ],
+        "outcome": {
+          "result": {
+            "kind": "side",
+            "side": "player"
+          },
+          "detail": {
+            "variant": "classic",
+            "table": 3,
+            "shoe": 1,
+            "hand": 2,
+            "player": [
+              "2C",
+              "QS",
+              "5C"
+            ],
+            "banker": [
+              "6C",
+              "10C"
+            ],
+            "playerTotal": 7,
+            "bankerTotal": 6,
+            "winner": "banker",
+            "strikes": [],
+            "multiplier": 1,
+            "fee": 0
+          }
+        }
+      },
+      "stated": "banker",
+      "honest": "player"
+    },
+    "baccaratFreeHandTooLong": {
+      "kept": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+          "lines": [
+            "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+            "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+            "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+            "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+            "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+            "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+            "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+            "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+            "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+            "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+            "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+            "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorbaccara1",
+        "gameId": "baccarat",
+        "table": 3,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorbaccara1",
+          "chainId": "ch_vectorbaccara3",
+          "index": 1,
+          "prevLink": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "terminal": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "root": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "86379a643b8eebd73a3ff4985a3aa7c51cfd18dd8498eb14db72131cc58806e1",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 328,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorbaccara1",
+        "status": "shuffled",
+        "link": "0efc9869730e32a919f0474770ebd3afe67100078944b5bf63101a103ced4886",
+        "salt": "665556858986cf56af560f355652fc08cf588909e8e4583240389ea86a66b01b",
+        "order": "aihNGkwXycQlDdXpBrcFOqsjTNpmKEFrRXuoWJAqBVvPznelCDgouESZQVWsPSuvSPscNLgcbhKkBYuhcnwoYSmRuitXKlZpQWdMAcLONvMaqRhEfGDnNcEsQPbNxLggywpjGvTyemIJWUmUpALuChtWFHVODkXyyhosLwrTakBbYVcRGSCpzwhELwelAMddUGAYZWihlHxWHToqPVKHjtRHlmjrMmQCJfFCySuTuZJUZVzxBpGgBaYOskUIkDozDFkOLxnzqGYCxOaIawKXiXEEytfaoqeZjUxdvbFMOGQdiWpgrvjbmeAITlUeHmbMIQDAnfsbHrgZfzznqKCftFiiOxzBCPxtdJfeytsjVrLYHVBSMINXvwZrIdPtvKlDJSPRRonNenTFTUJRYMabAEgkKQfjiqIJ",
+        "cut": {
+          "at": 150,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 8,
+          "shown": "7C"
+        },
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 8,
+            "to": 13
+          },
+          {
+            "roundId": "R-1",
+            "from": 13,
+            "to": 18
+          },
+          {
+            "roundId": "R-2",
+            "from": 18,
+            "to": 24
+          }
+        ],
+        "at": 8000
+      },
+      "tableauCards": 4,
+      "dealt": 5
+    },
+    "baccaratOtherTable": {
+      "kept": {
+        "seedId": "sd_vectorbaccara1",
+        "gameId": "baccarat",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+          "lines": [
+            "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+            "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+            "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+            "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+            "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+            "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+            "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+            "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+            "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+            "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+            "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+            "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorbaccara1",
+        "gameId": "baccarat",
+        "table": 3,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorbaccara1",
+          "chainId": "ch_vectorbaccara3",
+          "index": 1,
+          "prevLink": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "terminal": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "root": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "86379a643b8eebd73a3ff4985a3aa7c51cfd18dd8498eb14db72131cc58806e1",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 328,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorbaccara1",
+        "status": "shuffled",
+        "link": "0efc9869730e32a919f0474770ebd3afe67100078944b5bf63101a103ced4886",
+        "salt": "665556858986cf56af560f355652fc08cf588909e8e4583240389ea86a66b01b",
+        "order": "aihNGkwXycQlDdXpBrcFOqsjTNpmKEFrRXuoWJAqBVvPznelCDgouESZQVWsPSuvSPscNLgcbhKkBYuhcnwoYSmRuitXKlZpQWdMAcLONvMaqRhEfGDnNcEsQPbNxLggywpjGvTyemIJWUmUpALuChtWFHVODkXyyhosLwrTakBbYVcRGSCpzwhELwelAMddUGAYZWihlHxWHToqPVKHjtRHlmjrMmQCJfFCySuTuZJUZVzxBpGgBaYOskUIkDozDFkOLxnzqGYCxOaIawKXiXEEytfaoqeZjUxdvbFMOGQdiWpgrvjbmeAITlUeHmbMIQDAnfsbHrgZfzznqKCftFiiOxzBCPxtdJfeytsjVrLYHVBSMINXvwZrIdPtvKlDJSPRRonNenTFTUJRYMabAEgkKQfjiqIJ",
+        "cut": {
+          "at": 150,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 8,
+          "shown": "7C"
+        },
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 8,
+            "to": 12
+          },
+          {
+            "roundId": "R-1",
+            "from": 12,
+            "to": 17
+          },
+          {
+            "roundId": "R-2",
+            "from": 17,
+            "to": 22
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorbaccara1",
+          "pf_vectorbaccara2"
+        ],
+        "shoes": [
+          "sh_vectorbaccara1"
+        ],
+        "nonce": 0,
+        "cuts": {
+          "sh_vectorbaccara1": {
+            "at": 150
+          }
+        },
+        "hands": {
+          "sh_vectorbaccara1": [
+            {
+              "roundId": null,
+              "from": 8,
+              "to": 12
+            },
+            {
+              "roundId": "R-1",
+              "from": 12,
+              "to": 17
+            },
+            {
+              "roundId": "R-2",
+              "from": 17,
+              "to": 22
+            }
+          ]
+        },
+        "tables": {
+          "R-1": 5,
+          "R-2": 3
+        }
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorbaccara1",
+        "gameId": "baccarat",
+        "roundId": "R-1",
+        "seedId": "sd_vectorbaccara1",
+        "steps": [],
+        "shoes": [
+          {
+            "shoe": "sh_vectorbaccara1",
+            "table": 3,
+            "from": 12,
+            "to": 17
+          }
+        ],
+        "outcome": {
+          "result": {
+            "kind": "side",
+            "side": "player"
+          },
+          "detail": {
+            "variant": "classic",
+            "table": 3,
+            "shoe": 1,
+            "hand": 2,
+            "player": [
+              "2C",
+              "QS",
+              "5C"
+            ],
+            "banker": [
+              "6C",
+              "10C"
+            ],
+            "playerTotal": 7,
+            "bankerTotal": 6,
+            "winner": "player",
+            "strikes": [],
+            "multiplier": 1,
+            "fee": 0
+          }
+        }
+      },
+      "betAt": 5
+    },
+    "dragonTigerFreeHand": {
+      "kept": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+          "lines": [
+            "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectordragon01",
+        "gameId": "dragon-tiger",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectordragon01",
+          "chainId": "ch_vectordragon01",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "360d4e0aac519a446405b49e067d302b707e7054bd51dc436c30ae6f563cbaea",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 197,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectordragon01",
+        "status": "shuffled",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "6bb3554d161feae62e3ea696705cf9da9b235a974d80334ffd8b147269fb528b",
+        "order": "CRJfDTlplyoassOnNIDGBaMZBvYhLmCLczfdaHGmFChmazcgFUKjdEZPzOxszmSrJToNTZEWxFJbTtyXmKjNhDVKiRDwQkiMjtWuIAPdCaxjtXVQYTESZxONZxMIAPDkrqXUZlGLFQrbXSOVGdljxvmaGkzjIPvvphfmwQggnkWXWaHgRCirVYqSLyKntYuSyOqkpEHBwnnbhwVMdJSHEpEqJOkgAqHdVBIlSJpWnrcwbkXnNvUBTCDRDtZUfFbzyQQfxheNQtFffZgENMRAlhAjkUHuuOepWoPYyJqvluHsSLBLQBjAFowsTywTutbdVePapWiRuUeENIqYoGsrUnitsYmgeizscOCPMoIoHCcXKLKVgvzcAyuboKiLcRPDJxGFcrplKhXeBqUReWYwvfdieMGbrIAM",
+        "cut": {
+          "at": 200,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 11,
+          "shown": "10C"
+        },
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 11,
+            "to": 13
+          },
+          {
+            "roundId": null,
+            "from": 13,
+            "to": 15
+          },
+          {
+            "roundId": "R-2",
+            "from": 15,
+            "to": 17
+          }
+        ],
+        "at": 8000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectordragon01",
+          "gameId": "dragon-tiger",
+          "roundId": "R-1",
+          "seedId": "sd_vectordragon01",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectordragon01",
+              "table": 1,
+              "from": 11,
+              "to": 13
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "dragon"
+            },
+            "detail": {
+              "shoe": 1,
+              "hand": 1,
+              "cards": {
+                "dragon": "8S",
+                "tiger": "5S"
+              },
+              "winner": "dragon",
+              "suited": false
+            }
+          }
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.1.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectordragon03",
+          "gameId": "dragon-tiger",
+          "roundId": "R-2",
+          "seedId": "sd_vectordragon01",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_vectordragon01",
+              "table": 1,
+              "from": 15,
+              "to": 17
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "tiger"
+            },
+            "detail": {
+              "shoe": 1,
+              "hand": 3,
+              "cards": {
+                "dragon": "4C",
+                "tiger": "10S"
+              },
+              "winner": "tiger",
+              "suited": false
+            }
+          }
+        }
+      ],
+      "pair": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": -1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+          "lines": [
+            "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectordragon01",
+          "pf_vectordragon03"
+        ],
+        "shoes": [
+          "sh_vectordragon01"
+        ],
+        "nonce": 0,
+        "cuts": {
+          "sh_vectordragon01": {
+            "at": 200
+          }
+        },
+        "hands": {
+          "sh_vectordragon01": [
+            {
+              "roundId": "R-1",
+              "from": 11,
+              "to": 13
+            },
+            {
+              "roundId": "R-2",
+              "from": 13,
+              "to": 15
+            }
+          ]
+        }
+      },
+      "slipped": {
+        "roundId": null,
+        "from": 13,
+        "to": 15
+      }
+    },
+    "dragonTigerCutMoved": {
+      "kept": {
+        "seedId": "sd_vectordragon01",
+        "gameId": "dragon-tiger",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa",
+          "lines": [
+            "dragon-tiger:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectordragon01",
+        "gameId": "dragon-tiger",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectordragon01",
+          "chainId": "ch_vectordragon01",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "b3cccff017668a1e69c52a5257a194ed2fea138ae757bb312d839c2eb31938fa"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "360d4e0aac519a446405b49e067d302b707e7054bd51dc436c30ae6f563cbaea",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 197,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectordragon01",
+        "status": "shuffled",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "6bb3554d161feae62e3ea696705cf9da9b235a974d80334ffd8b147269fb528b",
+        "order": "CRJfDTlplyoassOnNIDGBaMZBvYhLmCLczfdaHGmFChmazcgFUKjdEZPzOxszmSrJToNTZEWxFJbTtyXmKjNhDVKiRDwQkiMjtWuIAPdCaxjtXVQYTESZxONZxMIAPDkrqXUZlGLFQrbXSOVGdljxvmaGkzjIPvvphfmwQggnkWXWaHgRCirVYqSLyKntYuSyOqkpEHBwnnbhwVMdJSHEpEqJOkgAqHdVBIlSJpWnrcwbkXnNvUBTCDRDtZUfFbzyQQfxheNQtFffZgENMRAlhAjkUHuuOepWoPYyJqvluHsSLBLQBjAFowsTywTutbdVePapWiRuUeENIqYoGsrUnitsYmgeizscOCPMoIoHCcXKLKVgvzcAyuboKiLcRPDJxGFcrplKhXeBqUReWYwvfdieMGbrIAM",
+        "cut": {
+          "at": 202,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 2,
+          "shown": "AC"
+        },
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 2,
+            "to": 4
+          }
+        ],
+        "at": 8000
+      },
+      "askedCut": 200,
+      "recordedCut": 202
+    },
+    "soloSkipped": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "auto",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 317,
+          "by": "auto"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 0,
+            "to": 7
+          },
+          {
+            "roundId": "R-1",
+            "from": 7,
+            "to": 13
+          }
+        ],
+        "at": 8000
+      }
+    },
+    "soloTwoRounds": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "auto",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 317,
+          "by": "auto"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 6
+          },
+          {
+            "roundId": "R-2",
+            "from": 6,
+            "to": 12
+          }
+        ],
+        "at": 8000
+      }
+    },
+    "rouletteNoDetail": {
+      "kept": {
+        "seedId": "sd_vectornegativr",
+        "gameId": "roulette",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectornegativ1",
+        "gameId": "roulette",
+        "roundId": "R-1",
+        "seedId": "sd_vectornegativr",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "act",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 1
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 2,
+                "v": 0
+              },
+              {
+                "n": 37,
+                "v": 0
+              }
+            ],
+            "words": 43
+          }
+        ],
+        "shoes": [],
+        "outcome": {
+          "result": {}
+        }
+      }
+    },
+    "seedReused": {
+      "first": {
+        "seedId": "sd_vectornegativr",
+        "gameId": "roulette",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "kept": {
+        "seedId": "sd_vectorreused02",
+        "gameId": "roulette",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": null,
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 10000,
+        "clientSeedAt": 11000
+      },
+      "pair": {
+        "seedId": "sd_vectorreused02",
+        "gameId": "roulette",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 10000,
+        "clientSeedAt": 11000,
+        "revealedAt": 19000
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.1.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorreused02",
+        "gameId": "roulette",
+        "roundId": "R-1",
+        "seedId": "sd_vectorreused02",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "act",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 37,
+                "v": 27
+              }
+            ],
+            "words": 1
+          }
+        ],
+        "shoes": [],
+        "outcome": {
+          "result": {
+            "kind": "number",
+            "n": 27
+          },
+          "detail": {
+            "wheel": "single",
+            "pocket": 27,
+            "strikes": []
+          }
+        }
+      }
+    }
+  }
+}

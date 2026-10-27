@@ -1,0 +1,111 @@
+#!/usr/bin/env node
+// fairshoe-verify: checks records of fairshoe/v1 against the pair the player kept and the player's own records.
+// Node 22.18 or newer runs it from a checkout as it is (the library is plain TypeScript): node bin/fairshoe-verify.
+// Not from an installed copy: Node strips the types of no file under node_modules, so a copy there cannot run.
+import { readFileSync, realpathSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+
+/** Exit status of a fault of the verifier itself (EXIT.internal in report.ts, which cannot be loaded for this one). */
+const INTERNAL = 4;
+
+function inNodeModules() {
+  try {
+    return realpathSync(fileURLToPath(import.meta.url)).split(/[\\/]/).includes('node_modules');
+  } catch {
+    return false;
+  }
+}
+
+if (inNodeModules()) {
+  console.error(
+    'fairshoe-verify runs from a checkout of fairshoe (git clone, then node bin/fairshoe-verify), not from an installed copy:\n' +
+      'Node strips the types of no file under node_modules. A linked install (npm install <path of the checkout>) works too.',
+  );
+  process.exitCode = INTERNAL;
+} else {
+  let report;
+  let lib;
+  try {
+    report = await import('./report.ts');
+    lib = await import('../src/index.ts');
+  } catch (err) {
+    console.error(`fairshoe-verify: the verifier could not be loaded (Node 22.18 or newer runs it): ${err instanceof Error ? err.message : String(err)}`);
+    process.exitCode = INTERNAL;
+  }
+  if (report && lib) process.exitCode = main(process.argv.slice(2), report, lib);
+}
+
+/** The exit status; nothing calls process.exit, so the output is written in full also to a slow pipe. */
+function main(args, { collect, EXIT, formatReport, InputError, verifyBundle }, { ALG, LIB }) {
+  const usage = `usage: fairshoe-verify [--json] <file.json>... (- reads standard input)
+
+Checks records of ${ALG} against what only the player knows. Each file holds a bundle, one record
+as the server gives it (a round proof, a shoe record, a pair's reveal, its record list) or an
+array of records; all files together make one bundle:
+
+  {
+    "kept":    { ... }     the pair as kept before sending the client seed, with that seed
+    "own":     { ... }     the player's own records: proofs, shoes, nonce, cuts, hands, tables
+    "seed":    { ... }     the pair's reveal (after the rotation)
+    "proofs":  [ ... ]     the pair's round proofs
+    "shoes":   [ ... ]     shoe records { "commit": ..., "reveal": ... }
+    "pairs":   [ ... ]     other kept pairs of the game
+    "later":   [ ... ]     proofs of later pairs dealt from this pair's shoes
+    "records": { ... }     the server's list of the pair's proofs and shoes
+  }
+
+Every check is reported as provable (ok and bound to the player's records), ok (the records agree,
+but something only the player knows is missing: listed), FAILED (with the reasons) or pending
+(not checkable yet: a shoe still in play, a proof before its pair's reveal; what it binds already
+is checked, a contradiction with the kept pair is FAILED). The result is provable only when at
+least one shoe, proof or pair was checked and every check is provable; pending when none could be
+checked yet. SPEC.md section 8 says what is checked.
+
+  --json      print the report as JSON
+  --version   print the algorithm and library version
+
+Exit status: 0 provable, 1 a check failed, 2 ok or pending (not provable), 3 the input could not
+be read, 4 the verifier itself failed (a fault to report, not a verdict on the records).`;
+
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(usage);
+    return 0;
+  }
+  if (args.includes('--version')) {
+    console.log(`${ALG} (${LIB})`);
+    return 0;
+  }
+  const json = args.includes('--json');
+  const files = args.filter((a) => a !== '--json');
+  const unknown = files.find((a) => a.startsWith('--'));
+  if (unknown || files.length === 0) {
+    console.error(unknown ? `unknown option ${unknown}\n\n${usage}` : usage);
+    return EXIT.input;
+  }
+  try {
+    const inputs = files.map((file) => {
+      const name = file === '-' ? 'standard input' : file;
+      let text;
+      try {
+        text = readFileSync(file === '-' ? 0 : file, 'utf8');
+      } catch (err) {
+        throw new InputError(`${name}: ${err instanceof Error ? err.message : String(err)}`);
+      }
+      try {
+        return { name, value: JSON.parse(text) };
+      } catch (err) {
+        throw new InputError(`${name}: not JSON (${err instanceof Error ? err.message : String(err)})`);
+      }
+    });
+    const report = verifyBundle(collect(inputs));
+    console.log(json ? JSON.stringify(report, null, 2) : formatReport(report).join('\n'));
+    return report.status === 'provable' ? EXIT.provable : report.status === 'failed' ? EXIT.failed : EXIT.ok;
+  } catch (err) {
+    if (err instanceof InputError) {
+      console.error(`fairshoe-verify: ${err.message}`);
+      return EXIT.input;
+    }
+    console.error(`fairshoe-verify: internal error, nothing was verified (please report it): ${err instanceof Error ? (err.stack ?? err.message) : String(err)}`);
+    return EXIT.internal;
+  }
+}

@@ -1,0 +1,327 @@
+{
+  "note": "A baccarat shoe of a twelve-table pair, cut by the player at 150: a free hand and two bets at table 3, each replayed by the tableau. Provable.",
+  "kept": {
+    "seedId": "sd_vectorbaccara1",
+    "gameId": "baccarat",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "root": {
+      "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+      "lines": [
+        "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+        "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+        "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+        "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+        "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+        "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+        "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+        "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+        "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+        "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+        "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+        "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+      ]
+    },
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "committedAt": 1000,
+    "clientSeedAt": 2000
+  },
+  "own": {
+    "proofs": [
+      "pf_vectorbaccara1",
+      "pf_vectorbaccara2"
+    ],
+    "shoes": [
+      "sh_vectorbaccara1"
+    ],
+    "nonce": 0,
+    "cuts": {
+      "sh_vectorbaccara1": {
+        "at": 150
+      }
+    },
+    "hands": {
+      "sh_vectorbaccara1": [
+        {
+          "roundId": null,
+          "from": 8,
+          "to": 12
+        },
+        {
+          "roundId": "R-1",
+          "from": 12,
+          "to": 17
+        },
+        {
+          "roundId": "R-2",
+          "from": 17,
+          "to": 22
+        }
+      ]
+    },
+    "tables": {
+      "R-1": 3,
+      "R-2": 3
+    }
+  },
+  "seed": {
+    "seedId": "sd_vectorbaccara1",
+    "gameId": "baccarat",
+    "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+    "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+    "clientSeed": "player-seed-01",
+    "clientSeedBy": "player",
+    "lastNonce": -1,
+    "lastShoes": [
+      {
+        "table": 1,
+        "shoeNo": 0
+      },
+      {
+        "table": 2,
+        "shoeNo": 0
+      },
+      {
+        "table": 3,
+        "shoeNo": 1
+      },
+      {
+        "table": 4,
+        "shoeNo": 0
+      },
+      {
+        "table": 5,
+        "shoeNo": 0
+      },
+      {
+        "table": 6,
+        "shoeNo": 0
+      },
+      {
+        "table": 7,
+        "shoeNo": 0
+      },
+      {
+        "table": 8,
+        "shoeNo": 0
+      },
+      {
+        "table": 9,
+        "shoeNo": 0
+      },
+      {
+        "table": 10,
+        "shoeNo": 0
+      },
+      {
+        "table": 11,
+        "shoeNo": 0
+      },
+      {
+        "table": 12,
+        "shoeNo": 0
+      }
+    ],
+    "root": {
+      "hash": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f",
+      "lines": [
+        "baccarat:10:d8949ba05c2f4e03ac1b8985c73e5b5a778c5558d1efd77e3f8c590ccc268ae5",
+        "baccarat:11:19f761989ced1a86b5656d0096db58466d0acbacfda474cdbeadb90ed2c4a237",
+        "baccarat:12:b5cdbe8b2006df9d8218ea26cc407f95c3413052ffbc25899eded783bbf6b4cb",
+        "baccarat:1:2c421f497435a4473bf352cc99472b4d1683232074d2aa9fa29a56122d0cef1d",
+        "baccarat:2:a8307a21ddbe302a505b6ecda7de77a12a44b9369af73c86a9203fe81cdbd24e",
+        "baccarat:3:32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+        "baccarat:4:f2c09cd634279ebec80e474ba159acabe2006c6b616a8bded1edf77033e17b0c",
+        "baccarat:5:272e4343145579c46379e16e13e2ab4bd1ae29666390fd47b4fa66862e7a88bd",
+        "baccarat:6:5a8a87abbe5d0481d76b5210e37a2902948993c6fb57f3b63caeed7bc9d93258",
+        "baccarat:7:f2064765348bec1cc19041741eb8ced0bebb9b424ac37b1431175a728cb38b88",
+        "baccarat:8:8a0f90a227a06f2f8b6aa8457e37ff3444901bb537d2d9979b9772a6501e4c84",
+        "baccarat:9:c8edc476c8078de716cb668337a3024b03047afdd9ed19611784b5623d9c8ef0"
+      ]
+    },
+    "committedAt": 1000,
+    "clientSeedAt": 2000,
+    "revealedAt": 9000
+  },
+  "proofs": [
+    {
+      "v": 1,
+      "alg": "fairshoe/v1",
+      "lib": "fairshoe@1.1.0",
+      "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "clientSeed": "player-seed-01",
+      "clientSeedBy": "player",
+      "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "engineVersion": 1,
+      "at": 5000,
+      "id": "pf_vectorbaccara1",
+      "gameId": "baccarat",
+      "roundId": "R-1",
+      "seedId": "sd_vectorbaccara1",
+      "steps": [],
+      "shoes": [
+        {
+          "shoe": "sh_vectorbaccara1",
+          "table": 3,
+          "from": 12,
+          "to": 17
+        }
+      ],
+      "outcome": {
+        "result": {
+          "kind": "side",
+          "side": "player"
+        },
+        "detail": {
+          "variant": "classic",
+          "table": 3,
+          "shoe": 1,
+          "hand": 2,
+          "player": [
+            "2C",
+            "QS",
+            "5C"
+          ],
+          "banker": [
+            "6C",
+            "10C"
+          ],
+          "playerTotal": 7,
+          "bankerTotal": 6,
+          "winner": "player",
+          "strikes": [],
+          "multiplier": 1,
+          "fee": 0
+        }
+      }
+    },
+    {
+      "v": 1,
+      "alg": "fairshoe/v1",
+      "lib": "fairshoe@1.1.0",
+      "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+      "clientSeed": "player-seed-01",
+      "clientSeedBy": "player",
+      "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+      "engineVersion": 1,
+      "at": 5000,
+      "id": "pf_vectorbaccara2",
+      "gameId": "baccarat",
+      "roundId": "R-2",
+      "seedId": "sd_vectorbaccara1",
+      "steps": [],
+      "shoes": [
+        {
+          "shoe": "sh_vectorbaccara1",
+          "table": 3,
+          "from": 17,
+          "to": 22
+        }
+      ],
+      "outcome": {
+        "result": {
+          "kind": "side",
+          "side": "player"
+        },
+        "detail": {
+          "variant": "classic",
+          "table": 3,
+          "shoe": 1,
+          "hand": 3,
+          "player": [
+            "7H",
+            "JD"
+          ],
+          "banker": [
+            "AD",
+            "2S",
+            "2D"
+          ],
+          "playerTotal": 7,
+          "bankerTotal": 5,
+          "winner": "player",
+          "strikes": [],
+          "multiplier": 1,
+          "fee": 0
+        }
+      }
+    }
+  ],
+  "shoes": [
+    {
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorbaccara1",
+        "gameId": "baccarat",
+        "table": 3,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorbaccara1",
+          "chainId": "ch_vectorbaccara3",
+          "index": 1,
+          "prevLink": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "terminal": "32b6b53bde1c77e41e52fe6ee7449a0badf1d12e8a759cb23131f916f94eb9a0",
+          "root": "41df82260b93152af604b57a6a744bf0bcc2027f8f8f9f8158caeea9f12ba89f"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "86379a643b8eebd73a3ff4985a3aa7c51cfd18dd8498eb14db72131cc58806e1",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 328,
+        "endAt": 364,
+        "burnRule": "bac-value",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorbaccara1",
+        "status": "shuffled",
+        "link": "0efc9869730e32a919f0474770ebd3afe67100078944b5bf63101a103ced4886",
+        "salt": "665556858986cf56af560f355652fc08cf588909e8e4583240389ea86a66b01b",
+        "order": "aihNGkwXycQlDdXpBrcFOqsjTNpmKEFrRXuoWJAqBVvPznelCDgouESZQVWsPSuvSPscNLgcbhKkBYuhcnwoYSmRuitXKlZpQWdMAcLONvMaqRhEfGDnNcEsQPbNxLggywpjGvTyemIJWUmUpALuChtWFHVODkXyyhosLwrTakBbYVcRGSCpzwhELwelAMddUGAYZWihlHxWHToqPVKHjtRHlmjrMmQCJfFCySuTuZJUZVzxBpGgBaYOskUIkDozDFkOLxnzqGYCxOaIawKXiXEEytfaoqeZjUxdvbFMOGQdiWpgrvjbmeAITlUeHmbMIQDAnfsbHrgZfzznqKCftFiiOxzBCPxtdJfeytsjVrLYHVBSMINXvwZrIdPtvKlDJSPRRonNenTFTUJRYMabAEgkKQfjiqIJ",
+        "cut": {
+          "at": 150,
+          "by": "player"
+        },
+        "burn": {
+          "cards": 8,
+          "shown": "7C"
+        },
+        "rounds": [
+          {
+            "roundId": null,
+            "from": 8,
+            "to": 12
+          },
+          {
+            "roundId": "R-1",
+            "from": 12,
+            "to": 17
+          },
+          {
+            "roundId": "R-2",
+            "from": 17,
+            "to": 22
+          }
+        ],
+        "at": 8000
+      }
+    }
+  ],
+  "records": {
+    "seedId": "sd_vectorbaccara1",
+    "gameId": "baccarat",
+    "proofs": [
+      "pf_vectorbaccara1",
+      "pf_vectorbaccara2"
+    ],
+    "shoes": [
+      "sh_vectorbaccara1"
+    ]
+  }
+}
