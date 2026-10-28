@@ -19,20 +19,37 @@ export interface ShoeRulesV1 {
   burn: BurnRule;
   /** 'player': the player may cut anywhere in the range (or cut automatically at kAuto); 'auto': only kAuto. */
   cutPolicy: CutPolicy;
+  /**
+   * A commitment may also state cut policy 'auto' (only kAuto): the solo row of fairshoe@1.1.0, under which the
+   * reference server dealt every solo round cut at kAuto. Such a shoe is held to it (an automatic cut only), so a
+   * record of 1.1.0 stays valid; it is never looser than the row.
+   */
+  autoToo?: true;
+  guard?: 'rtp-995';
+  guardWeights?: 'baccarat-multiplier/1';
+  /** Historical Max shoes had a cut card, only valid without a guard marker. */
+  legacyEndAt?: number;
 }
 
 /** Baccarat (12 tables), the four multiplier variants, Dragon Tiger, Card Duel (one table each). */
-const cardFamily = (tables: number): ShoeRulesV1 => Object.freeze({ tables, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX] as const), endAt: 364, burn: 'bac-value', cutPolicy: 'player' });
-/** Solo blackjack: one table, a committed shoe per round, cut automatically at kAuto, no burn, no cut card. */
-const SOLO_BLACKJACK: ShoeRulesV1 = Object.freeze({ tables: 1, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX] as const), endAt: null, burn: 'none', cutPolicy: 'auto' });
+const cardFamily = (tables: number, multiplier = false): ShoeRulesV1 => Object.freeze({ tables, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX] as const), endAt: 364, burn: 'bac-value', cutPolicy: 'player', guard: 'rtp-995', ...(multiplier ? { guardWeights: 'baccarat-multiplier/1' as const } : {}) });
+/**
+ * Solo blackjack: one table, a fresh committed shoe of eight decks for every round, cut by the player anywhere in the
+ * range or automatically at kAuto, no burn, no cut card (fairshoe@1.2.0). A shoe committed under the row of 1.1.0
+ * (cut policy 'auto': kAuto only) is still accepted and held to that.
+ */
+const SOLO_BLACKJACK: ShoeRulesV1 = Object.freeze({ tables: 1, decks: 8, cutRange: Object.freeze([CUT_MIN, CUT_MAX] as const), endAt: null, burn: 'none', cutPolicy: 'player', autoToo: true });
+
+/** The solo blackjack tables (game id = table id): one shoe per round, hands of no fixed length. */
+export const SOLO_BLACKJACK_GAMES: ReadonlySet<string> = new Set(['solo-classic', 'blitz-solo', 'freebet-solo', 'solo-vip']);
 
 /** Game id -> shoe rules (fairshoe/v1). */
 export const SHOE_GAMES_V1: Readonly<Record<string, ShoeRulesV1>> = Object.freeze({
   baccarat: cardFamily(12),
-  'blitz-baccarat': cardFamily(1),
-  'gold-baccarat': cardFamily(1),
-  'jade-baccarat': cardFamily(1),
-  'blitz-baccarat-max': cardFamily(1),
+  'blitz-baccarat': cardFamily(1, true),
+  'gold-baccarat': cardFamily(1, true),
+  'jade-baccarat': cardFamily(1, true),
+  'blitz-baccarat-max': Object.freeze({ ...cardFamily(1, true), endAt: null, legacyEndAt: 364 }),
   'dragon-tiger': cardFamily(1),
   'card-duel': cardFamily(1),
   'solo-classic': SOLO_BLACKJACK,
@@ -53,6 +70,8 @@ export interface StatedShoeRules {
   endAt: number | null;
   burnRule: BurnRule;
   cutPolicy: CutPolicy;
+  guard?: 'rtp-995';
+  guardWeights?: 'baccarat-multiplier/1';
 }
 
 /** Differences between a commitment's rules and the published ones (empty: they agree). */
@@ -61,9 +80,12 @@ export function shoeRulesDiff(stated: StatedShoeRules, rules: ShoeRulesV1): stri
   if (stated.decks !== rules.decks) out.push(`decks ${String(stated.decks)}, the rules say ${rules.decks}`);
   const [min, max] = Array.isArray(stated.cutRange) ? stated.cutRange : [NaN, NaN];
   if (min !== rules.cutRange[0] || max !== rules.cutRange[1]) out.push(`cut range ${String(min)} to ${String(max)}, the rules say ${rules.cutRange[0]} to ${rules.cutRange[1]}`);
-  if (stated.endAt !== rules.endAt) out.push(`cut card at ${String(stated.endAt)}, the rules say ${String(rules.endAt)}`);
+  if (stated.endAt !== rules.endAt && !(stated.guard === undefined && stated.endAt === rules.legacyEndAt)) out.push(`cut card at ${String(stated.endAt)}, the rules say ${String(rules.endAt)}`);
   if (stated.burnRule !== rules.burn) out.push(`burn ${String(stated.burnRule)}, the rules say ${rules.burn}`);
-  if (stated.cutPolicy !== rules.cutPolicy) out.push(`cut policy ${String(stated.cutPolicy)}, the rules say ${rules.cutPolicy}`);
+  if (stated.cutPolicy !== rules.cutPolicy && !(stated.cutPolicy === 'auto' && rules.autoToo)) out.push(`cut policy ${String(stated.cutPolicy)}, the rules say ${rules.cutPolicy}`);
+  if (stated.guard !== undefined && stated.guard !== rules.guard) out.push('unknown guard rule');
+  if (stated.guard !== undefined && stated.guardWeights !== rules.guardWeights) out.push('guard weights do not match the published table');
+  if (stated.guard === undefined && stated.guardWeights !== undefined) out.push('guard weights without a guard rule');
   return out;
 }
 

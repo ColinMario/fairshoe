@@ -73,7 +73,7 @@ describe('verifier page', () => {
     const codeOnly = code.replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/.*$/gm, '');
     expect(codeOnly).not.toMatch(/\b(?:require\(|process\.|Buffer\b|node:|import\s*[{(*]|export\s|globalThis|window\.|document\.|TextEncoder|crypto\.)/);
     const lib = bare(code);
-    expect(`${lib.ALG} ${lib.LIB}`).toBe('fairshoe/v1 fairshoe@1.1.0');
+    expect(`${lib.ALG} ${lib.LIB}`).toBe('fairshoe/v1 fairshoe@1.2.0');
     expect(EXAMPLES.length).toBeGreaterThan(3);
     for (const ex of EXAMPLES) {
       const inPage = lib.verifyBundle(lib.collect([ex]));
@@ -90,7 +90,9 @@ describe('verifier page', () => {
     expect(scripts).toHaveLength(1);
     expect(html.match(/<script/g)).toHaveLength(1);
     expect(csp).toContain(`'sha256-${createHash('sha256').update(scripts[0]!, 'utf8').digest('base64')}'`);
-    expect(html).not.toMatch(/\b(?:src|href|action)\s*=|@import|url\(|%[A-Z_]+%/);
+    // Attribute/CSS resource references, not JavaScript variables such as `action = 0`. Code purity is checked above.
+    const markup = html.replace(/<script>[\s\S]*?<\/script>/g, '');
+    expect(markup).not.toMatch(/\b(?:src|href|action)\s*=|@import|url\(|%[A-Z_]+%/);
   });
 
   it("the page's code verifies the files chosen, dropped or pasted and shows the reasons as text", async () => {

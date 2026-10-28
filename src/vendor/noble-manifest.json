@@ -1,0 +1,44 @@
+{
+  "version": 1,
+  "packages": [
+    {
+      "name": "@noble/curves",
+      "version": "2.4.0",
+      "file": "noble-curves-2.4.0.tgz",
+      "integrity": "sha512-P4/62zrgfH33CneE3Dn4WhJVA22YUU0eR51wKIan4NVRvwsA0YnPTwWGpNbpuacSujmSFLvyzpyuR30+fbq2Ew=="
+    },
+    {
+      "name": "@noble/hashes",
+      "version": "2.4.0",
+      "file": "noble-hashes-2.4.0.tgz",
+      "integrity": "sha512-X5XaVWZIBCT7HHZGm5I7ZQXDwLG+bGXuSrMQAW+7Zvl87h1kmc1ZB1VSRJcpUfoUrGQp4Fkoxm5kZ+Ms+aW+eA=="
+    }
+  ],
+  "sourceFiles": {
+    "curves/package/abstract/bls.js": "9bc37d55fbf294ef99d944950eb58ab5b0330e27aa9dacf73f557a7b88e8930f",
+    "curves/package/abstract/curve.js": "dbaeee3b41ff47efb76b78e14170fe4dda7c7ecdc387c402f16c5118e0bac356",
+    "curves/package/abstract/der.js": "7f80d698611b131368ecf732b8740bb97f72cd42fef77c4b0bb923e2e2d44159",
+    "curves/package/abstract/hash-to-curve.js": "e3c97e7d0827b728b14e3311ed11d8e386d8a70d8fc77e0b9fd2a3090f19d955",
+    "curves/package/abstract/modular.js": "9ced3aa10598277a735e54f7b61d88e929d565da884ba5385f9006ebb3b6aab2",
+    "curves/package/abstract/tower.js": "6e9f7273af53c06f8124c33b89d0d70d7d46e95effbf46d242e580e9c5aa8137",
+    "curves/package/abstract/weierstrass.js": "d007e949c0d5b912e8c54132983219c8ff8f69bda058a70563b5cc7a8783331c",
+    "curves/package/bls12-381.js": "eab0e80c31087656d0a0c2024906418e59ab6e2f02c9e5395406602c25351276",
+    "curves/package/utils.js": "be9ff86aef76419376e4d66cf01a134f3117f1f8dd62d81f1b79100145503367",
+    "hashes/package/_md.js": "60cf3010fda89e3e4d3f0e7ff1ce249e9c467f34b4fd41b6fd6101d9f69be763",
+    "hashes/package/_u64.js": "b09da8c07fe8187c07649494cdb7cd0bcf13df90b506a9473d19e4d5f8c2e102",
+    "hashes/package/hmac.js": "fec9f8f3aeda785ea2de91cc4c059d54ef98196261c026c43f48341007ae52c9",
+    "hashes/package/sha2.js": "471746bba6ec4c6238ca41358d1d3b40b6ff31cf3363f0b4d550c649c1a8e83b",
+    "hashes/package/utils.js": "037ad49adb78168b6b699598fd33f85f7877456b1d28b4d032e2a1a16807947c"
+  },
+  "utf8AdapterSha256": "287db7e2c38afeffa60da5582586dc38a16b341a3585bf0fab8b411be76076f9",
+  "generatedSha256": "ec5d9a874d21ed6ee0e8fa918f033087f394b97df63d1d0ba0c17e6da275a1f3",
+  "adaptations": [
+    "Tree-shaken ESM bundle exporting only signature verification.",
+    "Pure UTF-8 encoder adapter from fairshoe bytes.ts.",
+    "Random generation is replaced by an always-throwing adapter; verification is deterministic and never invokes it. No cryptographic arithmetic changed."
+  ],
+  "upstream": [
+    "https://github.com/paulmillr/noble-curves/tree/2.4.0",
+    "https://github.com/paulmillr/noble-hashes/tree/2.4.0"
+  ]
+}

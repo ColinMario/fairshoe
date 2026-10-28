@@ -1,6 +1,6 @@
 {
   "alg": "fairshoe/v1",
-  "lib": "fairshoe@1.1.0",
+  "lib": "fairshoe@1.2.0",
   "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
   "clientSeed": "player-seed-01",
   "chainSecret": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
@@ -503,7 +503,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -543,7 +543,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -656,7 +656,7 @@
           52,
           364
         ],
-        "cutPolicy": "auto",
+        "cutPolicy": "player",
         "autoCut": 317,
         "endAt": null,
         "burnRule": "none",
@@ -669,15 +669,15 @@
         "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
         "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
         "cut": {
-          "at": 317,
-          "by": "auto"
+          "at": 175,
+          "by": "player"
         },
         "burn": null,
         "rounds": [
           {
             "roundId": "R-1",
             "from": 0,
-            "to": 6
+            "to": 5
           }
         ],
         "at": 8000
@@ -686,7 +686,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -716,22 +716,100 @@
               "shoe": "sh_vectorsolo0001",
               "table": 1,
               "from": 0,
-              "to": 6
+              "to": 5
             }
           ],
           "outcome": {
             "roundId": "R-1",
-            "cards": [
-              "JS",
-              "8H",
-              "7D",
-              "JS",
-              "AC",
-              "10H"
-            ]
+            "roundNumber": 1,
+            "tableId": "solo-classic",
+            "tableName": "Blackjack Solo",
+            "at": 5000,
+            "dealerCards": [
+              {
+                "rank": "4",
+                "suit": "H"
+              },
+              {
+                "rank": "10",
+                "suit": "H"
+              },
+              {
+                "rank": "4",
+                "suit": "H"
+              }
+            ],
+            "dealerTotal": 18,
+            "hands": [
+              {
+                "seat": 0,
+                "cards": [
+                  {
+                    "rank": "A",
+                    "suit": "D"
+                  },
+                  {
+                    "rank": "8",
+                    "suit": "D"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              }
+            ],
+            "sideBets": [],
+            "totalBet": 1000,
+            "totalWin": 2000
           }
         }
       ],
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      },
       "pairRecords": {
         "seedId": "sd_vectorsolo0001",
         "gameId": "solo-classic",
@@ -740,6 +818,300 @@
         ],
         "shoes": [
           "sh_vectorsolo0001"
+        ]
+      }
+    },
+    "soloSplit": {
+      "pair": {
+        "seedId": "sd_vectorsolo0002",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "kept": {
+        "seedId": "sd_vectorsolo0002",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0002",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0002",
+          "chainId": "ch_vectorsolo0002",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0002",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 64,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 10
+          }
+        ],
+        "at": 8000
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorsolo0002",
+          "gameId": "solo-classic",
+          "roundId": "R-1",
+          "seedId": "sd_vectorsolo0002",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "tx",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 4294967296,
+                  "v": 2358936171
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_vectorsolo0002",
+              "table": 1,
+              "from": 0,
+              "to": 10
+            }
+          ],
+          "outcome": {
+            "roundId": "R-1",
+            "roundNumber": 1,
+            "tableId": "solo-classic",
+            "tableName": "Blackjack Solo",
+            "at": 5000,
+            "dealerCards": [
+              {
+                "rank": "3",
+                "suit": "D"
+              },
+              {
+                "rank": "5",
+                "suit": "S"
+              },
+              {
+                "rank": "7",
+                "suit": "C"
+              },
+              {
+                "rank": "K",
+                "suit": "D"
+              }
+            ],
+            "dealerTotal": 25,
+            "hands": [
+              {
+                "seat": 0,
+                "cards": [
+                  {
+                    "rank": "10",
+                    "suit": "D"
+                  },
+                  {
+                    "rank": "A",
+                    "suit": "H"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              },
+              {
+                "seat": 0,
+                "cards": [
+                  {
+                    "rank": "10",
+                    "suit": "S"
+                  },
+                  {
+                    "rank": "6",
+                    "suit": "C"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              },
+              {
+                "seat": 2,
+                "cards": [
+                  {
+                    "rank": "2",
+                    "suit": "H"
+                  },
+                  {
+                    "rank": "7",
+                    "suit": "H"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              }
+            ],
+            "sideBets": [],
+            "totalBet": 3000,
+            "totalWin": 6000
+          }
+        }
+      ],
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0002"
+        ],
+        "shoes": [
+          "sh_vectorsolo0002"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0002": {
+            "at": 64
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0002": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 10,
+              "cards": [
+                "10D",
+                "2H",
+                "3D",
+                "10S",
+                "7H",
+                "5S",
+                "AH",
+                "6C",
+                "7C",
+                "KD"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 2,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 2,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 0,
+                  "hand": 1
+                },
+                "dealer",
+                "dealer"
+              ],
+              "splits": [
+                {
+                  "at": 6,
+                  "seat": 0,
+                  "hand": 0
+                }
+              ],
+              "boxes": [
+                0,
+                2
+              ]
+            }
+          ]
+        }
+      },
+      "pairRecords": {
+        "seedId": "sd_vectorsolo0002",
+        "gameId": "solo-classic",
+        "proofs": [
+          "pf_vectorsolo0002"
+        ],
+        "shoes": [
+          "sh_vectorsolo0002"
         ]
       }
     },
@@ -772,7 +1144,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -865,7 +1237,7 @@
       "padded": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -1071,7 +1443,7 @@
       "twice": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -1141,7 +1513,7 @@
       "padded": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -1354,7 +1726,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -1405,7 +1777,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -1637,7 +2009,7 @@
       "proof": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -1910,7 +2282,7 @@
       "proof": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -2042,7 +2414,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -2082,7 +2454,7 @@
         {
           "v": 1,
           "alg": "fairshoe/v1",
-          "lib": "fairshoe@1.1.0",
+          "lib": "fairshoe@1.2.0",
           "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
           "clientSeed": "player-seed-01",
           "clientSeedBy": "player",
@@ -2289,7 +2661,7 @@
           52,
           364
         ],
-        "cutPolicy": "auto",
+        "cutPolicy": "player",
         "autoCut": 317,
         "endAt": null,
         "burnRule": "none",
@@ -2302,8 +2674,8 @@
         "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
         "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
         "cut": {
-          "at": 317,
-          "by": "auto"
+          "at": 175,
+          "by": "player"
         },
         "burn": null,
         "rounds": [
@@ -2315,7 +2687,7 @@
           {
             "roundId": "R-1",
             "from": 7,
-            "to": 13
+            "to": 12
           }
         ],
         "at": 8000
@@ -2360,7 +2732,7 @@
           52,
           364
         ],
-        "cutPolicy": "auto",
+        "cutPolicy": "player",
         "autoCut": 317,
         "endAt": null,
         "burnRule": "none",
@@ -2373,23 +2745,1485 @@
         "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
         "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
         "cut": {
-          "at": 317,
-          "by": "auto"
+          "at": 175,
+          "by": "player"
         },
         "burn": null,
         "rounds": [
           {
             "roundId": "R-1",
             "from": 0,
-            "to": 6
+            "to": 5
           },
           {
             "roundId": "R-2",
-            "from": 6,
-            "to": 12
+            "from": 5,
+            "to": 11
           }
         ],
         "at": 8000
+      }
+    },
+    "soloLonger": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 7
+          }
+        ],
+        "at": 8000
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.2.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorsolo0001",
+        "gameId": "solo-classic",
+        "roundId": "R-1",
+        "seedId": "sd_vectorsolo0001",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "tx",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 4294967296,
+                "v": 2358936171
+              }
+            ],
+            "words": 1
+          }
+        ],
+        "shoes": [
+          {
+            "shoe": "sh_vectorsolo0001",
+            "table": 1,
+            "from": 0,
+            "to": 7
+          }
+        ],
+        "outcome": {
+          "roundId": "R-1",
+          "roundNumber": 1,
+          "tableId": "solo-classic",
+          "tableName": "Blackjack Solo",
+          "at": 5000,
+          "dealerCards": [
+            {
+              "rank": "4",
+              "suit": "H"
+            },
+            {
+              "rank": "10",
+              "suit": "H"
+            },
+            {
+              "rank": "4",
+              "suit": "H"
+            }
+          ],
+          "dealerTotal": 18,
+          "hands": [
+            {
+              "seat": 0,
+              "cards": [
+                {
+                  "rank": "A",
+                  "suit": "D"
+                },
+                {
+                  "rank": "8",
+                  "suit": "D"
+                }
+              ],
+              "bet": 1000,
+              "outcome": "win",
+              "payout": 2000
+            }
+          ],
+          "sideBets": [],
+          "totalBet": 1000,
+          "totalWin": 2000
+        }
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 7,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H",
+                "6C",
+                "JH"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer",
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "named": 5,
+      "slice": 7
+    },
+    "soloOtherCard": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.2.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorsolo0001",
+        "gameId": "solo-classic",
+        "roundId": "R-1",
+        "seedId": "sd_vectorsolo0001",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "tx",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 4294967296,
+                "v": 2358936171
+              }
+            ],
+            "words": 1
+          }
+        ],
+        "shoes": [
+          {
+            "shoe": "sh_vectorsolo0001",
+            "table": 1,
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "outcome": {
+          "roundId": "R-1",
+          "roundNumber": 1,
+          "tableId": "solo-classic",
+          "tableName": "Blackjack Solo",
+          "at": 5000,
+          "dealerCards": [
+            {
+              "rank": "4",
+              "suit": "H"
+            },
+            {
+              "rank": "10",
+              "suit": "H"
+            },
+            {
+              "rank": "6",
+              "suit": "C"
+            }
+          ],
+          "dealerTotal": 18,
+          "hands": [
+            {
+              "seat": 0,
+              "cards": [
+                {
+                  "rank": "A",
+                  "suit": "D"
+                },
+                {
+                  "rank": "8",
+                  "suit": "D"
+                }
+              ],
+              "bet": 1000,
+              "outcome": "win",
+              "payout": 2000
+            }
+          ],
+          "sideBets": [],
+          "totalBet": 1000,
+          "totalWin": 2000
+        }
+      },
+      "card": "6C"
+    },
+    "soloSwapped": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                "AD",
+                "4H",
+                "10H",
+                "8D",
+                "4H"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "seen": [
+        "AD",
+        "4H",
+        "10H",
+        "8D",
+        "4H"
+      ]
+    },
+    "soloCutMoved": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 177,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "askedCut": 175,
+      "recordedCut": 177
+    },
+    "soloOtherPlaces": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorsolo0001",
+          "gameId": "solo-classic",
+          "roundId": "R-1",
+          "seedId": "sd_vectorsolo0001",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "tx",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 4294967296,
+                  "v": 2358936171
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_vectorsolo0001",
+              "table": 1,
+              "from": 0,
+              "to": 5
+            }
+          ],
+          "outcome": {
+            "roundId": "R-1",
+            "roundNumber": 1,
+            "tableId": "solo-classic",
+            "tableName": "Blackjack Solo",
+            "at": 5000,
+            "dealerCards": [
+              {
+                "rank": "4",
+                "suit": "H"
+              },
+              {
+                "rank": "8",
+                "suit": "D"
+              },
+              {
+                "rank": "4",
+                "suit": "H"
+              }
+            ],
+            "dealerTotal": 18,
+            "hands": [
+              {
+                "seat": 0,
+                "cards": [
+                  {
+                    "rank": "A",
+                    "suit": "D"
+                  },
+                  {
+                    "rank": "10",
+                    "suit": "H"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              }
+            ],
+            "sideBets": [],
+            "totalBet": 1000,
+            "totalWin": 2000
+          }
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+          "clientSeed": "player-seed-01",
+          "clientSeedBy": "player",
+          "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+          "engineVersion": 1,
+          "at": 5000,
+          "id": "pf_vectorsolo0001",
+          "gameId": "solo-classic",
+          "roundId": "R-1",
+          "seedId": "sd_vectorsolo0001",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "tx",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 4294967296,
+                  "v": 2358936171
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_vectorsolo0001",
+              "table": 1,
+              "from": 0,
+              "to": 5
+            }
+          ],
+          "outcome": {
+            "roundId": "R-1",
+            "roundNumber": 1,
+            "tableId": "solo-classic",
+            "tableName": "Blackjack Solo",
+            "at": 5000,
+            "dealerCards": [
+              {
+                "rank": "A",
+                "suit": "D"
+              },
+              {
+                "rank": "8",
+                "suit": "D"
+              },
+              {
+                "rank": "4",
+                "suit": "H"
+              }
+            ],
+            "dealerTotal": 18,
+            "hands": [
+              {
+                "seat": 0,
+                "cards": [
+                  {
+                    "rank": "4",
+                    "suit": "H"
+                  },
+                  {
+                    "rank": "10",
+                    "suit": "H"
+                  }
+                ],
+                "bet": 1000,
+                "outcome": "win",
+                "payout": 2000
+              }
+            ],
+            "sideBets": [],
+            "totalBet": 1000,
+            "totalWin": 2000
+          }
+        }
+      ]
+    },
+    "soloPlacesOffRule": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H"
+              ],
+              "places": [
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "soloPhantomBox": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 7
+          }
+        ],
+        "at": 8000
+      },
+      "proof": {
+        "v": 1,
+        "alg": "fairshoe/v1",
+        "lib": "fairshoe@1.2.0",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "engineVersion": 1,
+        "at": 5000,
+        "id": "pf_vectorsolo0001",
+        "gameId": "solo-classic",
+        "roundId": "R-1",
+        "seedId": "sd_vectorsolo0001",
+        "steps": [
+          {
+            "nonce": 0,
+            "kind": "tx",
+            "status": "ok",
+            "draws": [
+              {
+                "n": 4294967296,
+                "v": 2358936171
+              }
+            ],
+            "words": 1
+          }
+        ],
+        "shoes": [
+          {
+            "shoe": "sh_vectorsolo0001",
+            "table": 1,
+            "from": 0,
+            "to": 7
+          }
+        ],
+        "outcome": {
+          "roundId": "R-1",
+          "roundNumber": 1,
+          "tableId": "solo-classic",
+          "tableName": "Blackjack Solo",
+          "at": 5000,
+          "dealerCards": [
+            {
+              "rank": "8",
+              "suit": "D"
+            },
+            {
+              "rank": "6",
+              "suit": "C"
+            },
+            {
+              "rank": "J",
+              "suit": "H"
+            }
+          ],
+          "dealerTotal": 18,
+          "hands": [
+            {
+              "seat": 0,
+              "cards": [
+                {
+                  "rank": "A",
+                  "suit": "D"
+                },
+                {
+                  "rank": "10",
+                  "suit": "H"
+                }
+              ],
+              "bet": 1000,
+              "outcome": "win",
+              "payout": 2000
+            },
+            {
+              "seat": 1,
+              "cards": [
+                {
+                  "rank": "4",
+                  "suit": "H"
+                },
+                {
+                  "rank": "4",
+                  "suit": "H"
+                }
+              ],
+              "bet": 0,
+              "outcome": "lose",
+              "payout": 0
+            }
+          ],
+          "sideBets": [],
+          "totalBet": 1000,
+          "totalWin": 2000
+        }
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 7,
+              "cards": [
+                "AD",
+                "4H",
+                "8D",
+                "10H",
+                "4H",
+                "6C",
+                "JH"
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 1,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                {
+                  "seat": 1,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "soloFaceDown": {
+      "kept": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "committedAt": 1000,
+        "clientSeedAt": 2000
+      },
+      "pair": {
+        "seedId": "sd_vectorsolo0001",
+        "gameId": "solo-classic",
+        "serverSeed": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "lastNonce": 0,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2",
+          "lines": [
+            "solo-classic:1:eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 2000,
+        "revealedAt": 9000
+      },
+      "commit": {
+        "alg": "fairshoe/v1",
+        "shoe": "sh_vectorsolo0001",
+        "gameId": "solo-classic",
+        "table": 1,
+        "shoeNo": 1,
+        "decks": 8,
+        "origin": {
+          "kind": "chain",
+          "seedId": "sd_vectorsolo0001",
+          "chainId": "ch_vectorsolo0001",
+          "index": 1,
+          "prevLink": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "terminal": "eeae3acf8fb5c6b16dd4806335e63c5cfd7b1fe7a652d409f5c830eb579f44e9",
+          "root": "d5483d75536aed906e0911823a7b6dcd5ef92b3f7c718eff8b24dda220464fc2"
+        },
+        "clientSeed": "player-seed-01",
+        "clientSeedBy": "player",
+        "shoeHash": "b5abac697dc50c14da7e78106d5f8705ada1cc3e3fad7453814e3a7f80ea92b4",
+        "cutRange": [
+          52,
+          364
+        ],
+        "cutPolicy": "player",
+        "autoCut": 317,
+        "endAt": null,
+        "burnRule": "none",
+        "at": 3000
+      },
+      "reveal": {
+        "shoe": "sh_vectorsolo0001",
+        "status": "ended",
+        "link": "4408d6caade48539de89d98f915de91ff83140420bc5f5708a7f59a3114bcc5d",
+        "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
+        "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
+        "cut": {
+          "at": 175,
+          "by": "player"
+        },
+        "burn": null,
+        "rounds": [
+          {
+            "roundId": "R-1",
+            "from": 0,
+            "to": 5
+          }
+        ],
+        "at": 8000
+      },
+      "own": {
+        "proofs": [
+          "pf_vectorsolo0001"
+        ],
+        "shoes": [
+          "sh_vectorsolo0001"
+        ],
+        "nonce": 1,
+        "cuts": {
+          "sh_vectorsolo0001": {
+            "at": 175
+          }
+        },
+        "hands": {
+          "sh_vectorsolo0001": [
+            {
+              "roundId": "R-1",
+              "from": 0,
+              "to": 5,
+              "cards": [
+                null,
+                null,
+                null,
+                null,
+                null
+              ],
+              "places": [
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                {
+                  "seat": 0,
+                  "hand": 0
+                },
+                "dealer",
+                "dealer"
+              ],
+              "boxes": [
+                0
+              ]
+            }
+          ]
+        }
       }
     },
     "rouletteNoDetail": {
@@ -2406,7 +4240,7 @@
       "proof": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",
@@ -2643,7 +4477,7 @@
       "proof": {
         "v": 1,
         "alg": "fairshoe/v1",
-        "lib": "fairshoe@1.1.0",
+        "lib": "fairshoe@1.2.0",
         "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
         "clientSeed": "player-seed-01",
         "clientSeedBy": "player",

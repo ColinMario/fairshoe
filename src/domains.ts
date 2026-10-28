@@ -6,7 +6,7 @@
 /** Algorithm id; part of every record. */
 export const ALG = 'fairshoe/v1';
 /** This library (records name it as `fairshoe@<version>`). */
-export const LIB_VERSION = '1.1.0';
+export const LIB_VERSION = '1.2.0';
 export const LIB = `fairshoe@${LIB_VERSION}`;
 
 /** Game ids: lower-case letters, digits, '_' and '-', 1 to 64 characters, never ':' (the id is part of every message). */

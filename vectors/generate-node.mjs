@@ -5,7 +5,7 @@ import { createHmac, createHash } from 'node:crypto';
 const SEED = '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f';
 const CHAIN_SECRET = '202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f';
 const CS = 'player-seed-01';
-const LIB = 'fairshoe@1.1.0';
+const LIB = 'fairshoe@1.2.0';
 const sha = (b) => createHash('sha256').update(b).digest();
 const hmac = (k, m) => createHmac('sha256', k).update(Buffer.from(m, 'utf8')).digest();
 function stream(key, msg) {
@@ -76,7 +76,7 @@ out.cutEdges = { min: 52, max: 364, allowed: [52, 364], refused: [51, 365] };
     salt: sl.toString('hex'), shoeHash: hash(sl, s.order), shoeHashHexSalt: sha(Buffer.concat([Buffer.from(sl.toString('hex'), 'utf8'), Buffer.from(s.order.join(','), 'utf8')])).toString('hex'),
     autoCut: k, cut: k, dealtFirst10: D.slice(0, 10), burn: bacBurn(D), endAt: 364, atEndAtMinus1: D[363], atEndAt364: D[364] };
 }
-// blackjack solo table, shoe 2 under link 2, cut at kAuto, no cut card
+// blackjack solo table, shoe 2 under link 2, cut at kAuto (the deal without the player's cut), no cut card
 {
   const key = link(CHAIN_SECRET, L, 2);
   const s = shoe(key, 'solo-classic', 1, 2, 8);
@@ -152,19 +152,98 @@ const dtRank = (c) => DT_RANK[c.slice(0, -1)] ?? Number(c.slice(0, -1));
   const pair = pairOf('dragon-tiger', seedId, root, -1, [{ table: 1, shoeNo: 1 }]);
   out.records = { dragonTiger: { pair, kept: keptOf(pair), commit: x.commit, reveal: x.reveal, proofs, pairRecords: { seedId, gameId: 'dragon-tiger', proofs: proofs.map((p) => p.id), shoes: [x.commit.shoe] } } };
 }
+// Blackjack totals (SPEC section 6 cards): A 1 or 11, 2 to 9 their number, 10 J Q K 10.
+const bjValue = (c) => { const r = c.slice(0, -1); return r === 'A' ? 1 : ['10', 'J', 'Q', 'K'].includes(r) ? 10 : Number(r); };
+const bjTotal = (cs) => { const hard = cs.reduce((t, c) => t + bjValue(c), 0); return cs.some((c) => c.startsWith('A')) && hard + 10 <= 21 ? hard + 10 : hard; };
+const cardObj = (c) => ({ rank: c.slice(0, -1), suit: c.slice(-1) });
+/**
+ * A solo blackjack round as the reference server deals it from D (SPEC section 6: box card 1 in seat order, the
+ * dealer's up card, box card 2 in seat order, the dealer's hole card), every hand standing on two cards (a box in
+ * `split` splits its pair first: its second card starts a hand right behind it, each takes one card), the dealer
+ * drawing to 17; its outcome as the server's history entry, and what the player saw: the cards in dealing order, where
+ * each went ('dealer' or { seat, hand }), the splits (before which card), the boxes it bet on.
+ */
+function soloRound(D, roundId, seats = [0], split = []) {
+  const b = seats.length;
+  const hands = new Map(seats.map((s) => [s, [[]]]));
+  const dealer = [];
+  const places = [];
+  const splits = [];
+  let at = 0;
+  const give = (p) => { places.push(p); if (p === 'dealer') dealer.push(D[at]); else hands.get(p.seat)[p.hand].push(D[at]); at++; };
+  for (const seat of seats) give({ seat, hand: 0 });
+  give('dealer');
+  for (const seat of seats) give({ seat, hand: 0 });
+  give('dealer');
+  for (const seat of seats) {
+    if (!split.includes(seat)) continue;
+    const hs = hands.get(seat);
+    splits.push({ at, seat, hand: 0 });
+    hs.splice(1, 0, [hs[0].pop()]);
+    give({ seat, hand: 0 });
+    give({ seat, hand: 1 });
+  }
+  while (bjTotal(dealer) < 17) give('dealer');
+  const d = bjTotal(dealer);
+  const list = seats.flatMap((seat) => hands.get(seat).map((cs) => {
+    const p = bjTotal(cs);
+    const result = d > 21 || p > d ? 'win' : p === d ? 'push' : 'lose';
+    return { seat, cards: cs.map(cardObj), bet: 1000, outcome: result, payout: result === 'win' ? 2000 : result === 'push' ? 1000 : 0 };
+  }));
+  const totalBet = list.length * 1000, totalWin = list.reduce((t, h) => t + h.payout, 0);
+  const outcome = { roundId, roundNumber: 1, tableId: 'solo-classic', tableName: 'Blackjack Solo', at: 5000, dealerCards: dealer.map(cardObj), dealerTotal: d,
+    hands: list, sideBets: [], totalBet, totalWin };
+  const seen = { roundId, from: 0, to: at, cards: D.slice(0, at), places, ...(splits.length > 0 ? { splits } : {}), boxes: [...seats] };
+  return { cards: at, dealer, outcome, seen };
+}
+const SOLO_RULES = { cutPolicy: 'player', endAt: null, burn: 'none' };
 {
-  // Solo blackjack: one round from its own shoe (automatic cut, no burn, no cut card) and one draw of the round stream.
+  // Solo blackjack: one round from its own fresh shoe, cut by the player (the first cut from 173 on that deals a plain
+  // round: no blackjack, no ace up), no burn, no cut card, and one draw of the round stream. The player's own records:
+  // the cut asked for, the round seen with its cards in dealing order.
   const seedId = 'sd_vectorsolo0001';
   const terminal = out.chain.links[0];
   const root = rootOf([`solo-classic:1:${terminal}`]);
-  const x = cardShoeRecord({ gameId: 'solo-classic', table: 1, shoeNo: 1, seedId, chainId: 'ch_vectorsolo0001', shoeId: 'sh_vectorsolo0001', root, terminal, key: link(CHAIN_SECRET, L, 1), by: 'auto', burn: false,
-    rounds: [['R-1', 6]], status: 'ended', rules: { cutPolicy: 'auto', endAt: null, burn: 'none' } });
+  const key = link(CHAIN_SECRET, L, 1);
+  const order = shoe(key, 'solo-classic', 1, 1, 8).order;
+  const plain = (D) => bjTotal([D[0], D[2]]) < 21 && bjTotal([D[1], D[3]]) < 21 && !D[1].startsWith('A');
+  let cut = 173;
+  while (!plain(rot(order, cut))) cut++;
+  const r = soloRound(rot(order, cut), 'R-1');
+  const x = cardShoeRecord({ gameId: 'solo-classic', table: 1, shoeNo: 1, seedId, chainId: 'ch_vectorsolo0001', shoeId: 'sh_vectorsolo0001', root, terminal, key, cut, by: 'player', burn: false,
+    rounds: [['R-1', r.cards]], status: 'ended', rules: SOLO_RULES });
   const s = round('solo-classic', 0);
   s.int(2 ** 32);
   const proof = proofOf({ id: 'pf_vectorsolo0001', gameId: 'solo-classic', roundId: 'R-1', seedId, steps: [{ nonce: 0, kind: 'tx', status: 'ok', draws: s.draws, words: s.words }],
-    shoes: [{ shoe: x.commit.shoe, table: 1, from: 0, to: 6 }], outcome: { roundId: 'R-1', cards: x.D.slice(0, 6) } });
+    shoes: [{ shoe: x.commit.shoe, table: 1, from: 0, to: r.cards }], outcome: r.outcome });
   const pair = pairOf('solo-classic', seedId, root, 0, [{ table: 1, shoeNo: 1 }]);
-  out.records.soloBlackjack = { pair, kept: keptOf(pair), commit: x.commit, reveal: x.reveal, proofs: [proof], pairRecords: { seedId, gameId: 'solo-classic', proofs: [proof.id], shoes: [x.commit.shoe] } };
+  const own = { proofs: [proof.id], shoes: [x.commit.shoe], nonce: 1, cuts: { [x.commit.shoe]: { at: cut } }, hands: { [x.commit.shoe]: [r.seen] } };
+  out.records.soloBlackjack = { pair, kept: keptOf(pair), commit: x.commit, reveal: x.reveal, proofs: [proof], own, pairRecords: { seedId, gameId: 'solo-classic', proofs: [proof.id], shoes: [x.commit.shoe] } };
+}
+{
+  // Solo blackjack with two boxes (seats 0 and 2) and a split: the first cut from 52 on whose first deal gives box 0 a
+  // pair (no aces), no blackjack and no ace up. Box 0 splits (its second card starts hand 1), each split hand takes one
+  // card, box 2 stands, the dealer draws to 17; the deal without a cut of the player (kAuto) fails that, so the player
+  // cut. Its own pair (the chain of records.soloBlackjack, shoe 1).
+  const seedId = 'sd_vectorsolo0002';
+  const terminal = out.chain.links[0];
+  const root = rootOf([`solo-classic:1:${terminal}`]);
+  const key = link(CHAIN_SECRET, L, 1);
+  const order = shoe(key, 'solo-classic', 1, 1, 8).order;
+  const rank = (c) => c.slice(0, -1);
+  const fits = (D) => rank(D[0]) === rank(D[3]) && rank(D[0]) !== 'A' && bjTotal([D[1], D[4]]) < 21 && !D[2].startsWith('A') && bjTotal([D[2], D[5]]) < 21;
+  let cut = 52;
+  while (!fits(rot(order, cut))) cut++;
+  const r = soloRound(rot(order, cut), 'R-1', [0, 2], [0]);
+  const x = cardShoeRecord({ gameId: 'solo-classic', table: 1, shoeNo: 1, seedId, chainId: 'ch_vectorsolo0002', shoeId: 'sh_vectorsolo0002', root, terminal, key, cut, by: 'player', burn: false,
+    rounds: [['R-1', r.cards]], status: 'ended', rules: SOLO_RULES });
+  const s = round('solo-classic', 0);
+  s.int(2 ** 32);
+  const proof = proofOf({ id: 'pf_vectorsolo0002', gameId: 'solo-classic', roundId: 'R-1', seedId, steps: [{ nonce: 0, kind: 'tx', status: 'ok', draws: s.draws, words: s.words }],
+    shoes: [{ shoe: x.commit.shoe, table: 1, from: 0, to: r.cards }], outcome: r.outcome });
+  const pair = pairOf('solo-classic', seedId, root, 0, [{ table: 1, shoeNo: 1 }]);
+  const own = { proofs: [proof.id], shoes: [x.commit.shoe], nonce: 1, cuts: { [x.commit.shoe]: { at: cut } }, hands: { [x.commit.shoe]: [r.seen] } };
+  out.records.soloSplit = { pair, kept: keptOf(pair), commit: x.commit, reveal: x.reveal, proofs: [proof], own, pairRecords: { seedId, gameId: 'solo-classic', proofs: [proof.id], shoes: [x.commit.shoe] } };
 }
 {
   // Roulette: nonce 0 drew and was discarded (the spin was refused), nonce 1 is the spin of round R-1.
@@ -275,15 +354,47 @@ const twelveSecret = (t) => sha(Buffer.concat([Buffer.from(CHAIN_SECRET, 'hex'),
   out.negativeOwn.dragonTigerCutMoved = { kept: dt.kept, commit: moved.commit, reveal: moved.reveal, askedCut: 200, recordedCut: 202 };
 }
 {
-  // Solo blackjack: a shoe for one round that lists a hand of seven cards before the round (cards skipped), and one that
-  // lists two rounds.
+  // Solo blackjack, against the records of records.soloBlackjack: a shoe for one round that lists a hand of seven cards
+  // before the round (cards skipped), one that lists two rounds, a round whose slice is two cards longer than the cards
+  // played (the outcome names fewer), an outcome that names a card the slice does not have, the cards seen with the
+  // hole card and the player's second card swapped (dealt in another order than the shoe's), a cut moved by 2; the
+  // same cards in the same order dealt to other places: an outcome that gives the box D0, D3 (the dealer D1, D2, D4),
+  // one whose box and dealer swapped, the cards seen going to the dealer first (the server sent them so), a box the
+  // player did not bet on taking cards (seven cards: the player's box gets D0, D3), every card shown face down.
   const bj = out.records.soloBlackjack;
-  const x = cardShoeRecord({ gameId: 'solo-classic', table: 1, shoeNo: 1, seedId: bj.kept.seedId, chainId: bj.commit.origin.chainId, shoeId: bj.commit.shoe, root: bj.kept.root, terminal: bj.commit.origin.terminal, key: link(CHAIN_SECRET, L, 1), by: 'auto', burn: false,
-    rounds: [[null, 7], ['R-1', 6]], status: 'ended', rules: { cutPolicy: 'auto', endAt: null, burn: 'none' } });
-  const y = cardShoeRecord({ gameId: 'solo-classic', table: 1, shoeNo: 1, seedId: bj.kept.seedId, chainId: bj.commit.origin.chainId, shoeId: bj.commit.shoe, root: bj.kept.root, terminal: bj.commit.origin.terminal, key: link(CHAIN_SECRET, L, 1), by: 'auto', burn: false,
-    rounds: [['R-1', 6], ['R-2', 6]], status: 'ended', rules: { cutPolicy: 'auto', endAt: null, burn: 'none' } });
+  const cut = bj.reveal.cut.at;
+  const base = { gameId: 'solo-classic', table: 1, shoeNo: 1, seedId: bj.kept.seedId, chainId: bj.commit.origin.chainId, shoeId: bj.commit.shoe, root: bj.kept.root, terminal: bj.commit.origin.terminal, key: link(CHAIN_SECRET, L, 1), cut, by: 'player', burn: false, status: 'ended', rules: SOLO_RULES };
+  const n = bj.reveal.rounds[0].to;
+  const x = cardShoeRecord({ ...base, rounds: [[null, 7], ['R-1', n]] });
+  const y = cardShoeRecord({ ...base, rounds: [['R-1', n], ['R-2', 6]] });
   out.negativeOwn.soloSkipped = { kept: bj.kept, commit: x.commit, reveal: x.reveal };
   out.negativeOwn.soloTwoRounds = { kept: bj.kept, commit: y.commit, reveal: y.reveal };
+  const longer = cardShoeRecord({ ...base, rounds: [['R-1', n + 2]] });
+  const proof = bj.proofs[0];
+  const seen = bj.own.hands[bj.commit.shoe][0];
+  out.negativeOwn.soloLonger = { kept: bj.kept, pair: bj.pair, commit: longer.commit, reveal: longer.reveal,
+    proof: { ...proof, shoes: [{ ...proof.shoes[0], to: n + 2 }] }, own: { ...bj.own, hands: { [bj.commit.shoe]: [{ ...seen, to: n + 2, cards: longer.D.slice(0, n + 2), places: [...seen.places, 'dealer', 'dealer'] }] } }, named: n, slice: n + 2 };
+  const other = longer.D[n];
+  out.negativeOwn.soloOtherCard = { kept: bj.kept, pair: bj.pair, commit: bj.commit, reveal: bj.reveal, own: bj.own,
+    proof: { ...proof, outcome: { ...proof.outcome, dealerCards: [...proof.outcome.dealerCards.slice(0, -1), cardObj(other)] } }, card: other };
+  const swapped = [...seen.cards];
+  [swapped[2], swapped[3]] = [swapped[3], swapped[2]];
+  out.negativeOwn.soloSwapped = { kept: bj.kept, pair: bj.pair, commit: bj.commit, reveal: bj.reveal, own: { ...bj.own, hands: { [bj.commit.shoe]: [{ ...seen, cards: swapped }] } }, seen: swapped };
+  const moved = cardShoeRecord({ ...base, cut: cut + 2, rounds: [['R-1', n]] });
+  out.negativeOwn.soloCutMoved = { kept: bj.kept, commit: moved.commit, reveal: moved.reveal, askedCut: cut, recordedCut: cut + 2 };
+  const D = seen.cards;
+  const forge = (box, dealer) => ({ ...proof, outcome: { ...proof.outcome, hands: [{ ...proof.outcome.hands[0], cards: box.map((i) => cardObj(D[i])) }], dealerCards: dealer.map((i) => cardObj(D[i])) } });
+  out.negativeOwn.soloOtherPlaces = { kept: bj.kept, pair: bj.pair, commit: bj.commit, reveal: bj.reveal, own: bj.own,
+    proofs: [forge([0, 3], [1, 2, ...D.slice(4).map((_, i) => i + 4)]), forge([1, 3], [0, 2, ...D.slice(4).map((_, i) => i + 4)])] };
+  const dealerFirst = [{ ...seen, places: ['dealer', { seat: 0, hand: 0 }, { seat: 0, hand: 0 }, 'dealer', ...seen.places.slice(4)] }];
+  out.negativeOwn.soloPlacesOffRule = { kept: bj.kept, pair: bj.pair, commit: bj.commit, reveal: bj.reveal, own: { ...bj.own, hands: { [bj.commit.shoe]: dealerFirst } } };
+  // A box nobody bet on (seat 1) in the round of soloLonger (seven cards): the dealing rule over two boxes.
+  const phantomPlaces = [{ seat: 0, hand: 0 }, { seat: 1, hand: 0 }, 'dealer', { seat: 0, hand: 0 }, { seat: 1, hand: 0 }, 'dealer', 'dealer'];
+  const L7 = longer.D.slice(0, n + 2);
+  out.negativeOwn.soloPhantomBox = { kept: bj.kept, pair: bj.pair, commit: longer.commit, reveal: longer.reveal,
+    proof: { ...proof, shoes: [{ ...proof.shoes[0], to: n + 2 }], outcome: { ...proof.outcome, hands: [{ ...proof.outcome.hands[0], cards: [L7[0], L7[3]].map(cardObj) }, { seat: 1, cards: [L7[1], L7[4]].map(cardObj), bet: 0, outcome: 'lose', payout: 0 }], dealerCards: [L7[2], L7[5], L7[6]].map(cardObj) } },
+    own: { ...bj.own, hands: { [bj.commit.shoe]: [{ roundId: 'R-1', from: 0, to: n + 2, cards: L7, places: phantomPlaces, boxes: [0] }] } } };
+  out.negativeOwn.soloFaceDown = { kept: bj.kept, pair: bj.pair, commit: bj.commit, reveal: bj.reveal, own: { ...bj.own, hands: { [bj.commit.shoe]: [{ ...seen, cards: seen.cards.map(() => null) }] } } };
 }
 {
   // Roulette: the padded spin of negative.roulette without its outcome detail (the draw plan must not switch off), and

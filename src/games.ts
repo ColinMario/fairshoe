@@ -1,3 +1,8 @@
+import { auditDrawAuthorization } from './draw-authorization.ts';
+import { checkBaccaratPayout } from './baccarat-payout.ts';
+import { checkBlackjackPayout } from './blackjack-mapping.ts';
+import { checkHiloPayout, checkTradingPayout } from './sequence-payout.ts';
+import type { PayoutContext } from './payout-common.ts';
 /**
  * Game mappings (SPEC.md section 9): what the draws and cards of a round mean, recomputed and compared with the
  * outcome a proof states. A mapping fixes the whole draw plan of a round: which steps draw and exactly what they
@@ -12,13 +17,23 @@
  * these rules give (handRule, checked by verifyShoe).
  *
  * The multiplier variants of baccarat get their tableau compared (an error when it differs), but their outcome is not
- * checked: the strike draws and their weight tables are not mapped yet. For every other game the draws (and cards)
- * are verified, the outcome is not (OutcomeCheck.checked false), so a verifier must not call that outcome checked.
+ * checked: the strike draws and their weight tables are not mapped yet. Solo blackjack gets its cards compared: the
+ * cards its outcome names (every hand and the dealer) are the cards of the round's own slice, the first cards of its
+ * shoe, as many and the same ones, and with the player's record of the round (the cards seen and where each went,
+ * verifyShoe checks them against the shoe and the dealing rule) each hand of the outcome holds exactly the cards dealt
+ * to it; its payouts are not mapped, so its outcome is not called checked. For every other game the draws (and cards) are verified, the outcome
+ * is not (OutcomeCheck.checked false), so a verifier must not call that outcome checked.
  */
+import type { GameplayState } from './gameplay.ts';
 import type { RoundProof, StepProof } from './records.ts';
-import { baccaratValue, type CardCode } from './shoe.ts';
+import { SOLO_BLACKJACK_GAMES } from './rules.ts';
+import { baccaratValue, isCardCode, type CardCode } from './shoe.ts';
 
 export interface OutcomeCheck {
+  /** Independently replayed state, used only after verifying this predecessor proof. */
+  state?: GameplayState;
+  /** True only for a complete independently replayed payout, not merely cards or a winner. */
+  payoutsChecked?: boolean;
   /**
    * True when this game has a full mapping and the outcome was recomputed (errors then lists every disagreement).
    * False for a game without one, for a void round and for steps outside a round; errors may still list a
@@ -28,6 +43,8 @@ export interface OutcomeCheck {
   /** What was compared, for a reader ("pocket 26", "crash 1.79x", "player 8D 4S (2), banker ..."). */
   summary: string | null;
   errors: string[];
+  /** What the outcome leaves unbound (no error: the round is not provable). Solo blackjack: an outcome naming no cards. */
+  unproven?: string[];
 }
 
 /** Cards dealt to the round itself (dealing order), one list per slice of the round. */
@@ -286,6 +303,217 @@ export function outcomeDetail(proof: RoundProof): Detail | null {
   return detailOf(proof);
 }
 
+/** A card as an outcome names it: a code ("10H"), or `{ rank, suit }` (the reference server's history entry). */
+function cardOf(v: unknown): CardCode | null {
+  if (typeof v === 'string') return isCardCode(v) ? v : null;
+  if (!v || typeof v !== 'object') return null;
+  const c = v as { rank?: unknown; suit?: unknown };
+  const code = `${String(c.rank)}${String(c.suit)}`;
+  return typeof c.rank === 'string' && typeof c.suit === 'string' && isCardCode(code) ? code : null;
+}
+
+// ------------------------------------------------------------------------------------------------ solo blackjack
+
+/** Where a card of a solo blackjack round went, as the player saw it dealt: the dealer, or hand `hand` of box `seat`. */
+export type SeenPlace = 'dealer' | { seat: number; hand: number };
+
+/**
+ * A split the player saw: before card `at` of the round (an index into its cards), hand `hand` of box `seat` (two
+ * cards) became two hands: its second card moved to a new hand right behind it (hand + 1, the later hands move up one).
+ */
+export interface SeenSplit {
+  at: number;
+  seat: number;
+  hand: number;
+}
+
+/** What the player saw of a solo blackjack round (HandSeen): the cards, where each went, the splits, the boxes it bet. */
+export interface BlackjackSeen {
+  cards?: ReadonlyArray<CardCode | null>;
+  places?: ReadonlyArray<SeenPlace>;
+  splits?: ReadonlyArray<SeenSplit>;
+  boxes?: readonly number[];
+}
+
+/** A solo blackjack round dealt by the rule of SPEC section 6: the cards (indexes into the round's slice) of every hand and of the dealer. */
+export interface BlackjackDeal {
+  /** The player's hands in the order of play: box by box in seat order, split hands in order. */
+  hands: Array<{ seat: number; hand: number; cards: number[] }>;
+  dealer: number[];
+}
+
+/** Boxes of a blackjack table: seats 0 to 15 at most; hands of a box: 16 at most (more is malformed). */
+const MAX_SEATS = 16;
+const isSeat = (v: unknown): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 && v < MAX_SEATS;
+
+function placeOf(p: unknown): SeenPlace | null {
+  if (p === 'dealer') return 'dealer';
+  if (!p || typeof p !== 'object') return null;
+  const x = p as { seat?: unknown; hand?: unknown };
+  return isSeat(x.seat) && isSeat(x.hand) ? { seat: x.seat, hand: x.hand } : null;
+}
+
+function placeName(p: SeenPlace | null): string {
+  return p === null ? 'no place' : p === 'dealer' ? 'the dealer' : `box ${p.seat} hand ${p.hand}`;
+}
+
+const samePlace = (a: SeenPlace | null, b: SeenPlace | null): boolean => (a === 'dealer' || b === 'dealer' || a === null || b === null ? a === b : a.seat === b.seat && a.hand === b.hand);
+
+/**
+ * The places a solo blackjack round's cards went to, as the player saw them dealt, against the dealing rule (SPEC
+ * section 6): the first deal gives box 1 card 1, box 2 card 1, ..., the dealer's up card, box 1 card 2, ..., the
+ * dealer's hole card (face down: the only card dealt so), over exactly the boxes the player bet on; then every card goes
+ * to the hand in turn (box by box in seat order, split hands in order: never back to a hand whose turn is over, the
+ * split hand takes the card right after its split), and the dealer's draws come last. `count`: the cards of the
+ * round's slice. Returns the deal (indexes into the slice), or what breaks the rule.
+ */
+export function blackjackDeal(seen: BlackjackSeen, count: number): { deal: BlackjackDeal } | { errors: string[] } {
+  const { places, boxes, cards } = seen;
+  const splits = seen.splits ?? [];
+  if (!Array.isArray(boxes) || boxes.length === 0 || !boxes.every(isSeat) || boxes.some((s, i) => i > 0 && s <= boxes[i - 1]!)) {
+    return { errors: ['the boxes the player bet on are not a list of seats in seat order'] };
+  }
+  if (!Array.isArray(places) || places.length !== count) return { errors: [`the player saw ${Array.isArray(places) ? places.length : 'no'} places for the ${count} cards of the round`] };
+  if (!Array.isArray(splits) || !splits.every((s) => s && typeof s === 'object' && Number.isSafeInteger(s.at) && isSeat(s.seat) && isSeat(s.hand))) return { errors: ['the splits seen are not a list of splits'] };
+  const b = boxes.length;
+  const first = 2 * b + 2;
+  const hole = 2 * b + 1;
+  if (count < first) return { errors: [`the round has ${count} cards, the first deal to ${b} ${b === 1 ? 'box' : 'boxes'} and the dealer takes ${first}`] };
+  const errors: string[] = [];
+  const at = places.map(placeOf);
+  // The first deal: box card 1 in seat order, the up card, box card 2 in seat order, the hole card.
+  const rule = (i: number): SeenPlace => (i < b ? { seat: boxes[i]!, hand: 0 } : i === b || i === hole ? 'dealer' : { seat: boxes[i - b - 1]!, hand: 0 });
+  for (let i = 0; i < first; i++) if (!samePlace(at[i]!, rule(i))) errors.push(`card ${i} went to ${placeName(at[i]!)}, the first deal gives it to ${placeName(rule(i))}`);
+  if (Array.isArray(cards)) cards.forEach((c, i) => {
+    if (c === null && i !== hole) errors.push(`card ${i} was dealt face down: only the dealer's hole card (card ${hole}) is`);
+  });
+  if (errors.length > 0) return { errors };
+  const hands = new Map<number, number[][]>(boxes.map((s) => [s, [[]]]));
+  const dealer: number[] = [];
+  for (let i = 0; i < first; i++) {
+    const p = at[i]!;
+    if (p === 'dealer') dealer.push(i);
+    else hands.get(p.seat)![0]!.push(i);
+  }
+  // The turn: box index and hand; a hand before it never takes a card again.
+  let box = 0;
+  let turn = 0;
+  let dealerDrew = false;
+  let next: { seat: number; hand: number } | null = null;
+  const later = (bi: number, h: number): boolean => bi > box || (bi === box && h >= turn);
+  let s = 0;
+  for (let i = first; i <= count; i++) {
+    for (; s < splits.length && splits[s]!.at === i; s++) {
+      const { seat, hand } = splits[s]!;
+      const bi = boxes.indexOf(seat);
+      const list = hands.get(seat);
+      if (bi < 0 || !list) errors.push(`before card ${i} the player saw box ${seat} split, a box it did not bet on`);
+      else if (i === count) errors.push(`the round ends with a split of box ${seat} hand ${hand}: the split hand takes the next card`);
+      else if (dealerDrew) errors.push(`before card ${i} the player saw box ${seat} hand ${hand} split after the dealer drew`);
+      else if (!later(bi, hand)) errors.push(`before card ${i} the player saw box ${seat} hand ${hand} split after its turn`);
+      else if (list[hand]?.length !== 2) errors.push(`before card ${i} the player saw box ${seat} hand ${hand} split with ${list[hand]?.length ?? 0} cards, not two`);
+      else {
+        list.splice(hand + 1, 0, [list[hand]!.pop()!]);
+        box = bi;
+        turn = hand;
+        next = { seat, hand };
+        continue;
+      }
+      return { errors };
+    }
+    if (i === count) break;
+    const p = at[i]!;
+    if (p === null) errors.push(`card ${i} went to no place the player could read`);
+    else if (p === 'dealer') {
+      if (next) errors.push(`card ${i} went to the dealer, the split hand box ${next.seat} hand ${next.hand} takes the card after its split`);
+      dealerDrew = true;
+      dealer.push(i);
+    } else {
+      const bi = boxes.indexOf(p.seat);
+      const list = hands.get(p.seat);
+      if (bi < 0 || !list) errors.push(`card ${i} went to box ${p.seat}, a box the player did not bet on`);
+      else if (p.hand >= list.length) errors.push(`card ${i} went to box ${p.seat} hand ${p.hand}, which the box does not have`);
+      else if (dealerDrew) errors.push(`card ${i} went to box ${p.seat} hand ${p.hand} after the dealer drew`);
+      else if (!later(bi, p.hand)) errors.push(`card ${i} went to box ${p.seat} hand ${p.hand} after its turn was over`);
+      else if (next && (next.seat !== p.seat || next.hand !== p.hand)) errors.push(`card ${i} went to box ${p.seat} hand ${p.hand}, the split hand box ${next.seat} hand ${next.hand} takes the card after its split`);
+      else {
+        box = bi;
+        turn = p.hand;
+        list[p.hand]!.push(i);
+      }
+    }
+    next = null;
+    if (errors.length > 0) return { errors };
+  }
+  if (s < splits.length) return { errors: [`a split seen before card ${String(splits[s]!.at)} is out of order or outside cards ${first} to ${count - 1}`] };
+  const out: BlackjackDeal['hands'] = [];
+  for (const seat of boxes) hands.get(seat)!.forEach((cards, hand) => out.push({ seat, hand, cards }));
+  return { deal: { hands: out, dealer } };
+}
+
+/** The hands an outcome names (not the ones marked `behind`, which repeat another box's cards): seat and cards. */
+function namedHands(outcome: Detail, bad: string[]): { hands: Array<{ seat: unknown; cards: CardCode[] }>; dealer: CardCode[] } {
+  const list = (v: unknown, where: string): CardCode[] => {
+    if (!Array.isArray(v)) {
+      bad.push(`${where} has no list of cards`);
+      return [];
+    }
+    const out: CardCode[] = [];
+    for (const c of v) {
+      const code = cardOf(c);
+      if (code) out.push(code);
+      else bad.push(`${where} names ${JSON.stringify(c)}, not a card`);
+    }
+    return out;
+  };
+  const hands: Array<{ seat: unknown; cards: CardCode[] }> = [];
+  (outcome.hands as unknown[]).forEach((h, i) => {
+    if (!h || typeof h !== 'object' || (h as { behind?: unknown }).behind === true) return;
+    hands.push({ seat: (h as { seat?: unknown }).seat, cards: list((h as { cards?: unknown }).cards, `hand ${i + 1}`) });
+  });
+  return { hands, dealer: list(outcome.dealerCards, 'the dealer') };
+}
+
+/**
+ * Solo blackjack: the cards the outcome names (`hands[].cards`, without the hands marked `behind`, which repeat another
+ * box's cards, and `dealerCards`) are the round's own slice, as many and the same ones (the slice is in dealing order,
+ * the outcome by hand). With the places the player saw the cards go to (`seen`, its record of the round; their rule is
+ * checked by verifyShoe) every hand of the outcome is the hand the player saw, in order (box, cards in the order dealt),
+ * and the dealer's cards are the ones dealt to the dealer. A server that made the slice longer than the cards played
+ * (to skip cards), named other cards or gave the cards to other hands fails here.
+ */
+function blackjackOutcome(outcome: Detail, cards: RoundCards | null, seen: BlackjackSeen | null): { summary: string; errors: string[]; unproven?: string[] } {
+  const hand = ownHand(cards);
+  if ('errors' in hand) return { summary: 'no cards', errors: hand.errors };
+  // An outcome that names no cards (a record of fairshoe@1.1.0 may) binds none: not an error, never provable.
+  if (!Array.isArray(outcome.hands) || !Array.isArray(outcome.dealerCards)) return { summary: `cards ${hand.dealt.join(' ')}`, errors: [], unproven: ['the outcome names no cards of the round (hands, dealerCards)'] };
+  const bad: string[] = [];
+  const named = namedHands(outcome, bad);
+  const all = [...named.hands.flatMap((h) => h.cards), ...named.dealer];
+  const dealt = hand.dealt;
+  let summary = `cards ${dealt.join(' ')}`;
+  if (bad.length > 0) return { summary, errors: bad };
+  if (all.length !== dealt.length) return { summary, errors: [`the outcome names ${all.length} cards (hands and dealer), the round's slice has ${dealt.length} (${dealt.join(' ')})`] };
+  if ([...all].sort().join(' ') !== [...dealt].sort().join(' ')) return { summary, errors: [`the outcome names the cards ${all.join(' ')}, the round's slice has ${dealt.join(' ')}`] };
+  const placed = seen && seen.places !== undefined ? blackjackDeal(seen, dealt.length) : null;
+  // Without the places seen (or when they break the rule: verifyShoe says so) only the cards are compared.
+  if (!placed || 'errors' in placed) return { summary, errors: [] };
+  const codes = (ix: readonly number[]): string => ix.map((i) => dealt[i]).join(' ');
+  const { deal } = placed;
+  summary = [...deal.hands.map((h) => `box ${h.seat}${deal.hands.filter((x) => x.seat === h.seat).length > 1 ? ` hand ${h.hand}` : ''} ${codes(h.cards)}`), `dealer ${codes(deal.dealer)}`].join(', ');
+  const errors: string[] = [];
+  if (named.hands.length !== deal.hands.length) errors.push(`the outcome names ${named.hands.length} ${named.hands.length === 1 ? 'hand' : 'hands'}, the player saw ${deal.hands.length} dealt (${summary})`);
+  else {
+    deal.hands.forEach((h, k) => {
+      const n = named.hands[k]!;
+      const want = codes(h.cards);
+      if (n.seat !== h.seat || n.cards.join(' ') !== want) errors.push(`hand ${k + 1} of the outcome is box ${String(n.seat)} ${n.cards.join(' ')}, the player saw box ${h.seat} hand ${h.hand} dealt ${want}`);
+    });
+  }
+  if (named.dealer.join(' ') !== codes(deal.dealer)) errors.push(`the outcome gives the dealer ${named.dealer.join(' ')}, the player saw the dealer dealt ${codes(deal.dealer)}`);
+  return { summary, errors };
+}
+
 /** The proof is of a round that finished: a round id, an outcome, not void. */
 function finished(proof: RoundProof): boolean {
   return proof.roundId !== null && proof.outcome !== null && proof.outcome !== undefined && (proof.outcome as { void?: unknown }).void !== true;
@@ -295,9 +523,10 @@ function finished(proof: RoundProof): boolean {
  * Recompute a round's outcome from its draws and, for card games, the cards of its own shoe slice (null when the
  * shoes were not checked). A game without a mapping is not checked. A void round and the steps outside a round are
  * not checked either, but a game with a draw plan still holds them to it: a step outside a round must not draw, a
- * void round draws its plan or nothing.
+ * void round draws its plan or nothing. `seen`: solo blackjack, the player's record of the round (HandSeen), which binds
+ * every card of the outcome to the hand it was dealt to.
  */
-export function checkOutcome(proof: RoundProof, cards: RoundCards | null): OutcomeCheck {
+function checkOutcomeInner(proof: RoundProof, cards: RoundCards | null, seen: BlackjackSeen | null = null, context: PayoutContext & { shoeStepIndex?: number; shoeSteps?: number } = {}): OutcomeCheck {
   const unchecked: OutcomeCheck = { checked: false, summary: null, errors: [] };
   const draws = DRAW_MAPPINGS[proof.gameId];
   if (!finished(proof)) {
@@ -310,6 +539,19 @@ export function checkOutcome(proof: RoundProof, cards: RoundCards | null): Outco
     const p = planned(proof, draws.plan, draws.what, true);
     return { ...unchecked, errors: 'errors' in p ? p.errors : [] };
   }
+  if (SOLO_BLACKJACK_GAMES.has(proof.gameId)) {
+    // The cards are compared, the payouts are not mapped: never called checked.
+    if (!cards) return unchecked;
+    if (!proof.outcome || typeof proof.outcome !== 'object') return { ...unchecked, errors: ['the proof states no outcome: a finished blackjack round names its cards'] };
+    const r = blackjackOutcome(proof.outcome as Detail, cards, seen);
+    if (!(proof.outcome as Detail).payoutProof && !context.gameplay) return { checked: false, payoutsChecked: false, summary: `${r.summary} (historical payouts not checked)`, errors: r.errors, ...(r.unproven ? { unproven: r.unproven } : {}) };
+    const payout = checkBlackjackPayout(proof, cards, context);
+    return { ...payout, payoutsChecked: payout.checked, errors: [...r.errors, ...payout.errors], unproven: [...(r.unproven ?? []), ...(payout.unproven ?? [])] };
+  }
+  if (proof.gameId === 'hilo' || proof.gameId === 'bull-run') {
+    const payout = proof.gameId === 'hilo' ? checkHiloPayout(proof, context) : checkTradingPayout(proof, context);
+    return { ...payout, payoutsChecked: payout.checked };
+  }
   const isBaccarat = BACCARAT_FULL.has(proof.gameId) || BACCARAT_VARIANTS.has(proof.gameId);
   const duel = DUELS[proof.gameId];
   if (!draws && !isBaccarat && !duel) return unchecked;
@@ -319,9 +561,12 @@ export function checkOutcome(proof: RoundProof, cards: RoundCards | null): Outco
   if (isBaccarat) {
     if (!cards) return unchecked;
     const r = baccaratOutcome(detail, cards);
-    // A variant: the tableau is compared, the multipliers (strike draws) are not mapped, so the outcome is not checked.
+    if (detail.payoutProof) {
+      const payout = checkBaccaratPayout(proof, cards, context);
+      return { ...payout, payoutsChecked: payout.checked, errors: [...r.errors, ...payout.errors] };
+    }
     const full = BACCARAT_FULL.has(proof.gameId);
-    return { checked: full, summary: full ? r.summary : `${r.summary} (multipliers not mapped)`, errors: r.errors };
+    return { checked: full, payoutsChecked: false, summary: `${r.summary} (historical payouts not checked)`, errors: r.errors };
   }
   if (duel) {
     if (!cards) return unchecked;
@@ -335,5 +580,14 @@ export function checkOutcome(proof: RoundProof, cards: RoundCards | null): Outco
   return { checked: true, summary: r.summary, errors: r.errors };
 }
 
+/** Authorization covers all random operations, not just draws after a server-announced nonce. */
+export function checkOutcome(proof: RoundProof, cards: RoundCards | null, seen: BlackjackSeen | null = null, context: PayoutContext & { shoeStepIndex?: number; shoeSteps?: number } = {}): OutcomeCheck {
+  const authorization = auditDrawAuthorization(proof, context);
+  const result = checkOutcomeInner(proof, cards, seen, context);
+  if (!authorization) return result;
+  const incomplete = authorization.errors.length > 0 || (authorization.unproven?.length ?? 0) > 0;
+  return { ...result, ...(incomplete ? { checked: false, payoutsChecked: false } : {}), errors: [...result.errors, ...authorization.errors], unproven: [...(result.unproven ?? []), ...(authorization.unproven ?? [])] };
+}
+
 /** Games whose outcome the verifier recomputes in full (the others: draws and cards only). */
-export const MAPPED_GAMES: readonly string[] = Object.freeze([...Object.keys(DRAW_MAPPINGS), ...BACCARAT_FULL, ...Object.keys(DUELS)].sort());
+export const MAPPED_GAMES: readonly string[] = Object.freeze([...Object.keys(DRAW_MAPPINGS), ...BACCARAT_FULL, ...BACCARAT_VARIANTS, ...SOLO_BLACKJACK_GAMES, 'hilo', 'bull-run', ...Object.keys(DUELS)].sort());

@@ -1,6 +1,6 @@
 {
   "name": "fairshoe",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "fairshoe/v1: provably fair random streams, committed card shoes and their verifiers (no dependencies)",
   "license": "MIT",

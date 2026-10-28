@@ -46,11 +46,13 @@ export interface Bundle {
   proofs?: RoundProof[];
   shoes?: ShoeRecord[];
   later?: RoundProof[];
+  /** Earlier verified payout records for carry/Portfolio continuity. */
+  prior?: RoundProof[];
   records?: PairRecords;
 }
 
 const SINGLE = ['kept', 'own', 'seed', 'records'] as const;
-const LISTS = ['pairs', 'proofs', 'shoes', 'later'] as const;
+const LISTS = ['pairs', 'proofs', 'shoes', 'later', 'prior'] as const;
 const KEYS: readonly string[] = [...SINGLE, ...LISTS, 'note'];
 
 /** The input cannot be read as a bundle (exit code 3): nothing was verified. */
@@ -117,6 +119,7 @@ const idOf = {
   pairs: (p: unknown) => String((p as Obj)?.seedId),
   proofs: (p: unknown) => String((p as Obj)?.id),
   later: (p: unknown) => String((p as Obj)?.id),
+  prior: (p: unknown) => String((p as Obj)?.id),
   shoes: (s: unknown) => String(((s as Obj)?.commit as Obj | undefined)?.shoe),
 };
 
@@ -125,6 +128,7 @@ const ENTRY: Record<(typeof LISTS)[number], string> = {
   pairs: 'a kept pair (no "seedId")',
   proofs: 'a round proof (no "id", "seedId" or "steps")',
   later: 'a round proof (no "id", "seedId" or "steps")',
+  prior: 'a round proof (no "id", "seedId" or "steps")',
   shoes: 'a shoe record (no "commit")',
 };
 
@@ -142,6 +146,7 @@ const WHAT: Record<string, string> = {
   pairs: 'kept pair',
   proofs: 'proof',
   later: 'proof',
+  prior: 'proof',
   shoes: 'shoe',
 };
 
@@ -236,7 +241,9 @@ function proofLabel(p: RoundProof, outcome: string | null): string {
 function outcomeText(p: RoundProof, checked: boolean, summary: string | null): string | null {
   if ((p?.outcome as { void?: unknown } | null)?.void === true) return 'void round';
   if (p?.roundId === null || p?.outcome === null) return null;
-  return checked ? `outcome checked: ${summary ?? ''}`.trim() : 'outcome not checked: no mapping for this game yet (its draws and cards are checked)';
+  if (checked) return `outcome checked: ${summary ?? ''}`.trim();
+  // A partly mapped game says what it compared (solo blackjack: its cards; a baccarat variant: its tableau).
+  return summary ? `outcome not checked: ${summary}` : 'outcome not checked: no mapping for this game yet (its draws and cards are checked)';
 }
 
 /**
@@ -252,6 +259,9 @@ export function verifyBundle(b: Bundle): Report {
   const shoes = b.shoes ?? [];
   const proofs = b.proofs ?? [];
   const later = b.later ?? [];
+  const prior = b.prior ?? [];
+  const payoutPool = [...proofs, ...later, ...prior];
+  const loungeOnly = proofs.length > 0 && proofs.every((p) => p.lounge !== undefined) && !seed && shoes.length === 0;
   const pairs = b.pairs ?? [];
   // Stand-in from the reveal: the server's word, so it binds nothing.
   const stand: PairSeen | null =
@@ -267,7 +277,7 @@ export function verifyBundle(b: Bundle): Report {
     checks.push(c);
   };
 
-  if (!b.kept)
+  if (!b.kept && !loungeOnly)
     add({
       kind: 'kept',
       id: '',
@@ -291,6 +301,7 @@ export function verifyBundle(b: Bundle): Report {
     const hands = own?.hands?.[id];
     const r = verifyShoe(s.commit, s.reveal, {
       pair: keptOf(s.commit?.origin?.seedId) as PairSeen,
+      expectedRules: own?.shoeRules?.[id], shuffles: own?.shuffles?.[id], refused: own?.refused?.[id],
       ...(expectedCut !== undefined ? { expectedCut } : {}),
       ...(hands !== undefined ? { hands } : {}),
     });
@@ -300,18 +311,18 @@ export function verifyBundle(b: Bundle): Report {
   for (const p of [...proofs, ...later]) {
     const id = String(p?.id);
     const serverSeed = p?.serverSeed ?? (seed && seed.seedId === p?.seedId ? seed.serverSeed : null);
-    if (serverSeed === null || serverSeed === undefined) {
+    if ((serverSeed === null || serverSeed === undefined) && !p.lounge) {
       // Not revealed yet: what it binds against the kept pair already.
       const r = verifyProofBinding(p, { pair: keptOf(p?.seedId) ?? null, pairs: all });
       add({ kind: 'proof', id, label: proofLabel(p, 'server seed not revealed yet: checkable after the rotation'), status: r.ok ? 'pending' : 'failed', ok: r.ok, provable: null, errors: r.errors, unproven: r.unproven });
       continue;
     }
     const pair = keptOf(p?.seedId);
-    const r = verifyRound(p, serverSeed, { ...(pair ? { pair } : {}), shoes, pairs: all, ...(own ? { own } : {}) });
+    const r = verifyRound(p, serverSeed, { ...(pair ? { pair } : {}), shoes, pairs: all, prior: payoutPool, ...(own ? { own } : {}) });
     add({
       kind: 'proof',
       id,
-      label: proofLabel(p, outcomeText(p, r.outcome.checked, r.outcome.summary)),
+      label: proofLabel(p, r.outcome.payoutsChecked ? `payouts checked: ${r.outcome.summary ?? ''}` : outcomeText(p, r.outcome.checked, r.outcome.summary)),
       status: statusOf(r.ok, r.provable),
       ok: r.ok,
       provable: r.provable,
@@ -324,7 +335,7 @@ export function verifyBundle(b: Bundle): Report {
     const r = verifySeedReveal(seed);
     add({ kind: 'reveal', id: String(seed.seedId), label: `reveal ${String(seed.seedId)} (${String(seed.gameId)})`, status: r.ok ? 'ok' : 'failed', ok: r.ok, provable: null, errors: r.errors, unproven: [] });
     if (kept) {
-      const r2 = verifyPair(seed, proofs, shoes, { pair: kept, pairs, ...(later.length ? { later } : {}), ...(own ? { own } : {}) });
+      const r2 = verifyPair(seed, proofs, shoes, { pair: kept, pairs, prior, ...(later.length ? { later } : {}), ...(own ? { own } : {}) });
       const n = r2.counts;
       const label =
         `pair ${String(seed.seedId)} (${String(seed.gameId)}): ${n.proofs} ${n.proofs === 1 ? 'proof' : 'proofs'}, ${n.steps} ${n.steps === 1 ? 'step' : 'steps'}` +
@@ -363,7 +374,7 @@ export function verifyBundle(b: Bundle): Report {
   }
 
   // Without a kept pair nothing is provable, however well the records agree.
-  if (!b.kept)
+  if (!b.kept && !loungeOnly)
     for (const c of checks)
       if (c.provable === true) {
         c.provable = false;

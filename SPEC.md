@@ -1,7 +1,7 @@
 # fairshoe/v1
 
 Specification of fairshoe, provably fair random numbers and card shoes, algorithm version 1 (library
-`fairshoe@1.1.0`, 27 October 2026). It is written so that anybody can build their own verifier from it (GLI-19 v4.0
+`fairshoe@1.2.0`, 27 October 2026). It is written so that anybody can build their own verifier from it (GLI-19 v4.0
 draft, 5.5.3 a to e). The library in `src/` is the reference implementation; `vectors/` holds test vectors produced by
 an independent implementation.
 
@@ -24,9 +24,15 @@ checked against the player's own records (section 8):
   game's published shoe rules (section 6).
 - Every hand dealt from a shoe is one the player saw dealt (free hands included) and takes the cards the game's rules
   give (section 9): the server, which knows the order, cannot deal hands nobody asked for to choose the cards of the
-  player's next hand. A round of a game with several tables was dealt at the table the player bet at. A round dealt
-  from a shoe of an earlier pair (a shoe that ran on across a rotation) lies within that pair's last shoe numbers as
-  the player received them at the rotation; a game that deals each round from a shoe of its own never does that.
+  player's next hand. A solo blackjack round, whose hands have no fixed length, takes the first cards of its own shoe,
+  each in the order the player saw it dealt and to the place the dealing rule gives it (section 6: over the boxes the
+  player bet on, splits included; the player's record of the cards, where each went and its boxes, section 8), and
+  each hand of its outcome holds exactly the cards dealt to it: the server cannot deal them in another order, to
+  another hand (the player's card to the dealer, a box nobody bet on) or skip any. Which decision the player took on a
+  hand is not part of the record. A round of a game with several tables was dealt at the table the player bet at. A
+  round dealt from a shoe of an earlier pair (a shoe that ran on across a rotation) lies within that pair's last shoe
+  numbers as the player received them at the rotation; a game that deals each round from a shoe of its own never does
+  that.
 - Every step that drew spent a nonce, also when the step was refused. In the pair's full record (section 7,
   PairRecords) a gap shows (a nonce or a shoe number missing between others); a record the server leaves out at the
   end shows against the reveal's last shoe numbers and against the player's own records (the proofs and shoe
@@ -57,7 +63,8 @@ Not proven:
 - Coverage: a deterministic generator with a 256-bit key reaches at most 2^256 of the 416! orders of an eight-deck
   shoe (about 2^3025, or 2^2229 distinguishable ones). Every seed-based scheme shares this.
 - A cut chosen by somebody who knows the order. The cut protects the one who cuts; the commitment protects everybody.
-- Shared lounge tables (several players and bots at one shoe): not covered by version 1 (planned: section 11).
+- Shared lounge tables use the additive table-chain/future-beacon construction in section 12. The existence and
+  free choice of other human participants remain outside the proof.
 
 ## 2. Seeds and pairs
 
@@ -100,12 +107,11 @@ number 0, 1, 2, ... All numbers are written in decimal without leading zeros.
 | Shoe stream (the shuffle) | chain link `{shoeNo}` (32 bytes) | `fairshoe/v1/shoe:{gameId}:{table}:{clientSeed}:{shoeNo}:{b}` |
 | Shoe salt (one HMAC) | chain link `{shoeNo}` | `fairshoe/v1/salt:{gameId}:{table}:{clientSeed}:{shoeNo}` |
 | Automatic cut | UTF-8 of the client seed | `fairshoe/v1/cut-auto:{gameId}:{table}:{shoeNo}:{b}` |
-| Lounge bots (reserved) | chain link | `fairshoe/v1/bots:{table}:{clientSeed}:{shoeNo}:{b}` |
+| Lounge bots (section 12) | table chain link | `fairshoe/v1/bots:{tableId}:{openingSeedHash}:{index}:{b}` |
 
 `{gameId}` matches `^[a-z0-9][a-z0-9_-]{0,63}$` (lower case only: the id is written into the message as it is).
 `{table}` is the table number at the game, an integer from 1 (1 when the game has one table; baccarat has 12). Only
-numbers in v1: a table id written as text would give the same message as a number, so shared lounge tables will get a
-domain of their own.
+numbers in the original solo-shoe domain. Shared lounge tables use the separate domains in section 12.
 
 ## 4. Round stream, integers, steps
 
@@ -173,8 +179,13 @@ domain of their own.
 - **Commitment** (`shoe_commit`): published before anybody can cut the shoe. Reference server: the shoes a session
   opens when it starts come with `game_joined`; a shoe opened by SHUFFLE comes with that step, the cut is a later
   step; the next shoe of a table is committed ahead when the shoe before it ends at its cut card (so a cut sent on the
-  ended shoe finds its commitment out already). It never contains the shoe's own link, only the previous one
-  (`prevLink`), the terminal and the root.
+  ended shoe finds its commitment out already). A solo blackjack table commits the shoe of its next round when bets
+  open (the player joins the table, or the pause after a round ends; with `table_joined` and that step's `update`),
+  once the pair has a client seed: a pair still without one waits for the player's (`fair_client_seed`, whose step
+  commits the shoe), since committing first would make the server pick the seed. The player may cut it while bets are
+  open (message `cut`, changeable until the deal) or leave it to the deal, which cuts it automatically; a rotation or
+  a new client seed while bets are open replaces it with one of the new pair (the old one is revealed as aborted). It
+  never contains the shoe's own link, only the previous one (`prevLink`), the terminal and the root.
 - **Cut**: k cards from the front go to the back: dealing order D[i] = O[(i + k) mod size]. A rotation by a k that
   does not depend on O leaves a uniform order uniform, so the cut changes the order, never the odds.
 - **Automatic cut** kAuto = min + int(max − min + 1) on the cut-auto stream. It depends only on values fixed before the
@@ -199,7 +210,12 @@ domain of their own.
   else; each takes exactly the cards its game's hand rule gives (section 9: a punto banco hand of the baccarat family,
   two cards in Dragon Tiger and Card Duel). The player is told every hand as it is dealt (reference server: the note
   `shoe_deal` `{ shoe, table, roundId, from, to }`) and keeps them (section 8). A shoe for one round (`endAt` null)
-  lists that round alone, with its round id, from the first card after the burn.
+  lists that round alone, with its round id, from the first card after the burn. Blackjack hands have no fixed
+  length: the player also keeps the cards it saw dealt in its round, in dealing order (reference server: the `card`
+  events, the dealer's hole card at its place once `hole_reveal` turned it), where each went (the event's `to`: the
+  dealer, or hand h of box s), the splits it saw (the `split` events, before which card) and the boxes holding its main
+  bet when it dealt; the cards must be D[from, to) card by card, their places must follow the blackjack dealing order
+  below over those boxes.
 - **Shoe rules**, part of v1 (`src/rules.ts`); a commitment with other rules fails verification. The rules are always
   those of the game the player plays (the kept pair's, the proof's), never the ones a commitment names: a shoe whose
   commitment names another game fails.
@@ -208,11 +224,16 @@ domain of their own.
 |---|---|---|---|---|---|---|
 | `baccarat` | 12 | 8 | 52 to 364 | 364 | `bac-value` | `player` |
 | `blitz-baccarat`, `gold-baccarat`, `jade-baccarat`, `blitz-baccarat-max`, `dragon-tiger`, `card-duel` | 1 | 8 | 52 to 364 | 364 | `bac-value` | `player` |
-| `solo-classic`, `blitz-solo`, `freebet-solo`, `solo-vip` (one shoe per round) | 1 | 8 | 52 to 364 | null | `none` | `auto` |
+| `solo-classic`, `blitz-solo`, `freebet-solo`, `solo-vip` (a fresh shoe for every round) | 1 | 8 | 52 to 364 | null | `none` | `player` (a commitment stating `auto`, the row of 1.1.0, is accepted and held to kAuto) |
 
 - **Dealing order of a hand**: baccarat P1, B1, P2, B2, then the Player's and the Banker's third card; Dragon Tiger
   and Card Duel the first side (dragon, home), then the second (tiger, away); blackjack box 1 card 1, box 2 card 1,
-  ..., dealer up card, box 1 card 2, ..., dealer hole card, then each decision in seat order, then the dealer's draws.
+  ..., dealer up card, box 1 card 2, ..., dealer hole card (the boxes in seat order, the boxes with a main bet only;
+  the hole card is the only card dealt face down), then each decision in seat order, then the dealer's draws. The
+  decisions: the boxes are played one after the other in seat order, the hands of a box in order; a card goes to the
+  hand whose turn it is and never back to a hand whose turn is over. A split of a hand of two cards moves its second
+  card to a new hand right behind it (the box's later hands move up one); the split hand takes the next card, the new
+  hand its second card when its turn comes. The dealer draws after every hand of every box is over.
 
 ## 7. Records
 
@@ -233,7 +254,11 @@ ShoeReveal { shoe, status: "ended" | "shuffled" | "aborted", link, salt, order, 
 SeedReveal { seedId, gameId, serverSeed, serverSeedHash, clientSeed | null, clientSeedBy | null, lastNonce,
              lastShoes: [{ table, shoeNo }], root: { hash, lines } | null, committedAt, clientSeedAt | null, revealedAt }
 PairRecords { seedId, gameId, proofs: [proof id], shoes: [shoe id] }
-HandSeen    { roundId | null, from, to }            (as the note shoe_deal told it; with its shoe and table)
+HandSeen    { roundId | null, from, to, cards?, places?, splits?, boxes? }
+            (as the note shoe_deal told it, with its shoe and table; cards: the cards seen dealt in it, in order, null
+             for one face down; solo blackjack: places, where each card went, "dealer" or { seat, hand }; splits:
+             [{ at, seat, hand }], hand `hand` of box `seat` split before card `at`; boxes: the seats with the
+             player's main bet when it dealt, in seat order)
 PlayerRecords { proofs?: [proof id], shoes?: [shoe id], nonce?, cuts?: { shoe id: { at } | "auto" },
                 hands?: { shoe id: [HandSeen] }, tables?: { round id: table } }   (kept by the player, section 8)
 ```
@@ -255,9 +280,11 @@ What the player keeps, because the records cannot prove it:
 - the pair as shown **before** sending the client seed: its `seedId`, game, hash and root (`fair.active`, and
   `fair.next` for the pair a rotation activates with that seed). Nothing that comes after the seed was sent (a later
   `fair`, a `game_joined` after a session's start, a reveal) may stand in for it: those are the server's claims;
-- the client seed sent (fresh, section 2), each cut asked for (a position, or the automatic cut), every hand it saw
-  dealt from each shoe (`shoe_deal`, free hands included) and the table it bet at in each round of a game with
-  several tables;
+- the client seed sent (fresh, section 2), each cut asked for (a position, or the automatic cut: at solo blackjack a
+  deal without a cut of the player's), every hand it saw dealt from each shoe (`shoe_deal`, free hands included; a
+  solo blackjack round with the cards it saw dealt in it, where each went, the splits and the boxes it bet on) and the table it bet at in each round of a game with several
+  tables. A cut counts as the player's only when the player had the shoe's commitment before it sent the cut (else the
+  server could still choose which shoe gets the cut);
 - what it received of the pair: the ids of its proofs and of the shoes whose commitments it got, and the pair's next
   nonce as last seen before the rotation;
 - the reveal received at the rotation (`fair_revealed`, `seed_reveal`): its `lastShoes` and `revealedAt` are final.
@@ -267,8 +294,10 @@ What the player keeps, because the records cannot prove it:
 Every verifier takes the kept pair as an input (the library's `PairSeen`, with the reveal received once there is one)
 and the player's own records (`PlayerRecords`). `provable` is true only when `ok` is, the client seed was the
 player's, the record is bound to a kept pair and the player's records bind what only the player knows: the cut of a
-shoe the player could cut, the hands of a shoe with a cut card, the table of a round at a game of several tables, the
-reveal of an earlier pair whose shoe dealt the round, and for a pair the proofs, shoes and nonce received. While `ok`
+shoe the player could cut, the hands of a shoe with a cut card and the round of a solo blackjack shoe with its cards,
+their places and the boxes,
+the table of a round at a game of several tables, the reveal of an earlier pair whose shoe dealt the round, and for a
+pair the proofs, shoes and nonce received. While `ok`
 holds without them, a verifier lists what is missing (`unproven`).
 
 A shoe (`verifyShoe`, on the commitment and the reveal together, with the kept pair of `origin.seedId`; without it it
@@ -283,11 +312,19 @@ fails):
 3. The salt is the HMAC of the salt message; SHA-256(salt ‖ codes of O) = `shoeHash`.
 4. kAuto recomputed equals `autoCut`; the cut lies in `cutRange`; an automatic cut equals kAuto; under the game's `auto`
    policy the cut is automatic; the record's cut is the one the player asked for.
+   A solo cut selected before DEAL may remain unapplied if the unused shoe is aborted by a rotation or restart.
+   With no burn or rounds, that unfulfilled selection is `unproven`, not a contradictory applied cut. Any consumed
+   cards, changed applied cut, or other game/status still requires the recorded cut.
 5. The burn follows the rule on D; the rounds follow each other without gaps from the first card after the burn.
 6. With a cut card: the round that dealt index endAt is the last; an `ended` shoe dealt it, a `shuffled` or `aborted`
    one did not. Without one: one round at most, with a round id; an `ended` shoe has it.
 7. Every round takes the cards of its game's hand rule (section 9), free hands too.
-8. The rounds are exactly the hands the player saw dealt from the shoe (round id, from, to), no more, no fewer.
+8. The rounds are exactly the hands the player saw dealt from the shoe (round id, from, to), no more, no fewer; the
+   cards it saw dealt in a hand, when given, are D[from, to): as many, each card shown the one at its place (a card
+   shown face down only takes its place). Solo blackjack: the places follow the dealing order of section 6 over the
+   boxes the player bet on (the first deal exactly; then the hand in turn, the split hand right after its split, the
+   dealer last), and only the hole card was dealt face down. A solo blackjack shoe is provable only with the cards,
+   the places and the boxes.
 
 A round (`verifyRound`, with the revealed server seed, its kept pair, and the records of its shoes and the kept pairs
 of their chains when it was dealt from a shoe):
@@ -303,7 +340,11 @@ of their chains when it was dealt from a shoe):
    are at the table the player bet at and the one its outcome names (`detail.table`). A shoe of another pair is of an
    earlier one, within its kept `lastShoes` for the table, and never for a game whose shoes are for one round.
 4. For the games of section 9 the outcome is recomputed from the draws and the cards of the round's own slice, under
-   the game's draw plan and card rules.
+   the game's draw plan and card rules. Solo blackjack: the cards the outcome names (every hand but those marked
+   `behind`, which repeat a box's cards, and `dealerCards`) are the cards of the round's own slice, D[0, n) of its
+   shoe, as many and the same ones; with the player's record of the round each hand of the outcome, in the order of
+   play, is the box and the cards the player saw dealt to it (in the order dealt), and `dealerCards` are the cards
+   dealt to the dealer. An outcome that names no cards binds none: not provable. The payouts are not mapped.
 5. The client seed was not sent for another kept pair (unless one sending a rotation carried over: the same
    `clientSeedAt`).
 
@@ -367,10 +408,11 @@ hands too.
 
 The multiplier variants `gold-baccarat`, `jade-baccarat`, `blitz-baccarat`, `blitz-baccarat-max` draw their strikes
 from the round stream: their hands are replayed by the tableau like baccarat's (a disagreement is an error), but the
-outcome is not checked until the strikes and their weight tables are mapped. `blitz-roulette` and `blitz-roulette-max` draw their
-strikes before the pocket and are not mapped. Every other game (craps, sic bo, money wheel, bingo, race day, bull run,
-hi-lo, video poker, solo blackjack): draws and cards are verified, the outcome is not; a verifier must not show it as
-checked. Mappings for them, with their weight tables, are planned (section 11).
+outcome of historical records without versioned payout detail is not checked. New payout mappings for classic and
+multiplier baccarat, the four solo blackjack variants, Hi-Lo and Trading are specified in section 11.2. They require
+player-owned inputs and authorization for every random step; an internally consistent server transcript is insufficient.
+`blitz-roulette` and `blitz-roulette-max` still have no payout mapping. Craps, sic bo, money wheel, bingo, race day and
+video poker retain their stream/card checks without a full payout replay.
 
 ## 10. Test vectors
 
@@ -383,7 +425,9 @@ checked. Mappings for them, with their weight tables, are planned (section 11).
   a shuffle with a rejected word (416 words for 415 swaps), the span of kAuto (min and max over shoes 1 to 2000 of
   baccarat table 1 with that client seed), the cut range edges (51 and 365 refused, 52 and 364 allowed), burns of a
   ten and of an ace, two chains whose shoes end in reverse order, and complete records (pair as revealed and as kept,
-  commitments, reveals, proofs) of a Dragon Tiger shoe, a solo blackjack round and a roulette round. Negative vectors
+  commitments, reveals, proofs) of a Dragon Tiger shoe, a solo blackjack round (its own shoe cut by the player, with
+  the player's own records: the cut, the round with the cards seen, their places and the box), a solo blackjack round
+  on two boxes (seats 0 and 2) with a split and a roulette round. Negative vectors
   (`negative`): a roulette spin after 42 draws of int(2) that turn the honest pocket 27 into 0, a roulette step with
   two spins, and a High Flyer flight after a filler draw: every draw is on the round stream, the draw plan refuses
   them. Records with the player's own records (`ownRecords`): a baccarat shoe of a twelve-table pair cut by the player
@@ -391,24 +435,177 @@ checked. Mappings for them, with their weight tables, are planned (section 11).
   vectors against the card rules and the player's records (`negativeOwn`): a free hand slipped into the Dragon Tiger
   shoe, a cut recorded at 202 for one asked at 200, a baccarat hand one card off the tableau, a flipped winner, a
   round dealt at table 3 for a bet at table 5, solo blackjack shoes with a hand outside the round and with two rounds,
-  the padded roulette spin without its outcome detail, and a pair under a client seed already sent for another.
+  a solo round two cards longer than the cards it played, one whose outcome names a card its slice does not have, one
+  whose cards came in another order than the shoe's (the hole card and the box's second card swapped), one recorded
+  with a cut moved by two, the same cards in the same order to other places (an outcome giving the box's first card
+  to the dealer, and one swapping box and dealer; cards seen going to the dealer first; a box nobody bet on taking
+  cards; every card shown face down), the padded roulette spin without its outcome detail, and a pair under a client
+  seed already sent for another.
 - The tests check the library against this file, against node:crypto and Web Crypto, and against RFC 4231.
 
 ## 11. Versions and what comes next
 
-The algorithm id is part of every record; any change to section 3, 4 or 6 makes a new id. Library 1.1.0 (this
-document) added `clientSeedBy`, `origin.seedId`, `cutPolicy`, the shoe rules with the tables per game, PairRecords,
-`lastShoes`, the table of a shoe slice, the game mappings with their draw plans and the stricter verifiers to 1.0.0:
-every verifier checks against the pair the player kept (seed id, game, hash, root, client seed), `verifyShoe` and
-`verifyPair` require it, `verifyPair` takes the player's own records. 1.1.0 also binds what only the player knows:
-the hands seen (`HandSeen`, `PlayerRecords.hands`, the note `shoe_deal`), the cuts and tables (`PlayerRecords.cuts`,
-`tables`), the reveal received at a rotation (`PairSeen.lastShoes`), the fresh client seed; it adds the card rules of
-section 9 (tableau, winners, hand lengths), the one-round shoe rule, the required outcome detail and the draw plan of
-void rounds and steps outside a round, `provable` and `unproven` on every result, `later` for `verifyPair`, the checks
-before the reveal (`verifyShoeCommit`, `verifyProofBinding`), the command line verifier and the verifier page. The
-algorithm id is `fairshoe/v1`: every message of section 3 begins with it, so every value drawn from a message
-(streams, orders, salts, shoe hashes, kAuto) is that of `fairshoe/v1`; a record under another id fails here as an
-unknown algorithm. `vectors/v1.json` holds the values of `fairshoe/v1`. Planned, not part of v1: shared lounge shoes
-(a chain per table, the participants' client seeds and a public beacon round in the commitment, bot randomness from
-the `bots` stream, a domain for lounge table ids), the continuous solo blackjack shoe with the player's cut and a
-`bj-one-down` burn, mappings for the remaining games with versioned weight tables.
+The algorithm id is part of every record; any change to section 3 or 4, and any change to section 6 that alters a drawn
+value or refuses a record an earlier library accepted, makes a new id. Library 1.1.0 added `clientSeedBy`,
+`origin.seedId`, `cutPolicy`, the shoe rules with the tables per game, PairRecords, `lastShoes`, the table of a shoe
+slice, the game mappings with their draw plans and the stricter verifiers to 1.0.0: every verifier checks against the
+pair the player kept (seed id, game, hash, root, client seed), `verifyShoe` and `verifyPair` require it, `verifyPair`
+takes the player's own records. 1.1.0 also binds what only the player knows: the hands seen (`HandSeen`,
+`PlayerRecords.hands`, the note `shoe_deal`), the cuts and tables (`PlayerRecords.cuts`, `tables`), the reveal received
+at a rotation (`PairSeen.lastShoes`), the fresh client seed; it adds the card rules of section 9 (tableau, winners, hand
+lengths), the one-round shoe rule, the required outcome detail and the draw plan of void rounds and steps outside a
+round, `provable` and `unproven` on every result, `later` for `verifyPair`, the checks before the reveal
+(`verifyShoeCommit`, `verifyProofBinding`), the command line verifier and the verifier page. The algorithm id is
+`fairshoe/v1`: every message of section 3 begins with it, so every value drawn from a message (streams, orders, salts,
+shoe hashes, kAuto) is that of `fairshoe/v1`; a record under another id fails here as an unknown algorithm.
+`vectors/v1.json` holds the values of `fairshoe/v1`.
+
+Library 1.2.0 (27 October 2026; 1.1.0 was published the same night in the public repository) changes the solo row of
+section 6 and widens what a solo round binds; every value of sections 3 and 4 stays, and the records of 1.1.0 (its
+vectors, the reference server's) still verify (a solo round of 1.1.0 is ok, not provable: it lacks the record of the
+places), so the id stays `fairshoe/v1`. The four solo tables still deal every round from a shoe of its own, now cut by
+the player (cut policy `player`: a position while bets are open, or the automatic cut kAuto when the deal comes without
+one); a shoe committed under the row of 1.1.0 (cut policy `auto`) is still accepted and held to kAuto. A solo round is
+bound to its shoe card by card by the player's record of the cards (HandSeen.cards) and to its hands by where they went,
+the splits and the boxes (HandSeen.places, splits, boxes, the blackjack dealing order of section 6), and its outcome's
+hands are compared with them; an outcome that names no cards (a record of 1.1.0 may) is not provable. A verifier of
+1.1.0 refuses a solo shoe of the new row (cut policy `player`): the public repository and any copy of it need 1.2.0. A
+continuous solo shoe (one shoe for many rounds, the player's cut, a `bj-one-down` burn, the cut card at 208) was drafted
+and dropped: a card counter with the tables' bet spread beat it (about 100.9 %), and no strategy may reach 100 %.
+The current additive extensions include shared lounge proofs and the versioned payout mappings below. Further
+game mappings remain future work; their outcomes must not be labelled payout-checked.
+
+### 11.1 Additive composition guard (library 1.2)
+
+The random stream, shuffle, salted shoe hash and `fairshoe/v1` domain strings are unchanged. New card-family
+commitments opt in with `guard: "rtp-995"`; multiplier commitments also name `guardWeights:
+"baccarat-multiplier/1"`. Unknown tags fail validation. The player retains those header values before play in
+`PlayerRecords.shoeRules`; stripping or changing a retained marker is a contradiction. Marker-free historical
+commitments keep their original rules, including the old continuing Max shoe.
+
+The guard's input is the count of each of the 52 identities not yet seen. Only the shown burn card and cards
+shown in previous hands are removed; hidden burn cards remain in this conditional sample space. The exact
+rational return includes all side wagers and multiplier identity repetitions, including the joint product on
+Tie's four to six cards. A board is accepted only if its expected return is at most 995/1000 of its cost.
+Current Max shoes end after one paid or free hand. Other shoes end as `guarded` before a main wager exceeds the
+cap; their reveal carries `guard: { before, spot, num, den }`, with numerator and denominator as decimal strings.
+The verifier checks every preceding boundary as well as this exact final reason. A hand after an earlier trigger
+or an arbitrary early `guarded` end is an error.
+
+Side-wager reductions follow the published spot order. Classic Bonus, Perfect Pair and Banker Six additionally
+require main-wager coverage at 1/2, reduced to 1/4 from card 312. Fee rounding up and payout rounding down only
+reduce the bound. The client records its submitted board and the matching granted board or explicit guard
+refusal as `GuardDecision { before, requested, granted, unanswered? }` in `PlayerRecords.refused[shoe]`.
+`granted: null` denotes a guard refusal. A missing reply is recorded with `unanswered: true`, not as a proven
+refusal. The verifier rejects an unjustified trim/refusal; absent or incomplete evidence stays unproven.
+
+`PlayerRecords.shuffles[shoe]` records the boundaries at which the player requested a shuffle. An early
+`shuffled` shoe without such a request is unproven. These records narrow the availability limitation in section1;
+they do not prove why an unrecorded step was discarded, why a shoe was aborted, or all game payouts in section9.
+
+### 11.2 Player-owned payout replay and draw authorization
+
+`PlayerRecords.gameplay[roundId]` supplies a complete acknowledged input witness, retained before receiving the
+outcome. Versioned mappings are `hilo/rounded-v1`, `trading/carry99-v1`, `blackjack/payout-v1` and
+`detail.payoutProof.version = "baccarat/payout-v1"`. Rules are immutable public versions, never arbitrary rule objects
+from the server. `outcome.payoutsChecked` is separate from checked cards or a checked winner. Historical records may
+retain valid card/stream checks while their payouts remain unchecked. Missing own inputs are `unproven`; contradictory
+inputs or incorrect money are errors.
+
+`PlayerRecords.authorizedDraws[seedId][nonce]` records the operation actually requested and acknowledged:
+`hilo-init`, `hilo-exchange`, `hilo-guess`, `trading-trade`, `blackjack-board`, `baccarat-free`, or `baccarat-deal`.
+Hi-Lo entries also retain the card actually displayed. The client initializes its own counter at zero only after
+confirming its own client seed. It advances only for a successful authorized operation. `fair_get.active.nonce` is
+a cross-check and must never advance this counter. An unknown reply leaves a gap. A later announcement cannot close
+that gap or authorize skipped draws. Reservations are persisted before sending, including initialization and free
+operations. A known rejection consumes no authorization.
+
+Every G9 RNG step, including prefixes, free hands and steps moved into a separate idle proof, must have matching
+own authorization. A discarded step anywhere makes the extended payout sequence unproven. A payout witness's
+`startNonce` comes from the own counter. This closes both discarded and apparently applied prefix cherry-picking.
+The exact ranges and ordering of each operation are independently checked by the replay; a valid HMAC alone does
+not establish a legal draw plan.
+
+Hi-Lo replays each acknowledged higher/lower choice, rounded-bank continuation, the first-step 99% factor, random
+cent rounding, caps, target changes and ending. Its face-up starting card must come from an authorized init/exchange
+or a verified previous paid round (`cardFrom`). Trading replays the draw, movement, Portfolio, fee and carry; initial
+carry is 99, and later carry/Portfolio states refer to earlier proofs. Blackjack replays cards, destinations,
+insurance, decisions, splits, double/free double, Cash Out, fees, board draws and pending multiplier coverage from
+own bets and public rule versions. R1 saves only the first split hand's earned category. Baccarat replays the tableau,
+strikes and exact weighted draw plan, accepted board, fees, commission, side bets and payout cap. Its own guard
+receipt also binds `seedId` and `startNonce`; genuine earlier Free hands remain separately authorized.
+
+Empty carry and a zero Portfolio are state claims too: they are compared with the predecessor, rather than
+accepted from an empty current display. Blackjack references the last participating proof separately for each
+seat; `initialSeats` names seats whose zero carry was retained from the own fresh-table timeline. Pruning a
+witness cannot recreate initial-state knowledge. A definite rejected operation does not advance predecessor
+heads; an unknown or successfully applied operation lacking its proof leaves a persistent continuity gap.
+
+`RoundVerifyOptions.prior`, `PairVerifyOptions.prior` and bundle `prior` provide predecessor proofs. Only independently
+verified, provable, payout-checked predecessor state can anchor carry, Portfolio or a Hi-Lo card. Dependencies are
+checked recursively; cycles, conflicting copies and predecessors that do not precede the round fail. Equal observed
+timestamps do not destroy a valid nonce order. Identical copies are deduplicated. The online collector follows own
+references, fetches the corresponding seed reveals/shoes and retains missing dependencies as unproven.
+
+Public vectors `vectors/g9.json` and `vectors/g9-blackjack.json` include real engine proofs. The draw-authorization
+negative suite replaces a confirmed Trading loss with a later win using discarded, applied or empty prefix steps;
+none can become provable. Independent blackjack replay is also checked against complete actual engine rounds.
+
+## 12. Shared lounge rounds with a future public beacon
+
+The additive `RoundProof.lounge` version 1 uses policy `lounge-bots/1` and a separate hash chain per lounge table
+(maximum 2000 links). `LoungeRoundCommit` retains table/root/chain/index/previous link, opening time and seeds,
+opening bot state, initial/reset flag and the full bot plan's hash. At index 1 the initial flag is required. Later
+rounds preserve the preceding committed bot state, decrementing participation counters only for bots that played;
+an explicit void permits a reset. A new root needs a new player seed chosen after that root was received.
+
+All hashes below use SHA-256 and lowercase hex. Canonical JSON sorts object keys recursively, preserves array
+order, omits undefined object fields and permits only safe integer numbers. Participant seed rows are sorted by
+player id, with no duplicates. Their `by` marker distinguishes a player seed from the server fallback. The bot
+stream is HMAC-SHA256 keyed by the revealed table link, over
+`fairshoe/v1/bots:{tableId}:{hash(openingSeeds)}:{index}:{block}`. The public `planLoungeBots` policy fixes seating,
+lifecycle, all stakes and insurance coins before the card beacon can be known. `loungeBotAction` fixes subsequent
+basic-strategy decisions; presentation timing consumes no values of these monetary streams.
+
+`LoungeRoundLock` freezes `commitId`, `roundId`, close time, published deadline, timer/ready reason, ready player
+ids, final participant seeds, boxes/owners/behind shares, complete bot plan and `beaconRound`. Its hash is over all
+these fields excluding the hash itself. A timer close cannot precede the published deadline; a ready close requires
+all human wager owners' ready votes. Published betting durations are 15000 ms, or 8000 ms for Speed. Planned bot
+wagers are placed even when humans close early. No wager may be changed after this lock.
+
+The pinned Quicknet chain is `52db9ba70e0cc0f6eaf7803dd07447a1f5477735fd3f661792ba94600c84e971`, genesis
+1692803367 seconds, period 3 seconds. `beaconRound` is the first round whose scheduled time is strictly greater than
+`closedAt + 3000 ms`. `verifyQuicknetBeacon` checks the BLS signature against the pinned public key using the
+Quicknet short-signature scheme and its correct G1 DST, and randomness is SHA-256(signature bytes). Neither a
+server-supplied randomness field nor a successful network response substitutes for signature verification. A retry
+must fetch the same round. No latest-round selection or seed replacement is permitted.
+
+The shuffle uses the existing rejection-sampled integer stream, Fisher–Yates and eight ordered decks, with the
+link as HMAC key and message `fairshoe/v1/lounge-shoe:{lock.hash}:{beacon.randomness}:{block}`. The automatic
+cut is 52 + int(313) from HMAC keyed by SHA-256(UTF8(lock.hash)), message
+`fairshoe/v1/lounge-cut:{lock.commitId}:{block}`. Apply the existing cut rotation. There is no burn or cut-card
+ending: one fresh shoe is used for this round only. The public beacon and fixed lock prevent selecting the card
+order after seeing the complete wagers, subject to the beacon's security and availability.
+
+`verifyLoungeRound` reconstructs this order, replays the immutable `lounge/g1` blackjack rules and compares cards,
+actions, insurance, hand results and per-owner ledgers including Bet Behind. Its independent replay returns every
+card destination. Bot actions and insurance must match the published policy. Automatic human turns must obey
+Hit through 11 / Stand above 11, and timeout insurance may only decline. Timeout actions include their deadline
+and execution time; own turn receipts constrain that deadline. An absent player's completion remains distinguishable
+from a timeout. Rejected state-changing requests after lock are counted as `discarded`; they never consume another
+seed or produce a replacement order.
+
+Provability additionally requires `PlayerRecords.lounge[roundId]` (`LoungeOwnRecords`): the retained root before
+the own seed, commit and lock before the scheduled beacon time, the observed betting deadline, complete acknowledged
+own wagers/ready/actions/insurance, seen cards/destinations/actions/turns and chain predecessors for bot lifecycle.
+Receipt times use the player's local UTC clock, not a server-provided offset. The player's clock must therefore be
+accurate enough to distinguish arrival before the scheduled beacon. A single unknown legal dealer-hole position
+is allowed; observed cards, lengths and every other position remain exact. Missing, late or partial evidence is
+unproven; contradictions fail. `betsComplete:false` never turns an unknown wager board into an accusation. Complete
+previous proofs establish bot continuity but do not prove the existence or free choices of other humans.
+
+A successful proof is wrapped in the original envelope with `gameId = commit.tableId`, `roundId = lock.roundId`,
+`seedId = commit.chainId`, `id = pf_{commit.id}`, hash equal to the table terminal, client seed equal to the frozen
+seed-set hash, and no solo steps/shoes. The pure verifier dispatches this envelope directly without a solo server
+seed. A void proof reveals the spent link and locked inputs, records the reason, and remains payout-unproven;
+missing outcome availability cannot be transformed into a fair result. Demo proofs also remain unproven.

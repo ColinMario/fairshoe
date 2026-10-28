@@ -4,6 +4,7 @@ import {
   ALG,
   autoCut,
   baccaratHand,
+  blackjackDeal,
   burnOf,
   chainLink,
   chainTerminal,
@@ -34,7 +35,10 @@ import {
   verifyRound,
   verifySeedReveal,
   verifyShoe,
+  guardShoeBoundaries,
+  type HandSeen,
   type PairSeen,
+  type SeenPlace,
   type RoundProof,
   type SeedReveal,
   type ShoeCommit,
@@ -45,6 +49,12 @@ const SEED = '000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f';
 const SECRET = fromHex('202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f');
 const CS = 'player-seed-01';
 const NOT_PROVABLE = /not provable/;
+
+/**
+ * Where the cards of a solo round of one box (seat 0) go by the dealing rule (SPEC section 6): the box's first card,
+ * the up card, the box's second card, the hole card, then the dealer's draws.
+ */
+const soloPlaces = (n: number): SeenPlace[] => Array.from({ length: n }, (_, i): SeenPlace => (i === 0 || i === 2 ? { seat: 0, hand: 0 } : 'dealer'));
 
 /** A pair as the player kept it before sending CS (no shoe chains). */
 function keptPair(gameId: string, seedId = 's_test', extra: Partial<PairSeen> = {}): PairSeen {
@@ -245,9 +255,28 @@ describe('verifyShoe', () => {
     expect(r.dealing).not.toBeNull();
   });
 
+  it('requires the first guard trigger, rejects hidden later hands and a forged guard reason', () => {
+    const candidates = [52, 200, 364].map((cut) => shoeRecord({ cut, by: 'player' }));
+    const withTrigger = candidates.map((r) => ({ r, boundaries: guardShoeBoundaries(r.commit.gameId, Number(r.commit.table), rotate(r.order, r.reveal.cut!.at), r.reveal.burn, r.reveal.rounds) })).find(({ boundaries }) => boundaries.slice(0, -1).some((b) => b.spot !== null))!;
+    expect(withTrigger).not.toBeUndefined();
+    const { r, boundaries } = withTrigger;
+    r.commit.guard = 'rtp-995';
+    const index = boundaries.findIndex((b) => b.spot !== null);
+    const boundary = boundaries[index]!;
+    const rate = boundary.rates[boundary.spot!]!;
+    const reveal: ShoeReveal = { ...r.reveal, rounds: r.reveal.rounds.slice(0, index), status: 'guarded', guard: { before: boundary.before, spot: boundary.spot!, num: rate.num.toString(), den: rate.den.toString() } };
+    const opts = { pair: r.pair, expectedCut: { at: r.reveal.cut!.at }, hands: reveal.rounds, refused: reveal.rounds.map((r) => ({ before: r.from, requested: { player: 1000 }, granted: { player: 1000 } })) };
+    expect(verifyShoe(r.commit, reveal, opts)).toMatchObject({ ok: true, provable: true });
+    expect(verifyShoe(r.commit, r.reveal, r.opts).errors.join()).toMatch(/guard required a shuffle/);
+    expect(verifyShoe(r.commit, { ...reveal, guard: { ...reveal.guard!, num: '0' } }, opts).errors.join()).toMatch(/guard reason/);
+    expect(verifyShoe(r.commit, { ...reveal, rounds: [] }, { ...opts, hands: [] }).errors.join()).toMatch(/no guard trigger/);
+    const shifted = { ...r.commit, shoeHash: '0'.repeat(64) };
+    expect(verifyShoe(shifted, reveal, opts).ok).toBe(false);
+  });
+
   it('accepts a player cut anywhere from 52 to 364 and rejects 51 and 365', () => {
     for (const cut of [52, 200, 364]) {
-      const { commit, reveal, opts } = shoeRecord({ cut, by: 'player' });
+      const { commit, reveal, opts } = shoeRecord({ cut, by: 'player', rounds: [], status: 'shuffled' });
       expect(verifyShoe(commit, reveal, opts).ok).toBe(true);
     }
     for (const cut of [51, 365]) {
@@ -279,7 +308,7 @@ describe('verifyShoe', () => {
     expect(verifyShoe(commit, reveal, { pair: { ...opts.pair, gameId: 'roulette' } }).errors.join()).toMatch(/no published shoe rules for roulette/);
   });
 
-  it('solo blackjack cuts automatically only: a cut claimed by the player fails', () => {
+  it("solo blackjack: a shoe per round, cut by the player or at kAuto; provable only with the player's cut and cards seen", () => {
     const link = chainLink(SECRET, 3, 1);
     const inputs = { gameId: 'solo-classic', table: 1, clientSeed: CS, shoeNo: 1 };
     const order = shoeOrder(link, inputs, 8).order;
@@ -299,7 +328,7 @@ describe('verifyShoe', () => {
       clientSeedBy: 'player',
       shoeHash: shoeHash(salt, order),
       cutRange: [52, 364],
-      cutPolicy: 'auto',
+      cutPolicy: 'player',
       autoCut: k,
       endAt: null,
       burnRule: 'none',
@@ -307,10 +336,37 @@ describe('verifyShoe', () => {
     };
     const reveal: ShoeReveal = { shoe: 'sh_bj', status: 'ended', link: toHex(link), salt: toHex(salt), order: lettersOf(order), cut: { at: k, by: 'auto' }, burn: null, rounds: [{ roundId: 'R-1', from: 0, to: 6 }], at: 2 };
     const pair = keptPair('solo-classic', 's_bj', { root });
-    expect(verifyShoe(commit, reveal, { pair }).ok).toBe(true);
-    // The server knows O when it opens the solo shoe: a "player" cut at the k it likes must not pass.
+    const seen = (at: number): HandSeen[] => [{ roundId: 'R-1', from: 0, to: 6, cards: rotate(order, at).slice(0, 6), places: soloPlaces(6), boxes: [0] }];
+    // The deal without a cut of the player: kAuto; provable with the automatic cut, the cards seen and where they went.
+    expect(verifyShoe(commit, reveal, { pair, expectedCut: 'auto', hands: seen(k) })).toMatchObject({ ok: true, provable: true });
+    expect(verifyShoe(commit, reveal, { pair })).toMatchObject({ ok: true, provable: false });
+    const { places: _, ...cardsOnly } = seen(k)[0]!;
+    expect(verifyShoe(commit, reveal, { pair, expectedCut: 'auto', hands: [cardsOnly] })).toMatchObject({ ok: true, provable: false, unproven: ['where the player saw the cards of round R-1 go (and the boxes it bet on) is not given'] });
+    // A shoe committed under the solo row of fairshoe@1.1.0 (cut policy auto: kAuto only) still verifies, held to that.
+    expect(verifyShoe({ ...commit, cutPolicy: 'auto' }, reveal, { pair, hands: seen(k) })).toMatchObject({ ok: true, provable: true });
+    expect(verifyShoe({ ...commit, cutPolicy: 'auto' }, { ...reveal, cut: { at: k === 90 ? 91 : 90, by: 'player' } }, { pair }).errors).toEqual(['this game cuts automatically only, the record says player']);
+    // A shoe of another game's rules is still refused: baccarat's cut card on a solo shoe.
+    expect(verifyShoe({ ...commit, endAt: 364 }, reveal, { pair }).errors.join()).toMatch(/cut card at 364, the rules say null/);
+    // The player's cut: provable only with the player's own record of it. The server knows O when it commits the solo
+    // shoe: a "player" cut at the k it likes is the server's word without that record.
     const chosen = k === 90 ? 91 : 90;
-    expect(verifyShoe(commit, { ...reveal, cut: { at: chosen, by: 'player' } }, { pair }).errors.join()).toMatch(/cuts automatically only/);
+    const cutByPlayer = { ...reveal, cut: { at: chosen, by: 'player' as const } };
+    expect(verifyShoe(commit, cutByPlayer, { pair, hands: seen(chosen) })).toMatchObject({ ok: true, provable: false, unproven: ['the cut the player asked for on this shoe is not given'] });
+    expect(verifyShoe(commit, cutByPlayer, { pair, expectedCut: { at: chosen }, hands: seen(chosen) })).toMatchObject({ ok: true, provable: true });
+    expect(verifyShoe(commit, cutByPlayer, { pair, expectedCut: 'auto' }).errors).toEqual([`the player asked for the automatic cut, the record says player at ${chosen}`]);
+    // An automatic cut must be kAuto.
+    expect(verifyShoe(commit, { ...reveal, cut: { at: chosen, by: 'auto' } }, { pair }).errors.join()).toMatch(new RegExp(`an automatic cut \\(auto\\) must be ${k}`));
+    // The cards seen bind the round's order: one card off, or one card fewer, fails.
+    const off = seen(k);
+    off[0]!.cards = [...off[0]!.cards!.slice(1), off[0]!.cards![0]!];
+    expect(verifyShoe(commit, reveal, { pair, expectedCut: 'auto', hands: off }).errors.join()).toMatch(/round R-1: card 0 was .* on the table, the shoe has .* there/);
+    const short = seen(k);
+    short[0]!.cards = short[0]!.cards!.slice(0, 5);
+    expect(verifyShoe(commit, reveal, { pair, expectedCut: 'auto', hands: short }).errors).toEqual(['round R-1: the player saw 5 cards dealt, the shoe gives it 6 (cards 0 to 6)']);
+    // A card dealt face down and never turned (null) only takes its place.
+    const hole = seen(k);
+    hole[0]!.cards = hole[0]!.cards!.map((c, i) => (i === 3 ? null : c));
+    expect(verifyShoe(commit, reveal, { pair, expectedCut: 'auto', hands: hole })).toMatchObject({ ok: true, provable: true });
   });
 
   it('reports a swapped card, a hex salt, a foreign link and a terminal missing from the root', () => {
@@ -758,7 +814,8 @@ describe('a server that knows the order', () => {
     const root = shoeRoot([lineOf('solo-classic', 1, secret)]);
     const kept = keptPair('solo-classic', 'sd_L', { root });
     const one = anyShoe({ gameId: 'solo-classic', table: 1, shoeNo: 1, secret, seedId: 'sd_L', root, rounds: [['R-1', 6]], status: 'ended', shoe: 'sh_L' });
-    expect(verifyShoe(one.record.commit, one.record.reveal, { pair: kept })).toMatchObject({ ok: true, provable: true });
+    const seen = [{ roundId: 'R-1', from: 0, to: 6, cards: one.dealing.slice(0, 6), places: soloPlaces(6), boxes: [0] }];
+    expect(verifyShoe(one.record.commit, one.record.reveal, { pair: kept, expectedCut: 'auto', hands: seen })).toMatchObject({ ok: true, provable: true });
     const skipped = anyShoe({ gameId: 'solo-classic', table: 1, shoeNo: 1, secret, seedId: 'sd_L', root, rounds: [[null, 7], ['R-1', 6]], status: 'ended', shoe: 'sh_L' });
     expect(verifyShoe(skipped.record.commit, skipped.record.reveal, { pair: kept }).errors).toEqual(['a shoe for one round lists 2 rounds', 'a shoe for one round lists a hand outside a round']);
     const two = anyShoe({ gameId: 'solo-classic', table: 1, shoeNo: 1, secret, seedId: 'sd_L', root, rounds: [['R-1', 6], ['R-2', 6]], status: 'ended', shoe: 'sh_L' });
@@ -769,6 +826,65 @@ describe('a server that knows the order', () => {
     const r = one.record.reveal.rounds[0]!;
     const p = proofOf('solo-classic', [], () => undefined, { seedId: 'sd_L2', clientSeed: 'next-seed', shoes: [{ shoe: 'sh_L', table: 1, from: r.from, to: r.to }], outcome: { roundId: 'R-1' } });
     expect(verifyRound(p, SEED, { pair: next, shoes: [one.record], pairs: [{ ...kept, revealedAt: 9000, lastShoes: [{ table: 1, shoeNo: 1 }] }] }).errors.join()).toMatch(/every round of solo-classic is dealt from a shoe of its own pair/);
+  });
+
+  it('L2: a solo blackjack round deals its cards where the dealing rule gives them, over the boxes the player bet on', () => {
+    const h = (seat: number, hand = 0): SeenPlace => ({ seat, hand });
+    const d: SeenPlace = 'dealer';
+    // Boxes 0 and 2: first deal 0, 2, up card, 0, 2, hole; box 0 splits before card 6, each split hand takes a card,
+    // box 2 hits once, the dealer draws two.
+    const places = [h(0), h(2), d, h(0), h(2), d, h(0), h(0, 1), h(2), d, d];
+    const splits = [{ at: 6, seat: 0, hand: 0 }];
+    const ok = blackjackDeal({ places, splits, boxes: [0, 2] }, 11);
+    expect(ok).toEqual({ deal: { hands: [{ seat: 0, hand: 0, cards: [0, 6] }, { seat: 0, hand: 1, cards: [3, 7] }, { seat: 2, hand: 0, cards: [1, 4, 8] }], dealer: [2, 5, 9, 10] } });
+    const errs = (p: SeenPlace[], o: { splits?: typeof splits; boxes?: number[]; cards?: Array<string | null> } = {}) => {
+      const r = blackjackDeal({ places: p, splits: o.splits ?? [], boxes: o.boxes ?? [0, 2], ...(o.cards ? { cards: o.cards as never } : {}) }, p.length);
+      return 'errors' in r ? r.errors : [];
+    };
+    // The first deal in another order, or over a box the player did not bet on.
+    expect(errs([h(2), h(0), d, h(0), h(2), d])).toEqual(['card 0 went to box 2 hand 0, the first deal gives it to box 0 hand 0', 'card 1 went to box 0 hand 0, the first deal gives it to box 2 hand 0']);
+    expect(errs([h(0), h(1), d, h(0), h(1), d, d], { boxes: [0] })).toEqual(['card 1 went to box 1 hand 0, the first deal gives it to the dealer', 'card 2 went to the dealer, the first deal gives it to box 0 hand 0', 'card 3 went to box 0 hand 0, the first deal gives it to the dealer']);
+    expect(errs([h(0), d, h(0), d, h(1)], { boxes: [0] })).toEqual(['card 4 went to box 1, a box the player did not bet on']);
+    // Back to a hand whose turn is over, a card to the boxes after the dealer drew, a hand the box does not have.
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(2), h(0)])).toEqual(['card 7 went to box 0 hand 0 after its turn was over']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d, d, h(2)])).toEqual(['card 7 went to box 2 hand 0 after the dealer drew']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(0, 1)])).toEqual(['card 6 went to box 0 hand 1, which the box does not have']);
+    // A split: the split hand takes the next card; a hand of three cards or a box nobody bet on does not split; a split
+    // is never the round's last event.
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(0, 1), h(0)], { splits })).toEqual(['card 6 went to box 0 hand 1, the split hand box 0 hand 0 takes the card after its split']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(0), h(0), h(0, 1)], { splits: [{ at: 7, seat: 0, hand: 0 }] })).toEqual(['before card 7 the player saw box 0 hand 0 split with 3 cards, not two']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(1)], { splits: [{ at: 6, seat: 1, hand: 0 }] })).toEqual(['before card 6 the player saw box 1 split, a box it did not bet on']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d], { splits: [{ at: 6, seat: 0, hand: 0 }] })).toEqual(['the round ends with a split of box 0 hand 0: the split hand takes the next card']);
+    expect(errs([h(0), h(2), d, h(0), h(2), d, h(0)], { splits: [{ at: 2, seat: 0, hand: 0 }] })).toEqual(['a split seen before card 2 is out of order or outside cards 6 to 6']);
+    // Only the hole card is dealt face down; the boxes are seats in seat order; too few cards for the first deal.
+    expect(errs([h(0), d, h(0), d], { boxes: [0], cards: ['AS', null, 'KS', null] })).toEqual(["card 1 was dealt face down: only the dealer's hole card (card 3) is"]);
+    expect(errs([h(0), d, h(0), d], { boxes: [0], cards: ['AS', '2S', 'KS', null] })).toEqual([]);
+    expect(errs(places, { boxes: [2, 0] })).toEqual(['the boxes the player bet on are not a list of seats in seat order']);
+    expect(errs([h(0), h(2), d, h(0), h(2)])).toEqual(['the round has 5 cards, the first deal to 2 boxes and the dealer takes 6']);
+    expect(blackjackDeal({ places: [h(0)], boxes: [0] }, 4)).toEqual({ errors: ['the player saw 1 places for the 4 cards of the round'] });
+  });
+
+  it('L3: a solo round whose outcome gives the cards to other hands than the player saw them dealt to fails', () => {
+    const secret = secretOf(0x43);
+    const root = shoeRoot([lineOf('solo-classic', 1, secret)]);
+    const kept = keptPair('solo-classic', 'sd_L3', { root });
+    const one = anyShoe({ gameId: 'solo-classic', table: 1, shoeNo: 1, secret, seedId: 'sd_L3', root, rounds: [['R-1', 6]], status: 'ended', shoe: 'sh_L3' });
+    const D = one.dealing.slice(0, 6);
+    const own = { cuts: { sh_L3: 'auto' as const }, hands: { sh_L3: [{ roundId: 'R-1', from: 0, to: 6, cards: D, places: soloPlaces(6), boxes: [0] }] } };
+    const card = (c: string) => ({ rank: c.slice(0, -1), suit: c.slice(-1) });
+    const outcome = (box: number[], dealer: number[]) => ({ roundId: 'R-1', hands: [{ seat: 0, cards: box.map((i) => card(D[i]!)), bet: 100, outcome: 'lose', payout: 0 }], dealerCards: dealer.map((i) => card(D[i]!)) });
+    const proof = (o: unknown) => proofOf('solo-classic', [], () => undefined, { seedId: 'sd_L3', roundId: 'R-1', shoes: [{ shoe: 'sh_L3', table: 1, from: 0, to: 6 }], outcome: o });
+    const honest = verifyRound(proof(outcome([0, 2], [1, 3, 4, 5])), SEED, { pair: kept, shoes: [one.record], own });
+    expect(honest).toMatchObject({ ok: true, provable: true, outcome: { checked: false, errors: [] } });
+    expect(honest.outcome.summary).toBe(`box 0 ${D[0]} ${D[2]}, dealer ${[1, 3, 4, 5].map((i) => D[i]).join(' ')} (historical payouts not checked)`);
+    // The same cards, the box's first card to the dealer: the server knew D after the cut.
+    const forged = verifyRound(proof(outcome([1, 2], [0, 3, 4, 5])), SEED, { pair: kept, shoes: [one.record], own });
+    expect(forged.errors).toEqual([`outcome: hand 1 of the outcome is box 0 ${D[1]} ${D[2]}, the player saw box 0 hand 0 dealt ${D[0]} ${D[2]}`, `outcome: the outcome gives the dealer ${[0, 3, 4, 5].map((i) => D[i]).join(' ')}, the player saw the dealer dealt ${[1, 3, 4, 5].map((i) => D[i]).join(' ')}`]);
+    // Without the places the cards alone are compared: the forgery is not caught, and the round is not provable.
+    const cardsOnly = { ...own, hands: { sh_L3: [{ roundId: 'R-1', from: 0, to: 6, cards: D }] } };
+    expect(verifyRound(proof(outcome([1, 2], [0, 3, 4, 5])), SEED, { pair: kept, shoes: [one.record], own: cardsOnly })).toMatchObject({ ok: true, provable: false });
+    // An outcome that names no cards binds none (a record of fairshoe@1.1.0): ok, never provable.
+    expect(verifyRound(proof({ roundId: 'R-1' }), SEED, { pair: kept, shoes: [one.record], own })).toMatchObject({ ok: true, provable: false, unproven: ['the outcome names no cards of the round (hands, dealerCards)'] });
   });
 
   it('M: baccarat against the tableau: a hand dealt against the third-card rule and a winner the cards do not give fail', () => {

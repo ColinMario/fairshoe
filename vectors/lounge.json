@@ -1,0 +1,921 @@
+{
+  "source": "Real protocol client capture with official quicknet round 1",
+  "proof": {
+    "v": 1,
+    "alg": "fairshoe/v1",
+    "lib": "fairshoe@1.2.0",
+    "id": "pf_lounge-lounge-bali-1-20a8bc21d343240962aebe24-1",
+    "gameId": "lounge-bali-1",
+    "roundId": "RZUNF2-1",
+    "seedId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24",
+    "serverSeedHash": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+    "clientSeed": "cac8b5d2cec855a24a96e640cd825505fa8e8eaea0cd7e6dd56a1b8fe9deac0a",
+    "clientSeedBy": "player",
+    "serverSeed": null,
+    "steps": [],
+    "shoes": [],
+    "outcome": null,
+    "engineVersion": 1,
+    "at": 1692803380478,
+    "lounge": {
+      "v": 1,
+      "policy": "lounge-bots/1",
+      "demo": false,
+      "commit": {
+        "id": "lounge-lounge-bali-1-20a8bc21d343240962aebe24-1",
+        "chainId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24",
+        "tableId": "lounge-bali-1",
+        "terminal": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+        "length": 2000,
+        "index": 1,
+        "previous": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+        "openedAt": 1692803342000,
+        "openingSeeds": [],
+        "beforeBots": {
+          "target": 0,
+          "targetRoundsLeft": 0,
+          "seats": []
+        },
+        "initial": true,
+        "botPlanHash": "e32c3b2ba9e38c4b68a66dc78603bd18f338806a967d10fd29baf72c1185c013"
+      },
+      "lock": {
+        "commitId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24-1",
+        "roundId": "RZUNF2-1",
+        "closedAt": 1692803342000,
+        "deadline": 1692803357000,
+        "reason": "ready",
+        "ready": [
+          "p_7s-y0pAlTj2T"
+        ],
+        "seeds": [
+          {
+            "id": "p_7s-y0pAlTj2T",
+            "seed": "lounge-player-true",
+            "by": "player"
+          }
+        ],
+        "boxes": [
+          {
+            "seat": 0,
+            "ownerId": "bot:AceHunter",
+            "bot": true,
+            "main": 500,
+            "pp": 100,
+            "p21": 0,
+            "behind": [],
+            "pending": null
+          },
+          {
+            "seat": 1,
+            "ownerId": "bot:Noah.B",
+            "bot": true,
+            "main": 1500,
+            "pp": 0,
+            "p21": 0,
+            "behind": [],
+            "pending": null
+          },
+          {
+            "seat": 2,
+            "ownerId": "bot:SilverFox",
+            "bot": true,
+            "main": 400,
+            "pp": 0,
+            "p21": 0,
+            "behind": [],
+            "pending": null
+          },
+          {
+            "seat": 3,
+            "ownerId": "bot:Sofia.R",
+            "bot": true,
+            "main": 1000,
+            "pp": 0,
+            "p21": 0,
+            "behind": [],
+            "pending": null
+          },
+          {
+            "seat": 4,
+            "ownerId": "p_7s-y0pAlTj2T",
+            "bot": false,
+            "main": 1000,
+            "pp": 0,
+            "p21": 0,
+            "behind": [],
+            "pending": null
+          }
+        ],
+        "plan": {
+          "state": {
+            "target": 6,
+            "targetRoundsLeft": 5,
+            "seats": [
+              {
+                "seat": 0,
+                "id": "bot:AceHunter",
+                "name": "AceHunter",
+                "bot": true,
+                "roundsLeft": 21
+              },
+              {
+                "seat": 1,
+                "id": "bot:Noah.B",
+                "name": "Noah.B",
+                "bot": true,
+                "roundsLeft": 28
+              },
+              {
+                "seat": 2,
+                "id": "bot:SilverFox",
+                "name": "SilverFox",
+                "bot": true,
+                "roundsLeft": 27
+              },
+              {
+                "seat": 3,
+                "id": "bot:Sofia.R",
+                "name": "Sofia.R",
+                "bot": true,
+                "roundsLeft": 6
+              },
+              {
+                "seat": 5,
+                "id": "bot:Clara.M",
+                "name": "Clara.M",
+                "bot": true,
+                "roundsLeft": 10
+              }
+            ]
+          },
+          "left": [],
+          "joined": [
+            {
+              "seat": 0,
+              "id": "bot:AceHunter",
+              "name": "AceHunter",
+              "bot": true,
+              "roundsLeft": 21
+            },
+            {
+              "seat": 5,
+              "id": "bot:Clara.M",
+              "name": "Clara.M",
+              "bot": true,
+              "roundsLeft": 10
+            },
+            {
+              "seat": 3,
+              "id": "bot:Sofia.R",
+              "name": "Sofia.R",
+              "bot": true,
+              "roundsLeft": 6
+            },
+            {
+              "seat": 2,
+              "id": "bot:SilverFox",
+              "name": "SilverFox",
+              "bot": true,
+              "roundsLeft": 27
+            },
+            {
+              "seat": 1,
+              "id": "bot:Noah.B",
+              "name": "Noah.B",
+              "bot": true,
+              "roundsLeft": 28
+            }
+          ],
+          "wagers": [
+            {
+              "id": "bot:AceHunter",
+              "bets": [
+                {
+                  "seat": 0,
+                  "spot": "main",
+                  "amount": 500
+                },
+                {
+                  "seat": 0,
+                  "spot": "pp",
+                  "amount": 100
+                }
+              ]
+            },
+            {
+              "id": "bot:Clara.M",
+              "bets": []
+            },
+            {
+              "id": "bot:Sofia.R",
+              "bets": [
+                {
+                  "seat": 3,
+                  "spot": "main",
+                  "amount": 1000
+                }
+              ]
+            },
+            {
+              "id": "bot:SilverFox",
+              "bets": [
+                {
+                  "seat": 2,
+                  "spot": "main",
+                  "amount": 400
+                }
+              ]
+            },
+            {
+              "id": "bot:Noah.B",
+              "bets": [
+                {
+                  "seat": 1,
+                  "spot": "main",
+                  "amount": 1500
+                }
+              ]
+            }
+          ],
+          "insurance": [
+            {
+              "seat": 0,
+              "normal": false,
+              "evenMoney": true
+            },
+            {
+              "seat": 5,
+              "normal": false,
+              "evenMoney": false
+            },
+            {
+              "seat": 3,
+              "normal": false,
+              "evenMoney": true
+            },
+            {
+              "seat": 2,
+              "normal": false,
+              "evenMoney": false
+            },
+            {
+              "seat": 1,
+              "normal": false,
+              "evenMoney": false
+            }
+          ]
+        },
+        "beaconRound": 1,
+        "hash": "87ce81e9a12ebadd0cf6f15e786686ff5a59016246d084960784911785f38eab"
+      },
+      "link": "8c54cf32f07982cd1e72eda14a2b94ba8400f5767d781b4b6110684de895dae3",
+      "beacon": {
+        "round": 1,
+        "signature": "b55e7cb2d5c613ee0b2e28d6750aabbb78c39dcc96bd9d38c2c2e12198df95571de8e8e402a0cc48871c7089a2b3af4b",
+        "randomness": "1466a6cd24e327188770752f6134001c64d6efcc590ccc26b721611ad96f165a"
+      },
+      "cards": [
+        "QC",
+        "AD",
+        "8D",
+        "4H",
+        "5D",
+        "4S",
+        "6S",
+        "6D",
+        "8S",
+        "2C",
+        "AC",
+        "2S",
+        "7C",
+        "6H",
+        "7C",
+        "3S",
+        "5D",
+        "AH"
+      ],
+      "actions": [
+        {
+          "seat": 0,
+          "hand": 0,
+          "action": "stand",
+          "at": 12
+        },
+        {
+          "seat": 1,
+          "hand": 0,
+          "action": "double",
+          "at": 12
+        },
+        {
+          "seat": 2,
+          "hand": 0,
+          "action": "split",
+          "at": 13
+        },
+        {
+          "seat": 2,
+          "hand": 0,
+          "action": "stand",
+          "at": 14
+        },
+        {
+          "seat": 2,
+          "hand": 1,
+          "action": "stand",
+          "at": 15
+        },
+        {
+          "seat": 3,
+          "hand": 0,
+          "action": "hit",
+          "at": 15
+        },
+        {
+          "seat": 3,
+          "hand": 0,
+          "action": "hit",
+          "at": 16
+        },
+        {
+          "seat": 3,
+          "hand": 0,
+          "action": "stand",
+          "at": 17
+        },
+        {
+          "seat": 4,
+          "hand": 0,
+          "action": "stand",
+          "at": 17
+        }
+      ],
+      "discarded": 0,
+      "insurance": [],
+      "ledger": {
+        "bot:AceHunter": {
+          "staked": 600,
+          "returned": 0
+        },
+        "bot:Noah.B": {
+          "staked": 3000,
+          "returned": 0
+        },
+        "bot:SilverFox": {
+          "staked": 800,
+          "returned": 0
+        },
+        "bot:Sofia.R": {
+          "staked": 1000,
+          "returned": 0
+        },
+        "p_7s-y0pAlTj2T": {
+          "staked": 1000,
+          "returned": 0
+        }
+      },
+      "hands": [
+        {
+          "seat": 0,
+          "hand": 0,
+          "outcome": "lose",
+          "bet": 500,
+          "payout": 0
+        },
+        {
+          "seat": 1,
+          "hand": 0,
+          "outcome": "lose",
+          "bet": 3000,
+          "payout": 0
+        },
+        {
+          "seat": 2,
+          "hand": 0,
+          "outcome": "lose",
+          "bet": 400,
+          "payout": 0
+        },
+        {
+          "seat": 2,
+          "hand": 1,
+          "outcome": "lose",
+          "bet": 400,
+          "payout": 0
+        },
+        {
+          "seat": 3,
+          "hand": 0,
+          "outcome": "lose",
+          "bet": 1000,
+          "payout": 0
+        },
+        {
+          "seat": 4,
+          "hand": 0,
+          "outcome": "lose",
+          "bet": 1000,
+          "payout": 0
+        }
+      ],
+      "status": "ok",
+      "at": 1692803380478
+    }
+  },
+  "own": {
+    "proofs": [],
+    "shoes": [],
+    "lounge": {
+      "RZUNF2-1": {
+        "root": {
+          "chainId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24",
+          "tableId": "lounge-bali-1",
+          "terminal": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+          "length": 2000
+        },
+        "rootReceivedAt": 1692803342000,
+        "seed": "lounge-player-true",
+        "seedSentAt": 1692803342001,
+        "playerId": "p_7s-y0pAlTj2T",
+        "commit": {
+          "id": "lounge-lounge-bali-1-20a8bc21d343240962aebe24-1",
+          "chainId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24",
+          "tableId": "lounge-bali-1",
+          "terminal": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+          "length": 2000,
+          "index": 1,
+          "previous": "20a8bc21d343240962aebe2438e94e28bf21e2baf95717747f4af8761d2ac25e",
+          "openedAt": 1692803342000,
+          "openingSeeds": [],
+          "beforeBots": {
+            "target": 0,
+            "targetRoundsLeft": 0,
+            "seats": []
+          },
+          "initial": true,
+          "botPlanHash": "e32c3b2ba9e38c4b68a66dc78603bd18f338806a967d10fd29baf72c1185c013"
+        },
+        "commitReceivedAt": 1692803342002,
+        "lock": {
+          "commitId": "lounge-lounge-bali-1-20a8bc21d343240962aebe24-1",
+          "roundId": "RZUNF2-1",
+          "closedAt": 1692803342000,
+          "deadline": 1692803357000,
+          "reason": "ready",
+          "ready": [
+            "p_7s-y0pAlTj2T"
+          ],
+          "seeds": [
+            {
+              "id": "p_7s-y0pAlTj2T",
+              "seed": "lounge-player-true",
+              "by": "player"
+            }
+          ],
+          "boxes": [
+            {
+              "seat": 0,
+              "ownerId": "bot:AceHunter",
+              "bot": true,
+              "main": 500,
+              "pp": 100,
+              "p21": 0,
+              "behind": [],
+              "pending": null
+            },
+            {
+              "seat": 1,
+              "ownerId": "bot:Noah.B",
+              "bot": true,
+              "main": 1500,
+              "pp": 0,
+              "p21": 0,
+              "behind": [],
+              "pending": null
+            },
+            {
+              "seat": 2,
+              "ownerId": "bot:SilverFox",
+              "bot": true,
+              "main": 400,
+              "pp": 0,
+              "p21": 0,
+              "behind": [],
+              "pending": null
+            },
+            {
+              "seat": 3,
+              "ownerId": "bot:Sofia.R",
+              "bot": true,
+              "main": 1000,
+              "pp": 0,
+              "p21": 0,
+              "behind": [],
+              "pending": null
+            },
+            {
+              "seat": 4,
+              "ownerId": "p_7s-y0pAlTj2T",
+              "bot": false,
+              "main": 1000,
+              "pp": 0,
+              "p21": 0,
+              "behind": [],
+              "pending": null
+            }
+          ],
+          "plan": {
+            "state": {
+              "target": 6,
+              "targetRoundsLeft": 5,
+              "seats": [
+                {
+                  "seat": 0,
+                  "id": "bot:AceHunter",
+                  "name": "AceHunter",
+                  "bot": true,
+                  "roundsLeft": 21
+                },
+                {
+                  "seat": 1,
+                  "id": "bot:Noah.B",
+                  "name": "Noah.B",
+                  "bot": true,
+                  "roundsLeft": 28
+                },
+                {
+                  "seat": 2,
+                  "id": "bot:SilverFox",
+                  "name": "SilverFox",
+                  "bot": true,
+                  "roundsLeft": 27
+                },
+                {
+                  "seat": 3,
+                  "id": "bot:Sofia.R",
+                  "name": "Sofia.R",
+                  "bot": true,
+                  "roundsLeft": 6
+                },
+                {
+                  "seat": 5,
+                  "id": "bot:Clara.M",
+                  "name": "Clara.M",
+                  "bot": true,
+                  "roundsLeft": 10
+                }
+              ]
+            },
+            "left": [],
+            "joined": [
+              {
+                "seat": 0,
+                "id": "bot:AceHunter",
+                "name": "AceHunter",
+                "bot": true,
+                "roundsLeft": 21
+              },
+              {
+                "seat": 5,
+                "id": "bot:Clara.M",
+                "name": "Clara.M",
+                "bot": true,
+                "roundsLeft": 10
+              },
+              {
+                "seat": 3,
+                "id": "bot:Sofia.R",
+                "name": "Sofia.R",
+                "bot": true,
+                "roundsLeft": 6
+              },
+              {
+                "seat": 2,
+                "id": "bot:SilverFox",
+                "name": "SilverFox",
+                "bot": true,
+                "roundsLeft": 27
+              },
+              {
+                "seat": 1,
+                "id": "bot:Noah.B",
+                "name": "Noah.B",
+                "bot": true,
+                "roundsLeft": 28
+              }
+            ],
+            "wagers": [
+              {
+                "id": "bot:AceHunter",
+                "bets": [
+                  {
+                    "seat": 0,
+                    "spot": "main",
+                    "amount": 500
+                  },
+                  {
+                    "seat": 0,
+                    "spot": "pp",
+                    "amount": 100
+                  }
+                ]
+              },
+              {
+                "id": "bot:Clara.M",
+                "bets": []
+              },
+              {
+                "id": "bot:Sofia.R",
+                "bets": [
+                  {
+                    "seat": 3,
+                    "spot": "main",
+                    "amount": 1000
+                  }
+                ]
+              },
+              {
+                "id": "bot:SilverFox",
+                "bets": [
+                  {
+                    "seat": 2,
+                    "spot": "main",
+                    "amount": 400
+                  }
+                ]
+              },
+              {
+                "id": "bot:Noah.B",
+                "bets": [
+                  {
+                    "seat": 1,
+                    "spot": "main",
+                    "amount": 1500
+                  }
+                ]
+              }
+            ],
+            "insurance": [
+              {
+                "seat": 0,
+                "normal": false,
+                "evenMoney": true
+              },
+              {
+                "seat": 5,
+                "normal": false,
+                "evenMoney": false
+              },
+              {
+                "seat": 3,
+                "normal": false,
+                "evenMoney": true
+              },
+              {
+                "seat": 2,
+                "normal": false,
+                "evenMoney": false
+              },
+              {
+                "seat": 1,
+                "normal": false,
+                "evenMoney": false
+              }
+            ]
+          },
+          "beaconRound": 1,
+          "hash": "87ce81e9a12ebadd0cf6f15e786686ff5a59016246d084960784911785f38eab"
+        },
+        "lockReceivedAt": 1692803342009,
+        "deadline": 1692803357000,
+        "bets": [
+          {
+            "seat": 4,
+            "spot": "main",
+            "amount": 1000
+          }
+        ],
+        "ready": true,
+        "cards": [
+          "QC",
+          "AD",
+          "8D",
+          "4H",
+          "5D",
+          "4S",
+          "6S",
+          "6D",
+          "8S",
+          "2C",
+          "AC",
+          "2S",
+          "7C",
+          "6H",
+          "7C",
+          "3S",
+          "5D",
+          "AH"
+        ],
+        "places": [
+          {
+            "seat": 0,
+            "hand": 0
+          },
+          {
+            "seat": 1,
+            "hand": 0
+          },
+          {
+            "seat": 2,
+            "hand": 0
+          },
+          {
+            "seat": 3,
+            "hand": 0
+          },
+          {
+            "seat": 4,
+            "hand": 0
+          },
+          "dealer",
+          {
+            "seat": 0,
+            "hand": 0
+          },
+          {
+            "seat": 1,
+            "hand": 0
+          },
+          {
+            "seat": 2,
+            "hand": 0
+          },
+          {
+            "seat": 3,
+            "hand": 0
+          },
+          {
+            "seat": 4,
+            "hand": 0
+          },
+          "dealer",
+          {
+            "seat": 1,
+            "hand": 0
+          },
+          {
+            "seat": 2,
+            "hand": 0
+          },
+          {
+            "seat": 2,
+            "hand": 1
+          },
+          {
+            "seat": 3,
+            "hand": 0
+          },
+          {
+            "seat": 3,
+            "hand": 0
+          },
+          "dealer"
+        ],
+        "observedActions": [
+          {
+            "seat": 0,
+            "hand": 0,
+            "action": "stand",
+            "at": 12,
+            "auto": false
+          },
+          {
+            "seat": 1,
+            "hand": 0,
+            "action": "double",
+            "at": 12,
+            "auto": false
+          },
+          {
+            "seat": 2,
+            "hand": 0,
+            "action": "split",
+            "at": 13,
+            "auto": false
+          },
+          {
+            "seat": 2,
+            "hand": 0,
+            "action": "stand",
+            "at": 14,
+            "auto": false
+          },
+          {
+            "seat": 2,
+            "hand": 1,
+            "action": "stand",
+            "at": 15,
+            "auto": false
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "action": "hit",
+            "at": 15,
+            "auto": false
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "action": "hit",
+            "at": 16,
+            "auto": false
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "action": "stand",
+            "at": 17,
+            "auto": false
+          },
+          {
+            "seat": 4,
+            "hand": 0,
+            "action": "stand",
+            "at": 17,
+            "auto": false
+          }
+        ],
+        "actions": [
+          {
+            "seat": 4,
+            "hand": 0,
+            "action": "stand",
+            "at": 17
+          }
+        ],
+        "insurance": [],
+        "turns": [
+          {
+            "seat": 0,
+            "hand": 0,
+            "at": 12,
+            "endsAt": 1692803383012
+          },
+          {
+            "seat": 1,
+            "hand": 0,
+            "at": 12,
+            "endsAt": 1692803385036
+          },
+          {
+            "seat": 2,
+            "hand": 0,
+            "at": 13,
+            "endsAt": 1692803385697
+          },
+          {
+            "seat": 2,
+            "hand": 0,
+            "at": 14,
+            "endsAt": 1692803386797
+          },
+          {
+            "seat": 2,
+            "hand": 1,
+            "at": 15,
+            "endsAt": 1692803388935
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "at": 15,
+            "endsAt": 1692803390375
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "at": 16,
+            "endsAt": 1692803392570
+          },
+          {
+            "seat": 3,
+            "hand": 0,
+            "at": 17,
+            "endsAt": 1692803394109
+          },
+          {
+            "seat": 4,
+            "hand": 0,
+            "at": 17,
+            "endsAt": 1692803396473
+          }
+        ],
+        "complete": true,
+        "betsComplete": true,
+        "prior": []
+      }
+    }
+  }
+}

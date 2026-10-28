@@ -69,7 +69,7 @@ node bin/fairshoe-verify mine.json reveal.json proof-1.json proof-2.json shoe-1.
 
 ```text
 $ node bin/fairshoe-verify examples/dragon-tiger.json
-fairshoe/v1 (fairshoe@1.1.0)
+fairshoe/v1 (fairshoe@1.2.0)
   provable  shoe sh_vectordragon01 (dragon-tiger table 1, shoe 1, shuffled, cut 200 by player, 3 hands)
   provable  proof pf_vectordragon01 (dragon-tiger round R-1, no nonce, outcome checked: dragon 8S, tiger 5S, dragon)
   provable  proof pf_vectordragon03 (dragon-tiger round R-2, no nonce, outcome checked: dragon 4C, tiger 10S, tiger)
@@ -84,7 +84,7 @@ the shoe it was dealt from. A proof whose server seed is not revealed yet is rep
 
 ```text
 $ node bin/fairshoe-verify examples/baccarat-flipped-winner.json
-fairshoe/v1 (fairshoe@1.1.0)
+fairshoe/v1 (fairshoe@1.2.0)
   provable  shoe sh_vectorbaccara1 (baccarat table 3, shoe 1, shuffled, cut 150 by player, 3 hands)
   FAILED    proof pf_vectorbaccara1 (baccarat round R-1, no nonce, outcome checked: player 2C QS 5C (7), banker 6C 10C (6), player)
               error: outcome: the winner is player, the proof says "banker"
@@ -97,7 +97,7 @@ Without them the shoe is only ok:
 
 ```text
 $ node bin/fairshoe-verify examples/dragon-tiger-without-own-records.json
-fairshoe/v1 (fairshoe@1.1.0)
+fairshoe/v1 (fairshoe@1.2.0)
   ok        shoe sh_vectordragon01 (dragon-tiger table 1, shoe 1, shuffled, cut 200 by player, 3 hands)
               not provable: the cut the player asked for on this shoe is not given
               not provable: the hands the player saw dealt from this shoe are not given
@@ -135,7 +135,8 @@ verifyProofBinding(proof, { pair: kept });       // { ok, errors, unproven }
 
 The building blocks are exported too: `roundRng(serverSeed, gameId, clientSeed, nonce)` (an `Rng` whose `int(n)`
 records its draws), `chainLink`, `shoeRoot`, `shoeOrder`, `shoeSalt`, `shoeHash`, `autoCut`, `rotate`, `burnOf`,
-`shoeRulesFor`, `checkOutcome`, `crashPoint`, `sha256` and `hmacSha256`. `bin/report.ts` is what the command line
+`shoeRulesFor`, `checkOutcome`, `blackjackDeal` (the places of a solo blackjack round's cards against the dealing
+rule), `crashPoint`, `sha256` and `hmacSha256`. `bin/report.ts` is what the command line
 verifier and the page run on top of them.
 
 ## The verifier page

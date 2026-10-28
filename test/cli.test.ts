@@ -51,7 +51,7 @@ describe('fairshoe-verify', () => {
     for (const [name, code] of Object.entries(EXAMPLES)) {
       const r = run([join('examples', name)]);
       expect(r.code, `${name}: ${r.out}${r.err}`).toBe(code);
-      expect(r.out).toMatch(/^fairshoe\/v1 \(fairshoe@1\.1\.0\)\n/);
+      expect(r.out).toMatch(/^fairshoe\/v1 \(fairshoe@1\.2\.0\)\n/);
       expect(r.out).toMatch(code === EXIT.provable ? /\nresult: provable\n$/ : code === EXIT.failed ? /\nresult: FAILED/ : /\nresult: ok, not provable\n$/);
     }
     expect(run(['examples/baccarat-flipped-winner.json']).out).toMatch(/FAILED +proof pf_vectorbaccara1 .*\n +error: outcome: the winner is player, the proof says "banker"/);
@@ -100,7 +100,7 @@ describe('fairshoe-verify', () => {
     const r = run(['--json', 'examples/dragon-tiger.json']);
     expect(r.code).toBe(EXIT.provable);
     const report = JSON.parse(r.out) as Report;
-    expect(report).toMatchObject({ alg: 'fairshoe/v1', lib: 'fairshoe@1.1.0', status: 'provable', ok: true, provable: true });
+    expect(report).toMatchObject({ alg: 'fairshoe/v1', lib: 'fairshoe@1.2.0', status: 'provable', ok: true, provable: true });
     expect(report.checks.map((c) => `${c.kind} ${c.status}`)).toEqual(['shoe provable', 'proof provable', 'proof provable', 'reveal ok', 'pair provable', 'records provable']);
   });
 
@@ -116,7 +116,7 @@ describe('fairshoe-verify', () => {
       expect(run(['--frobnicate', 'examples/roulette.json']).err).toMatch(/unknown option --frobnicate/);
       expect(run(['--help'])).toMatchObject({ code: 0 });
       expect(run(['--help']).out).toMatch(/2 ok or pending \(not provable\), 3 the input could not\nbe read, 4 the verifier itself failed/);
-      expect(run(['--version']).out).toBe('fairshoe/v1 (fairshoe@1.1.0)\n');
+      expect(run(['--version']).out).toBe('fairshoe/v1 (fairshoe@1.2.0)\n');
     } finally {
       f.done();
     }
@@ -213,7 +213,7 @@ describe('bundles', () => {
     const r = check(dtBundle);
     expect(r).toMatchObject({ status: 'provable', ok: true, provable: true });
     expect(formatReport(r)).toEqual([
-      'fairshoe/v1 (fairshoe@1.1.0)',
+      'fairshoe/v1 (fairshoe@1.2.0)',
       '  provable  shoe sh_vectordragon01 (dragon-tiger table 1, shoe 1, shuffled, cut 200 by player, 3 hands)',
       '  provable  proof pf_vectordragon01 (dragon-tiger round R-1, no nonce, outcome checked: dragon 8S, tiger 5S, dragon)',
       '  provable  proof pf_vectordragon03 (dragon-tiger round R-2, no nonce, outcome checked: dragon 4C, tiger 10S, tiger)',
@@ -304,7 +304,7 @@ describe('bundles', () => {
     };
     fails([{ name: 'a', value: 42 }], /a: neither a bundle nor a record/);
     // Nothing unknown to name: no empty list after "not".
-    fails([{ name: 'a', value: {} }], /^a: neither a bundle \(keys kept, own, seed, records, pairs, proofs, shoes, later, note\) nor a record of fairshoe\/v1$/);
+    fails([{ name: 'a', value: {} }], /^a: neither a bundle \(keys kept, own, seed, records, pairs, proofs, shoes, later, prior, note\) nor a record of fairshoe\/v1$/);
     fails([{ name: 'a', value: { proofs: [{}] } }], /a: an entry of "proofs" is not a round proof/);
     fails([{ name: 'a', value: { shoes: [{ reveal: null }] } }], /a: an entry of "shoes" is not a shoe record/);
     fails([{ name: 'a', value: { kept: dt.kept, pairs: [{ gameId: 'x' }], seed: dt.pair } }], /a: an entry of "pairs" is not a kept pair/);

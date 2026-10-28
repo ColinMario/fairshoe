@@ -1,3 +1,4 @@
+import type { LoungeRoundProof } from './lounge.ts';
 /**
  * The records a server publishes and a verifier checks (SPEC.md section 7): the proof of a round, and a shoe's
  * commitment and reveal. Plain JSON; times are milliseconds since 1970 (UTC).
@@ -41,6 +42,8 @@ export interface ShoeSlice {
 
 /** The proof of one round (or of a step outside a round: roundId null). */
 export interface RoundProof {
+  /** Shared lounge proof: its own committed chain and independently verified public beacon. */
+  lounge?: LoungeRoundProof;
   v: 1;
   alg: string;
   /** The library that produced it, `fairshoe@<version>`. */
@@ -104,16 +107,21 @@ export interface ShoeCommit {
   /** Index (in the dealing order) of the first card behind the cut card: the round dealing it is the shoe's last. Null: no cut card. */
   endAt: number | null;
   burnRule: BurnRule;
+  /** Published guard rule; absent on historical shoes made before the guard was introduced. */
+  guard?: 'rtp-995';
+  guardWeights?: 'baccarat-multiplier/1';
   at: number;
 }
 
-export type ShoeEnd = 'ended' | 'shuffled' | 'aborted';
+export type ShoeEnd = 'ended' | 'shuffled' | 'aborted' | 'guarded';
 export type CutBy = 'player' | 'auto' | 'timeout';
 
 /** Published when the shoe is over (event shoe_reveal): everything needed to recompute it. */
 export interface ShoeReveal {
   shoe: string;
   status: ShoeEnd;
+  /** Exact visible-composition reason when this shoe ended by the published guard. */
+  guard?: { before: number; spot: string; num: string; den: string };
   /** The chain link the shoe was shuffled under. */
   link: string;
   salt: string;

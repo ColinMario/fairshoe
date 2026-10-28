@@ -1,5 +1,5 @@
 {
-  "note": "A solo blackjack round dealt from a shoe of its own, cut automatically. The draws and cards are provable; the outcome of blackjack is not mapped yet, so it is not called checked.",
+  "note": "A solo blackjack round dealt from a fresh shoe of its own, cut by the player at 175. With the player's own records (the cut asked for, the round seen with its cards in dealing order, where each card went and the box it bet on) the draws and cards are provable: the cards are the first of the shoe, each hand of the outcome holds the cards dealt to it by the dealing rule. Its payouts are not mapped yet, so the outcome is not called checked.",
   "kept": {
     "seedId": "sd_vectorsolo0001",
     "gameId": "solo-classic",
@@ -24,14 +24,39 @@
     ],
     "nonce": 1,
     "cuts": {
-      "sh_vectorsolo0001": "auto"
+      "sh_vectorsolo0001": {
+        "at": 175
+      }
     },
     "hands": {
       "sh_vectorsolo0001": [
         {
           "roundId": "R-1",
           "from": 0,
-          "to": 6
+          "to": 5,
+          "cards": [
+            "AD",
+            "4H",
+            "8D",
+            "10H",
+            "4H"
+          ],
+          "places": [
+            {
+              "seat": 0,
+              "hand": 0
+            },
+            "dealer",
+            {
+              "seat": 0,
+              "hand": 0
+            },
+            "dealer",
+            "dealer"
+          ],
+          "boxes": [
+            0
+          ]
         }
       ]
     }
@@ -64,7 +89,7 @@
     {
       "v": 1,
       "alg": "fairshoe/v1",
-      "lib": "fairshoe@1.1.0",
+      "lib": "fairshoe@1.2.0",
       "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
       "clientSeed": "player-seed-01",
       "clientSeedBy": "player",
@@ -94,19 +119,51 @@
           "shoe": "sh_vectorsolo0001",
           "table": 1,
           "from": 0,
-          "to": 6
+          "to": 5
         }
       ],
       "outcome": {
         "roundId": "R-1",
-        "cards": [
-          "JS",
-          "8H",
-          "7D",
-          "JS",
-          "AC",
-          "10H"
-        ]
+        "roundNumber": 1,
+        "tableId": "solo-classic",
+        "tableName": "Blackjack Solo",
+        "at": 5000,
+        "dealerCards": [
+          {
+            "rank": "4",
+            "suit": "H"
+          },
+          {
+            "rank": "10",
+            "suit": "H"
+          },
+          {
+            "rank": "4",
+            "suit": "H"
+          }
+        ],
+        "dealerTotal": 18,
+        "hands": [
+          {
+            "seat": 0,
+            "cards": [
+              {
+                "rank": "A",
+                "suit": "D"
+              },
+              {
+                "rank": "8",
+                "suit": "D"
+              }
+            ],
+            "bet": 1000,
+            "outcome": "win",
+            "payout": 2000
+          }
+        ],
+        "sideBets": [],
+        "totalBet": 1000,
+        "totalWin": 2000
       }
     }
   ],
@@ -135,7 +192,7 @@
           52,
           364
         ],
-        "cutPolicy": "auto",
+        "cutPolicy": "player",
         "autoCut": 317,
         "endAt": null,
         "burnRule": "none",
@@ -148,15 +205,15 @@
         "salt": "0ed706c7c774b9dd285da92f52eb11ab53101472917452b65635dac33a9cdce4",
         "order": "MNvABgRuWFEfkBzxPRkAnfUuaAxlGuwgSFmYzDnECJDZfEeiJjWvXqJIBzFWAsCOjOcJTENstmcgotqrCSRBvLGlerXbiqdbLqyEzOoKFcoYfUtISiHhUbCiJTzTUelStIHkkZBwPSaRgUMsMfoxcthVFubSxTVdybYGayEpDGLalyIaQhWQsXLpqrpFCEGOzdeCkkFoLbzGdlwXZvPSZnxAXPpWncZLVTkXNxpnMJTrCIiVNusYuBfHgGeNwdPjDQSdIHwAThNbihAJimTMjaMZhZFYMydKOtvaQXPsOgspljmWoqJYmsQDvwoRvKUgKnWYPjyCHQhIOwVctabpjnhDRkuDeojrtHcxvgfRKBymiAVNldnmeXVDLBKcUIrmQOPHLVYKupMEKqqGZRfNreyxlwWHQUzr",
         "cut": {
-          "at": 317,
-          "by": "auto"
+          "at": 175,
+          "by": "player"
         },
         "burn": null,
         "rounds": [
           {
             "roundId": "R-1",
             "from": 0,
-            "to": 6
+            "to": 5
           }
         ],
         "at": 8000

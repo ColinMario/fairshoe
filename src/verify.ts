@@ -1,3 +1,7 @@
+import { loungeHash, verifyLoungeRound, type LoungeOwnRecords } from './lounge.ts';
+import type { DrawAuthorization, GameplayWitness, ProofRef } from './gameplay.ts';
+import { equal as samePayoutValue, proofRefKey, type PriorState } from './payout-common.ts';
+import { guardDecisionErrors, guardShoeBoundaries, type GuardDecision } from './guard.ts';
 /**
  * Verifiers (SPEC.md section 8). They recompute everything from the published values and report every mismatch;
  * nothing here trusts the server. A verifier result lists errors in English, one line per problem; `ok` is true only
@@ -5,19 +9,21 @@
  * arithmetic may check out, but the server could have tried client seeds until it liked the outcome.
  *
  * What only the player can know is an input: the pair (seed id, game, hash and root) as shown before the player sent
- * the client seed, the client seed sent, the cut the player asked for, every hand it saw dealt, the table it bet at,
- * the reveals it received at the rotations, and the records the player received. Records alone cannot prove those, so
- * every record is checked against them: a server that swapped the server seed, the client seed, a chain or the root
- * after the player's client seed, or that dealt hands the player never saw to skip cards, fails here, however
- * consistent its records are. `provable` is true only when `ok` is, and only against such records: what is missing
- * for it is listed in `unproven`.
+ * the client seed, the client seed sent, the cut the player asked for, every hand it saw dealt (and, at solo blackjack,
+ * whose hands have no fixed length, the cards it saw in each, in the order they came, where each went and the boxes
+ * it bet on), the table it bet at, the reveals it received at the rotations, and the records the player received.
+ * Records alone cannot prove those, so every record is checked against them: a server that swapped the server seed,
+ * the client seed, a chain or the root after the player's client seed, that dealt hands the player never saw to skip
+ * cards, or that dealt the cards of a blackjack round in another order than the shoe's or to other hands than the
+ * dealing rule gives, fails here, however consistent its records are. `provable` is true only when `ok` is, and only
+ * against such records: what is missing for it is listed in `unproven`.
  */
 import { fromHex, isHex } from './bytes.ts';
 import { linkReaches, shoeRoot } from './chain.ts';
 import { ALG, isClientSeed, isGameId, isTableRef } from './domains.ts';
-import { CARD_GAMES, MAPPED_GAMES, checkOutcome, handRule, outcomeDetail, type OutcomeCheck } from './games.ts';
+import { CARD_GAMES, MAPPED_GAMES, blackjackDeal, checkOutcome, handRule, outcomeDetail, type OutcomeCheck, type SeenPlace, type SeenSplit } from './games.ts';
 import type { ClientSeedBy, CutPolicy, RoundProof, SeedReveal, ShoeCommit, ShoeRecord, ShoeReveal } from './records.ts';
-import { rootLineErrors, shoeRulesDiff, shoeRulesFor, type ShoeRulesV1 } from './rules.ts';
+import { SOLO_BLACKJACK_GAMES, rootLineErrors, shoeRulesDiff, shoeRulesFor, type ShoeRulesV1 } from './rules.ts';
 import { isServerSeed, roundRng, serverSeedHash } from './seeds.ts';
 import { autoCut, BURN_RULES, burnOf, codesOf, isCardCode, isDigest, lettersOf, rotate, shoeHash, shoeOrder, shoeSalt, type CardCode } from './shoe.ts';
 import { isIntRange } from './stream.ts';
@@ -32,6 +38,25 @@ export interface HandSeen {
   roundId: string | null;
   from: number;
   to: number;
+  /**
+   * The cards the player saw dealt in it, in the order they came to the table (solo blackjack: every card of the
+   * round, the dealer's hole card at its place once turned, null for a card shown face down only). They must be the
+   * shoe's D[from, to), as many and each at its place: a blackjack hand has no fixed length, and without them a server
+   * that knows the order could deal the round's cards in another order. A solo blackjack shoe is provable only with
+   * them and with `places` and `boxes`.
+   */
+  cards?: ReadonlyArray<CardCode | null>;
+  /**
+   * Solo blackjack: where each of `cards` went (the card event's target: the dealer, or hand `hand` of box `seat`), in
+   * the same order. They must follow the dealing rule (SPEC section 6) over `boxes`, and each hand of the outcome must
+   * hold exactly the cards dealt to it: without them a server that knows the order could give the player's card to the
+   * dealer, or deal to a box nobody bet on to move the player's cards.
+   */
+  places?: ReadonlyArray<SeenPlace>;
+  /** Solo blackjack: the splits the player saw (before which card, which box and hand); none when left out. */
+  splits?: ReadonlyArray<SeenSplit>;
+  /** Solo blackjack: the boxes (seats) holding the player's main bet when it dealt the round, in seat order. */
+  boxes?: readonly number[];
 }
 
 const NOT_PROVABLE = 'not provable: the server picked the client seed after its commitment';
@@ -87,7 +112,15 @@ function isCount(v: unknown): v is number {
 
 // ------------------------------------------------------------------------------------------------ shoes
 
+export interface GuardRuleSeen { guard: 'rtp-995' | null; guardWeights: 'baccarat-multiplier/1' | null }
+
 export interface ShoeVerifyOptions {
+  /** Guard rule as this client kept it in the commitment before cutting. */
+  expectedRules?: GuardRuleSeen;
+  /** Own shuffle requests, each the number of consumed cards before it was sent. */
+  shuffles?: readonly number[];
+  /** Own requested boards and the amounts actually granted/refused. */
+  refused?: readonly GuardDecision[];
   /**
    * Required: the pair whose root binds the shoe's chain (origin.seedId), as the player kept it. Its root lines, its
    * client seed and its game are the ones the shoe must have; the rules are those of the pair's game.
@@ -104,7 +137,8 @@ export interface ShoeVerifyOptions {
   /**
    * Every hand the player saw dealt from this shoe, in order (the shoe_deal notes), free hands included: the reveal's
    * rounds must be exactly these. Without them a shoe with a cut card is not provable: a server that knows the order
-   * could deal hands nobody asked for and so choose the cards of the player's next hand.
+   * could deal hands nobody asked for and so choose the cards of the player's next hand. A solo blackjack shoe (one
+   * round) is provable only with its round, the cards seen in it and where they went (HandSeen cards, places, boxes).
    */
   hands?: readonly HandSeen[];
 }
@@ -118,7 +152,7 @@ export interface ShoeCheck extends VerifyResult {
   unproven?: string[];
 }
 
-const SHOE_ENDS = ['ended', 'shuffled', 'aborted'];
+const SHOE_ENDS = ['ended', 'shuffled', 'aborted', 'guarded'];
 const CUT_BYS = ['player', 'auto', 'timeout'];
 const CUT_POLICIES: readonly CutPolicy[] = ['player', 'auto'];
 
@@ -142,6 +176,8 @@ function commitShape(commit: ShoeCommit, errors: string[]): number {
   const size = decksOk ? commit.decks * 52 : 0;
   if (!BURN_RULES.includes(commit.burnRule)) errors.push(`unknown burn rule ${String(commit.burnRule)}`);
   if (!CUT_POLICIES.includes(commit.cutPolicy)) errors.push(`unknown cut policy ${String(commit.cutPolicy)}`);
+  if (commit.guard !== undefined && commit.guard !== 'rtp-995') errors.push(`unknown guard rule ${String(commit.guard)}`);
+  if (commit.guardWeights !== undefined && commit.guardWeights !== 'baccarat-multiplier/1') errors.push(`unknown guard weights ${String(commit.guardWeights)}`);
   const range = commit.cutRange;
   if (!Array.isArray(range) || range.length !== 2 || !isCount(range[0]) || !isCount(range[1]) || range[0] > range[1] || range[1] >= size) errors.push('bad cut range');
   if (commit.endAt !== null && !(isCount(commit.endAt) && commit.endAt < size)) errors.push('bad cut card position');
@@ -220,6 +256,7 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
     if (!linkReaches(link, 1, origin.prevLink)) errors.push('the link does not hash to the previous link');
     if (!linkReaches(link, commit.shoeNo, origin.terminal)) errors.push('the link does not lead to the chain terminal');
 
+    if (opts.expectedRules && ((commit.guard ?? null) !== opts.expectedRules.guard || (commit.guardWeights ?? null) !== opts.expectedRules.guardWeights)) errors.push('the guard rule differs from the commitment kept by the player');
     const inputs = { gameId: commit.gameId, table: commit.table, clientSeed: commit.clientSeed, shoeNo: commit.shoeNo };
     const order = shoeOrder(link, inputs, commit.decks).order;
     if (lettersOf(order) !== reveal.order) errors.push('the order is not the shuffle of the shoe stream');
@@ -236,8 +273,9 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
     if (!rules || errors.some((e) => e !== NOT_PROVABLE)) return { ok: false, errors, dealing: null, provable: false, unproven: [] };
 
     dealing = order;
-    // The policy is the game's (the pair's), never the commitment's own word.
-    const autoOnly = rules.cutPolicy === 'auto';
+    // The policy is the game's (the pair's), never the commitment's own word; a commitment that promised the automatic
+    // cut only (the solo row of 1.1.0, rules.autoToo) is held to that.
+    const autoOnly = rules.cutPolicy === 'auto' || commit.cutPolicy === 'auto';
     const want = opts.expectedCut;
     if (reveal.cut) {
       const { at, by } = reveal.cut;
@@ -249,7 +287,14 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
       }
       if (want === 'auto' && by !== 'auto') errors.push(`the player asked for the automatic cut, the record says ${by} at ${at}`);
       if (want && want !== 'auto' && (by !== 'player' || at !== want.at)) errors.push(`the player cut at ${want.at}, the record says ${by} at ${at}`);
-    } else if (opts.expectedCut) errors.push('the player cut, the record has no cut');
+    } else if (opts.expectedCut) {
+      // Solo cuts are selectable before DEAL, but applied only when the round starts. A rotation/restart can abort
+      // that still-unused shoe. Keep the selection as evidence and flag the unfulfilled cut; never accuse an honest
+      // server of changing an applied cut. Any burn, dealt hand, or other game/status still requires the recorded cut.
+      if (SOLO_BLACKJACK_GAMES.has(pair.gameId) && reveal.status === 'aborted' && reveal.burn === null && reveal.rounds.length === 0) {
+        unproven.push('the selected cut was not applied before this unused solo shoe was aborted');
+      } else errors.push('the player cut, the record has no cut');
+    }
     let next = 0;
     if (reveal.burn) {
       if (!reveal.cut) errors.push('a burn before the cut');
@@ -271,9 +316,9 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
     if (reveal.status === 'ended' && commit.endAt !== null && !lastDealtEnd) errors.push('the shoe ended before its cut card came out');
     if (reveal.status !== 'ended' && lastDealtEnd) errors.push(`the cut card came out, the shoe should have ended, not ${reveal.status}`);
     // A shoe for one round (no cut card): the round it was opened for and nothing else, from the first card after the burn.
-    if (rules.endAt === null) {
+    if (commit.endAt === null) {
       if (reveal.rounds.length > 1) errors.push(`a shoe for one round lists ${reveal.rounds.length} rounds`);
-      if (reveal.rounds.some((r) => r.roundId === null)) errors.push('a shoe for one round lists a hand outside a round');
+      if (SOLO_BLACKJACK_GAMES.has(pair.gameId) && reveal.rounds.some((r) => r.roundId === null)) errors.push('a shoe for one round lists a hand outside a round');
       if (reveal.status === 'ended' && reveal.rounds.length === 0) errors.push('a shoe for one round ended without its round');
     }
     // Every hand of a card game takes the cards its rules give (section 9), free hands too: a longer one skips cards.
@@ -287,17 +332,69 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
     }
     // What the player saw: exactly these hands, no more (a hand nobody asked for skips cards), no fewer, none moved.
     const seen = opts.hands;
+    // Solo blackjack: its hands have no fixed length, so the cards seen bind the round to the shoe, card by card, and
+    // where they went binds them to the hands of the dealing rule.
+    const blackjack = SOLO_BLACKJACK_GAMES.has(pair.gameId);
+    const noCards: string[] = [];
+    const noPlaces: string[] = [];
     if (seen !== undefined) {
       if (!Array.isArray(seen)) errors.push('the hands seen are not a list');
       else {
         const listed = reveal.rounds.map((r) => `${r.roundId === null ? 'free hand' : `round ${r.roundId}`} ${r.from}-${r.to}`);
         const mine = seen.map((r) => `${isObject(r) && r.roundId === null ? 'free hand' : `round ${String(r?.roundId)}`} ${String(r?.from)}-${String(r?.to)}`);
         if (listed.join(', ') !== mine.join(', ')) errors.push(`the shoe lists ${listed.join(', ') || 'no hand'}; the player saw ${mine.join(', ') || 'none'}`);
+        for (const h of seen as readonly unknown[]) {
+          if (!isObject(h)) continue;
+          const name = h.roundId === null ? 'the free hand' : `round ${String(h.roundId)}`;
+          if (h.cards === undefined) {
+            if (blackjack) noCards.push(name);
+            continue;
+          }
+          const cardErrors = seenCardErrors(h as unknown as HandSeen, dealing, name);
+          for (const e of cardErrors) errors.push(e);
+          if (!blackjack || cardErrors.length > 0) continue;
+          if (h.places === undefined || h.boxes === undefined) noPlaces.push(name);
+          else {
+            const placed = blackjackDeal(h as unknown as HandSeen, (h.to as number) - (h.from as number));
+            if ('errors' in placed) for (const e of placed.errors) errors.push(`${name}: ${e}`);
+          }
+        }
       }
     }
+    // Opt-in on the commitment: historical marker-free shoes retain the rules they were dealt under.
+    if (errors.length === 0 && commit.guard === 'rtp-995' && CARD_GAMES.includes(pair.gameId)) {
+      const boundaries = guardShoeBoundaries(pair.gameId, Number(commit.table), dealing, reveal.burn, reveal.rounds);
+      for (let i = 0; i < reveal.rounds.length; i++) if (boundaries[i]!.spot) errors.push(`the guard required a shuffle before card ${boundaries[i]!.before}, but another hand was dealt`);
+      const final = boundaries.at(-1)!;
+      if (reveal.status === 'guarded') {
+        if (!final.spot || pair.gameId === 'blitz-baccarat-max') errors.push('the guarded shoe has no guard trigger at its final boundary');
+        else {
+          const rate = final.rates[final.spot]!;
+          if (!reveal.guard || reveal.guard.before !== final.before || reveal.guard.spot !== final.spot || reveal.guard.num !== rate.num.toString() || reveal.guard.den !== rate.den.toString()) errors.push('the stated guard reason does not match the visible composition');
+        }
+      }
+      if (reveal.status === 'shuffled' && !(opts.shuffles ?? []).some((before) => before === final.before || before === 0 && reveal.rounds.length === 0)) unproven.push('the player shuffle request at this shoe boundary is not given');
+      for (let i = 0; i < reveal.rounds.length; i++) {
+        const round = reveal.rounds[i]!;
+        if (round.roundId === null) continue;
+        const before = boundaries[i]!.before;
+        const accepted = (opts.refused ?? []).some((d) => !d.unanswered && d.granted !== null && (d.before === before || d.before === 0 && i === 0));
+        if (!accepted) unproven.push(`the player's requested and granted board before round ${round.roundId} is not given`);
+      }
+      for (const decision of opts.refused ?? []) {
+        if (!Number.isSafeInteger(decision.before) || decision.before < 0) { errors.push('invalid guard decision boundary'); continue; }
+        const boundary = decision.before === 0 ? boundaries[0] : boundaries.find((b) => b.before === decision.before);
+        if (!boundary) { errors.push(`the requested board at card ${decision.before} is not on a hand boundary`); continue; }
+        if (decision.refusal && decision.refusal !== 'guard_limit') { unproven.push(`the requested board at card ${decision.before} was refused for ${decision.refusal}, outside the guard proof`); continue; }
+        if (decision.unanswered) { unproven.push(`the player's requested board at card ${decision.before} has no received response`); continue; }
+        for (const e of guardDecisionErrors(pair.gameId, boundary.rates, { ...decision, before: boundary.before })) errors.push(`guard at card ${decision.before}: ${e}`);
+      }
+    } else if (reveal.status === 'guarded') errors.push('this shoe has no applicable composition guard');
     if (errors.length === 0 && reveal.rounds.length > 0) {
-      if (rules.cutPolicy === 'player' && want === undefined) unproven.push('the cut the player asked for on this shoe is not given');
-      if (rules.endAt !== null && seen === undefined) unproven.push('the hands the player saw dealt from this shoe are not given');
+      if (!autoOnly && want === undefined) unproven.push('the cut the player asked for on this shoe is not given');
+      if ((commit.endAt !== null || blackjack) && seen === undefined) unproven.push(`the hands the player saw dealt from this shoe${blackjack ? ' (with their cards)' : ''} are not given`);
+      else if (noCards.length > 0) unproven.push(`the cards the player saw dealt in ${noCards.join(', ')} are not given`);
+      else if (noPlaces.length > 0) unproven.push(`where the player saw the cards of ${noPlaces.join(', ')} go (and the boxes it bet on) is not given`);
     }
   } catch (err) {
     errors.push(`the record cannot be checked: ${errorText(err)}`);
@@ -305,6 +402,23 @@ export function verifyShoe(commit: ShoeCommit, reveal: ShoeReveal, options: Shoe
   }
   const ok = errors.length === 0;
   return { ok, errors, dealing, provable: ok && unproven.length === 0, unproven: ok ? unproven : [] };
+}
+
+/**
+ * The cards a player saw dealt in a hand against the shoe's D[from, to): as many, and each card shown the one at its
+ * place (a card shown face down only, null, just takes its place).
+ */
+function seenCardErrors(hand: HandSeen, dealing: readonly CardCode[], name: string): string[] {
+  const cards = hand.cards;
+  if (!Array.isArray(cards) || !cards.every((c) => c === null || isCardCode(c))) return [`${name}: the cards seen are not a list of cards`];
+  if (!Number.isSafeInteger(hand.from) || !Number.isSafeInteger(hand.to) || hand.from < 0 || hand.to > dealing.length || hand.to < hand.from) return [];
+  const dealt = dealing.slice(hand.from, hand.to);
+  if (cards.length !== dealt.length) return [`${name}: the player saw ${cards.length} cards dealt, the shoe gives it ${dealt.length} (cards ${hand.from} to ${hand.to})`];
+  const out: string[] = [];
+  cards.forEach((c, i) => {
+    if (c !== null && c !== dealt[i]) out.push(`${name}: card ${hand.from + i} was ${c} on the table, the shoe has ${dealt[i]} there`);
+  });
+  return out;
 }
 
 /** What a check before the reveal found: errors (a contradiction already), and what it could not bind yet. */
@@ -391,6 +505,8 @@ export function verifyProofBinding(proof: RoundProof, options: { pair?: PairSeen
 // ------------------------------------------------------------------------------------------------ rounds
 
 export interface RoundVerifyOptions {
+  /** Earlier payout proofs needed to bind carried balances or multipliers. */
+  prior?: readonly RoundProof[];
   /**
    * The proof's pair (proof.seedId) as the player kept it; when left out it is looked up in `pairs`. Without it the
    * proof is not provable: its server seed hash and client seed are bound to nothing the player saw.
@@ -457,7 +573,26 @@ function reusedSeed(kept: PairSeen, pairs: readonly PairSeen[] | undefined): str
  * shoes, a card game's round has its own slice, and for a mapped game the outcome follows from the draws and cards.
  * Discarded steps are checked like the others and counted.
  */
+interface PayoutVerificationContext { active: Set<string>; checked: Map<string, RoundCheck> }
 export function verifyRound(proof: RoundProof, serverSeed: string | null = proof?.serverSeed ?? null, options: RoundVerifyOptions = {}): RoundCheck {
+  return verifyRoundInner(proof, serverSeed, options, { active: new Set(), checked: new Map() });
+}
+function verifyRoundInner(proof: RoundProof, serverSeed: string | null, options: RoundVerifyOptions, replay: PayoutVerificationContext): RoundCheck {
+  if (typeof proof?.gameId === 'string' && proof.gameId.startsWith('lounge-')) {
+    try {
+    if (!proof.lounge) return { ok: true, provable: false, errors: [], unproven: ['the shared lounge proof is not given'], cards: null, outcome: { checked: false, summary: 'historical lounge round', errors: [], payoutsChecked: false } };
+    const c = proof.lounge.commit, lock = proof.lounge.lock;
+    const envelopeErrors: string[] = [];
+    if (proof.alg !== ALG) envelopeErrors.push(`unknown algorithm ${String(proof.alg)}`);
+    if (proof.gameId !== c?.tableId || proof.roundId !== lock?.roundId || proof.seedId !== c?.chainId || proof.id !== `pf_${c?.id}`) envelopeErrors.push('the lounge proof envelope does not match its committed table, round, chain and id');
+    if (proof.serverSeedHash !== c?.terminal || proof.clientSeed !== loungeHash(lock?.seeds) || !Array.isArray(proof.steps) || proof.steps.length || !Array.isArray(proof.shoes) || proof.shoes.length) envelopeErrors.push('the lounge proof contains foreign private-seed, nonce or shoe fields');
+    const expectedOutcome = proof.lounge.status === 'void' ? { void: true, reason: proof.lounge.voidReason } : null;
+    if (!samePayoutValue(proof.outcome, expectedOutcome)) envelopeErrors.push('the lounge envelope outcome disagrees with the shared round status');
+    if (envelopeErrors.length) return { ok: false, provable: false, errors: envelopeErrors, unproven: [], cards: null, outcome: { checked: false, payoutsChecked: false, summary: null, errors: [] } };
+    const result = verifyLoungeRound(proof.lounge, proof.roundId ? options.own?.lounge?.[proof.roundId] : undefined);
+    return { ...result, cards: result.cards ? [result.cards] : null, outcome: { ...result.outcome, payoutsChecked: result.outcome.checked, summary: 'shared lounge replay' } };
+    } catch (error) { return { ok: false, provable: false, errors: [`the lounge proof cannot be checked: ${errorText(error)}`], cards: null, outcome: { checked: false, payoutsChecked: false, summary: null, errors: [] } }; }
+  }
   const errors: string[] = [];
   const unproven: string[] = [];
   const none: OutcomeCheck = { checked: false, summary: null, errors: [] };
@@ -524,9 +659,40 @@ export function verifyRound(proof: RoundProof, serverSeed: string | null = proof
       if (dealt && rules.tables > 1 && bet === undefined) unproven.push(`the table the player bet at in round ${proof.roundId} is not given`);
     }
     // The round's own hands: the slices its shoes list under its round id (a free hand before it may ride along).
-    const outcome = checkOutcome(proof, slices?.own ?? null);
+    const gameplay = proof.roundId ? options.own?.gameplay?.[proof.roundId] : undefined;
+    const refs: ProofRef[] = gameplay?.kind === 'trading/carry99-v1' ? [gameplay.carryFrom, gameplay.portfolioFrom].filter((r): r is ProofRef => !!r) : gameplay?.kind === 'blackjack/payout-v1' ? Object.values(gameplay.carryFrom ?? {}) : gameplay?.kind === 'hilo/rounded-v1' && gameplay.cardFrom ? [gameplay.cardFrom] : [];
+    const prior: Record<string, PriorState> = {};
+    const thisKey = `${proof.seedId}:${proof.roundId}`;
+    replay.active.add(thisKey);
+    for (const ref of refs) {
+      const key = proofRefKey(ref);
+      if (replay.active.has(key)) { errors.push('the payout carry predecessor graph has a cycle'); continue; }
+      const candidates = (options.prior ?? []).filter((p) => p.seedId === ref.seedId && p.roundId === ref.roundId && p.gameId === proof.gameId);
+      const unique: RoundProof[] = [];
+      for (const candidate of candidates) if (!unique.some((p) => samePayoutValue(p, candidate))) unique.push(candidate);
+      if (unique.length > 1) { errors.push('conflicting copies of a payout carry predecessor'); continue; }
+      const previous = unique[0];
+      if (!previous || previous.at > proof.at || replay.active.size > 512) { prior[key] = { verified: false }; continue; }
+      if (previous.seedId === proof.seedId && gameplay && previous.steps.some((s) => s.status === 'ok' && s.nonce >= gameplay.startNonce)) { errors.push(`a carry predecessor does not precede this round (prior ${previous.steps.filter((s) => s.status === 'ok').map((s) => s.nonce).join(',')}; own start ${gameplay.startNonce})`); continue; }
+      let checked = replay.checked.get(key);
+      if (!checked) {
+        const previousPair = options.pairs?.find((p) => p.seedId === previous.seedId) ?? (kept?.seedId === previous.seedId ? kept : undefined);
+        checked = verifyRoundInner(previous, previous.serverSeed ?? (previous.seedId === proof.seedId ? serverSeed : null), { ...options, pair: previousPair }, replay);
+        replay.checked.set(key, checked);
+      }
+      prior[key] = { verified: checked.ok && checked.provable && checked.outcome.payoutsChecked === true, ...(checked.outcome.state ? { state: checked.outcome.state } : {}) };
+    }
+    replay.active.delete(thisKey);
+    const ownIndex = proof.shoes.findIndex((slice) => options.shoes?.some((record) => record.commit.shoe === slice.shoe && record.reveal?.rounds.some((r) => r.roundId === proof.roundId && r.from === slice.from && r.to === slice.to)));
+    const ownSlice = proof.shoes[ownIndex];
+    const accepted = ownSlice ? [...(options.own?.refused?.[ownSlice.shoe] ?? [])].reverse().find((r) => r.granted !== null && !r.unanswered && (r.before === ownSlice.from || r.before === 0)) : undefined;
+    const shoeKinds = proof.shoes.map((slice): 'free' | 'deal' | 'unknown' => {
+      const hand = options.shoes?.find((record) => record.commit.shoe === slice.shoe)?.reveal?.rounds.find((r) => r.from === slice.from && r.to === slice.to);
+      return hand ? hand.roundId === null ? 'free' : hand.roundId === proof.roundId ? 'deal' : 'unknown' : 'unknown';
+    });
+    const outcome = checkOutcome(proof, slices?.own ?? null, slices?.seen ?? null, { gameplay, prior, authorizedDraws: options.own?.authorizedDraws?.[proof.seedId], baccaratBets: accepted?.granted ?? undefined, baccaratNonce: accepted?.startNonce, baccaratSeedId: accepted?.seedId, shoeKinds, shoeStepIndex: ownIndex, shoeSteps: proof.shoes.length });
     for (const e of outcome.errors) errors.push(`outcome: ${e}`);
-    if (MAPPED_GAMES.includes(proof.gameId) && outcomeDetail(proof) && !outcome.checked) unproven.push('the outcome of this mapped game was not checked');
+    for (const u of outcome.unproven ?? []) unproven.push(u);
     const ok = errors.length === 0;
     return { ok, errors, provable: ok && unproven.length === 0, unproven: ok ? [...new Set(unproven)] : [], cards, outcome };
   } catch (err) {
@@ -548,13 +714,14 @@ function roundCards(
   options: RoundVerifyOptions,
   errors: string[],
   unproven: string[],
-): { cards: CardCode[][] | null; own: CardCode[][] | null; ownTables: number[] | null } {
+): { cards: CardCode[][] | null; own: CardCode[][] | null; ownTables: number[] | null; seen: HandSeen | null } {
   const shoes = options.shoes ?? [];
   const own = options.own;
   const checked = new Map<string, ShoeCheck>();
   const out: CardCode[][] = [];
   const mine: CardCode[][] = [];
   const tables: number[] = [];
+  let seen: HandSeen | null = null;
   let ok = true;
   for (const slice of proof.shoes) {
     if (!isObject(slice) || typeof slice.shoe !== 'string' || !isTableRef(slice.table) || !Number.isSafeInteger(slice.from) || !Number.isSafeInteger(slice.to)) {
@@ -585,14 +752,14 @@ function roundCards(
       }
       if (seedId !== proof.seedId) {
         // A shoe that ran on across a rotation. Its pair's reveal fixed the last shoe of each chain for good.
-        if (shoeRulesFor(proof.gameId)?.endAt === null) errors.push(`shoe ${slice.shoe} belongs to pair ${String(seedId)}: every round of ${proof.gameId} is dealt from a shoe of its own pair`);
+        if (record.commit.endAt === null) errors.push(`shoe ${slice.shoe} belongs to pair ${String(seedId)}: every round of ${proof.gameId} is dealt from a shoe of its own pair`);
         const last = Array.isArray(pair.lastShoes) ? pair.lastShoes.find((x) => isObject(x) && x.table === record.commit.table) : undefined;
         if (!Array.isArray(pair.lastShoes)) unproven.push(`the reveal of pair ${String(seedId)} as received at its rotation (its last shoe numbers) is not given`);
         else if (!last || record.commit.shoeNo > last.shoeNo) errors.push(`shoe ${slice.shoe} is shoe ${record.commit.shoeNo} of table ${record.commit.table} of pair ${String(seedId)}, whose reveal ended that chain at shoe ${String(last?.shoeNo ?? 0)}`);
       }
       const expectedCut = own?.cuts?.[slice.shoe];
       const hands = own?.hands?.[slice.shoe];
-      check = verifyShoe(record.commit, record.reveal, { pair, ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
+      check = verifyShoe(record.commit, record.reveal, { pair, expectedRules: own?.shoeRules?.[slice.shoe], shuffles: own?.shuffles?.[slice.shoe], refused: own?.refused?.[slice.shoe], ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
       checked.set(slice.shoe, check);
       // A shoe under the same server-picked client seed is reported once, for the proof.
       for (const e of check.errors) if (e !== NOT_PROVABLE || proof.clientSeedBy === 'player') errors.push(`shoe ${slice.shoe}: ${e}`);
@@ -611,9 +778,12 @@ function roundCards(
     if (round && proof.roundId !== null && round.roundId === proof.roundId) {
       mine.push(cards);
       tables.push(slice.table);
+      // The player's record of its own round (solo blackjack: the cards seen and where they went).
+      const hands = own?.hands?.[slice.shoe];
+      seen ??= (Array.isArray(hands) ? hands.find((h) => isObject(h) && h.roundId === proof.roundId && h.from === slice.from && h.to === slice.to) : undefined) ?? null;
     }
   }
-  return ok ? { cards: out, own: mine, ownTables: tables } : { cards: null, own: null, ownTables: null };
+  return ok ? { cards: out, own: mine, ownTables: tables, seen } : { cards: null, own: null, ownTables: null, seen: null };
 }
 
 // ------------------------------------------------------------------------------------------------ pairs
@@ -652,6 +822,13 @@ export function verifySeedReveal(r: SeedReveal): VerifyResult {
  * knows: the cuts it asked for, the hands it saw dealt, the tables it bet at.
  */
 export interface PlayerRecords {
+  gameplay?: Readonly<Record<string, GameplayWitness>>;
+  /** Acknowledged random operations, tracked from nonce zero independently of server nonce announcements. */
+  authorizedDraws?: Readonly<Record<string, Readonly<Record<string, DrawAuthorization>>>>;
+  lounge?: Readonly<Record<string, LoungeOwnRecords>>;
+  shoeRules?: Readonly<Record<string, GuardRuleSeen>>;
+  shuffles?: Readonly<Record<string, readonly number[]>>;
+  refused?: Readonly<Record<string, readonly GuardDecision[]>>;
   /** Ids of the pair's proofs the player received (round_proof notes, fair_revealed / seed_reveal proofs). */
   proofs?: readonly string[];
   /** Ids of the shoes of the pair's chains whose commitment the player received (shoe_commit notes, game_joined). */
@@ -670,6 +847,8 @@ export interface PlayerRecords {
 }
 
 export interface PairVerifyOptions {
+  /** Carry predecessors from earlier seed pairs. */
+  prior?: readonly RoundProof[];
   /** Required: the pair as the player kept it before sending the client seed. The reveal and every record must match it. */
   pair: PairSeen;
   /**
@@ -702,6 +881,7 @@ export interface PairCheck extends VerifyResult {
     ended: number;
     shuffled: number;
     aborted: number;
+    guarded?: number;
     /** Shoes of the pair's chains still in play (a rotation does not end them): checkable once they are over. */
     running: number;
     /** Hands outside a round (free hands) the revealed shoes of the pair dealt. */
@@ -731,6 +911,7 @@ function sameLastShoes(a: ReadonlyArray<{ table: number; shoeNo: number }>, b: u
 export function verifyPair(seed: SeedReveal, proofs: readonly RoundProof[], shoes: readonly ShoeRecord[], options: PairVerifyOptions): PairCheck {
   const errors: string[] = [];
   const unproven: string[] = [];
+  const replay: PayoutVerificationContext = { active: new Set(), checked: new Map() };
   const counts: PairCheck['counts'] = { proofs: 0, steps: 0, discarded: 0, voided: 0, shoes: 0, ended: 0, shuffled: 0, aborted: 0, running: 0, free: 0 };
   try {
     for (const e of verifySeedReveal(seed).errors) errors.push(`pair: ${e}`);
@@ -766,7 +947,8 @@ export function verifyPair(seed: SeedReveal, proofs: readonly RoundProof[], shoe
         if (s.status === 'discarded') counts.discarded++;
         seen.set(s.nonce, (seen.get(s.nonce) ?? 0) + 1);
       }
-      const r = verifyRound(p, seed.serverSeed, { pair, shoes, pairs, ...(own ? { own } : {}) });
+      const r = verifyRoundInner(p, seed.serverSeed, { pair, shoes, pairs, prior: [...proofs, ...(options.prior ?? [])], ...(own ? { own } : {}) }, replay);
+      replay.checked.set(`${p.seedId}:${p.roundId}`, r);
       for (const e of r.errors) if (e !== NOT_PROVABLE) errors.push(`proof ${p.id}: ${e}`);
       for (const u of r.unproven ?? []) unproven.push(`proof ${p.id}: ${u}`);
     }
@@ -795,12 +977,12 @@ export function verifyPair(seed: SeedReveal, proofs: readonly RoundProof[], shoe
         counts.running++;
         continue;
       }
-      counts[s.reveal.status]++;
+      counts[s.reveal.status] = (counts[s.reveal.status] ?? 0) + 1;
       counts.free! += Array.isArray(s.reveal.rounds) ? s.reveal.rounds.filter((r) => r?.roundId === null).length : 0;
       const id = s.commit.shoe;
       const expectedCut = own?.cuts?.[id];
       const hands = own?.hands?.[id];
-      const check = verifyShoe(s.commit, s.reveal, { pair, ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
+      const check = verifyShoe(s.commit, s.reveal, { pair, expectedRules: own?.shoeRules?.[id], shuffles: own?.shuffles?.[id], refused: own?.refused?.[id], ...(expectedCut !== undefined ? { expectedCut } : {}), ...(hands !== undefined ? { hands } : {}) });
       for (const e of check.errors) if (e !== NOT_PROVABLE) errors.push(`shoe ${id}: ${e}`);
       for (const u of check.unproven ?? []) unproven.push(`shoe ${id}: ${u}`);
     }

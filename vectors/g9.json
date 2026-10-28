@@ -1,0 +1,4708 @@
+{
+  "v": 1,
+  "source": "Reference runtime captures, checked by the independent public payout replay",
+  "cases": [
+    {
+      "name": "hilo-rounded",
+      "pair": {
+        "seedId": "sd_9zr9b8nbe2r28i8m",
+        "gameId": "hilo",
+        "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+        "root": null,
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_9zr9b8nbe2r28i8m",
+        "gameId": "hilo",
+        "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+        "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 31,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1064
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_dff3yn8ky4hp8vvi",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "init",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 35
+                }
+              ],
+              "words": 1
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 30
+                },
+                {
+                  "n": 1000000,
+                  "v": 572769
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 2,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 42
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 0
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "10D",
+                "5D",
+                "4C"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "higher_or_same"
+              ],
+              "multiplier": 1.434782608695652,
+              "payout": 0,
+              "outcome": "lost",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1005
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_guf7crntsmdgdbsb",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-2",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 3,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 13
+                },
+                {
+                  "n": 1000000,
+                  "v": 979970
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 4,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 8
+                },
+                {
+                  "n": 1000000,
+                  "v": 951260
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 5,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 21
+                },
+                {
+                  "n": 1000000,
+                  "v": 370665
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 2
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "4C",
+                "AH",
+                "9S",
+                "9H"
+              ],
+              "guesses": [
+                "higher_or_same",
+                "lower",
+                "lower_or_same"
+              ],
+              "multiplier": 2,
+              "payout": 46,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1011
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_pdhrs9iw2z9u8xcx",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-3",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 6,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 37
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 0
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "9H",
+                "QD"
+              ],
+              "guesses": [
+                "lower_or_same"
+              ],
+              "multiplier": 1,
+              "payout": 0,
+              "outcome": "lost",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1014
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_25whahtj5tmx3ay5",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-4",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 7,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 8
+                },
+                {
+                  "n": 1000000,
+                  "v": 501532
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 8,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 22
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 0
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "QD",
+                "9S",
+                "10H"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same"
+              ],
+              "multiplier": 1.173913043478261,
+              "payout": 0,
+              "outcome": "lost",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1018
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_6vefmd2kn2rqshg7",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-5",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 9,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 46
+                },
+                {
+                  "n": 1000000,
+                  "v": 222592
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 10,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 29
+                },
+                {
+                  "n": 1000000,
+                  "v": 246370
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 11,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 10
+                },
+                {
+                  "n": 1000000,
+                  "v": 742271
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 3.17
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "10H",
+                "8C",
+                "4D",
+                "JS"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same",
+                "higher_or_same"
+              ],
+              "multiplier": 3.1739130434782608,
+              "payout": 73,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1024
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_4w6iduwhvibccent",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-6",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 12,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 35
+                },
+                {
+                  "n": 1000000,
+                  "v": 539534
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 13,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 43
+                },
+                {
+                  "n": 1000000,
+                  "v": 322429
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 14,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 12
+                },
+                {
+                  "n": 1000000,
+                  "v": 591289
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 2.48
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "JS",
+                "10D",
+                "5C",
+                "KS"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same",
+                "higher_or_same"
+              ],
+              "multiplier": 2.4782608695652173,
+              "payout": 57,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1030
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_xz6z4w8qza7uiu7d",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-7",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 15,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 15
+                },
+                {
+                  "n": 1000000,
+                  "v": 330748
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 16,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 12
+                },
+                {
+                  "n": 1000000,
+                  "v": 611413
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 17,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 11
+                },
+                {
+                  "n": 1000000,
+                  "v": 943624
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 1.26
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "KS",
+                "3H",
+                "KS",
+                "QS"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "higher_or_same",
+                "lower_or_same"
+              ],
+              "multiplier": 1.2608695652173914,
+              "payout": 29,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1036
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_y77u7tv7fur3y29v",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-8",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 18,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 22
+                },
+                {
+                  "n": 1000000,
+                  "v": 136012
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 19,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 1
+                }
+              ],
+              "words": 1
+            },
+            {
+              "nonce": 20,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 49
+                },
+                {
+                  "n": 1000000,
+                  "v": 445675
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 1.83
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "QS",
+                "10H",
+                "2S",
+                "JC"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same",
+                "higher"
+              ],
+              "multiplier": 1.826086956521739,
+              "payout": 42,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1042
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_hvk5xyatfjjqdebh",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-9",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 21,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 47
+                },
+                {
+                  "n": 1000000,
+                  "v": 838919
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 22,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 8
+                },
+                {
+                  "n": 1000000,
+                  "v": 620439
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 23,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 23
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 0
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "JC",
+                "9C",
+                "9S",
+                "JH"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same",
+                "lower_or_same"
+              ],
+              "multiplier": 2.0434782608695654,
+              "payout": 0,
+              "outcome": "lost",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1047
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_zj537u32ux8mif5x",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-10",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 24,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 34
+                },
+                {
+                  "n": 1000000,
+                  "v": 145500
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 25,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 13
+                }
+              ],
+              "words": 1
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 0
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "JH",
+                "9D",
+                "AH"
+              ],
+              "guesses": [
+                "lower_or_same",
+                "lower_or_same"
+              ],
+              "multiplier": 1.3043478260869565,
+              "payout": 0,
+              "outcome": "lost",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1051
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_xmetdniw3sd45khu",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-11",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 26,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 15
+                },
+                {
+                  "n": 1000000,
+                  "v": 794414
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 27,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 8
+                }
+              ],
+              "words": 1
+            },
+            {
+              "nonce": 28,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 40
+                },
+                {
+                  "n": 1000000,
+                  "v": 195124
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 1.87
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "AH",
+                "3H",
+                "9S",
+                "2C"
+              ],
+              "guesses": [
+                "lower",
+                "higher_or_same",
+                "lower_or_same"
+              ],
+              "multiplier": 1.8695652173913044,
+              "payout": 43,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1057
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_uwnuvxeiwixnpv9v",
+          "gameId": "hilo",
+          "roundId": "WFV4Q9-12",
+          "seedId": "sd_9zr9b8nbe2r28i8m",
+          "serverSeedHash": "b144c51296ba37c4b0ff46dc0186e18b0e798a1b9e6aa0bd57d6abe39db534d8",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "5f3eb81452dc0cd83826da968f087c4152d30879787eb42f910a2c3785c27663",
+          "steps": [
+            {
+              "nonce": 29,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 15
+                },
+                {
+                  "n": 1000000,
+                  "v": 906699
+                }
+              ],
+              "words": 2
+            },
+            {
+              "nonce": 30,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 13
+                }
+              ],
+              "words": 1
+            },
+            {
+              "nonce": 31,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 52,
+                  "v": 46
+                },
+                {
+                  "n": 1000000,
+                  "v": 1602
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "multiplier",
+              "value": 1.26
+            },
+            "detail": {
+              "stake": 23,
+              "cards": [
+                "2C",
+                "3H",
+                "AH",
+                "8C"
+              ],
+              "guesses": [
+                "higher",
+                "higher_or_same",
+                "lower"
+              ],
+              "multiplier": 1.2608695652173914,
+              "payout": 29,
+              "outcome": "cashout",
+              "mapping": "hilo/rounded-v1"
+            }
+          },
+          "engineVersion": 1,
+          "at": 1063
+        }
+      ],
+      "shoes": [],
+      "own": {
+        "authorizedDraws": {
+          "sd_9zr9b8nbe2r28i8m": {
+            "0": {
+              "kind": "hilo-init",
+              "card": "10D"
+            },
+            "1": {
+              "kind": "hilo-guess",
+              "card": "5D"
+            },
+            "2": {
+              "kind": "hilo-guess",
+              "card": "4C"
+            },
+            "3": {
+              "kind": "hilo-guess",
+              "card": "AH"
+            },
+            "4": {
+              "kind": "hilo-guess",
+              "card": "9S"
+            },
+            "5": {
+              "kind": "hilo-guess",
+              "card": "9H"
+            },
+            "6": {
+              "kind": "hilo-guess",
+              "card": "QD"
+            },
+            "7": {
+              "kind": "hilo-guess",
+              "card": "9S"
+            },
+            "8": {
+              "kind": "hilo-guess",
+              "card": "10H"
+            },
+            "9": {
+              "kind": "hilo-guess",
+              "card": "8C"
+            },
+            "10": {
+              "kind": "hilo-guess",
+              "card": "4D"
+            },
+            "11": {
+              "kind": "hilo-guess",
+              "card": "JS"
+            },
+            "12": {
+              "kind": "hilo-guess",
+              "card": "10D"
+            },
+            "13": {
+              "kind": "hilo-guess",
+              "card": "5C"
+            },
+            "14": {
+              "kind": "hilo-guess",
+              "card": "KS"
+            },
+            "15": {
+              "kind": "hilo-guess",
+              "card": "3H"
+            },
+            "16": {
+              "kind": "hilo-guess",
+              "card": "KS"
+            },
+            "17": {
+              "kind": "hilo-guess",
+              "card": "QS"
+            },
+            "18": {
+              "kind": "hilo-guess",
+              "card": "10H"
+            },
+            "19": {
+              "kind": "hilo-guess",
+              "card": "2S"
+            },
+            "20": {
+              "kind": "hilo-guess",
+              "card": "JC"
+            },
+            "21": {
+              "kind": "hilo-guess",
+              "card": "9C"
+            },
+            "22": {
+              "kind": "hilo-guess",
+              "card": "9S"
+            },
+            "23": {
+              "kind": "hilo-guess",
+              "card": "JH"
+            },
+            "24": {
+              "kind": "hilo-guess",
+              "card": "9D"
+            },
+            "25": {
+              "kind": "hilo-guess",
+              "card": "AH"
+            },
+            "26": {
+              "kind": "hilo-guess",
+              "card": "3H"
+            },
+            "27": {
+              "kind": "hilo-guess",
+              "card": "9S"
+            },
+            "28": {
+              "kind": "hilo-guess",
+              "card": "2C"
+            },
+            "29": {
+              "kind": "hilo-guess",
+              "card": "3H"
+            },
+            "30": {
+              "kind": "hilo-guess",
+              "card": "AH"
+            },
+            "31": {
+              "kind": "hilo-guess",
+              "card": "8C"
+            }
+          }
+        },
+        "proofs": [
+          "pf_dff3yn8ky4hp8vvi",
+          "pf_guf7crntsmdgdbsb",
+          "pf_pdhrs9iw2z9u8xcx",
+          "pf_25whahtj5tmx3ay5",
+          "pf_6vefmd2kn2rqshg7",
+          "pf_4w6iduwhvibccent",
+          "pf_xz6z4w8qza7uiu7d",
+          "pf_y77u7tv7fur3y29v",
+          "pf_hvk5xyatfjjqdebh",
+          "pf_zj537u32ux8mif5x",
+          "pf_xmetdniw3sd45khu",
+          "pf_uwnuvxeiwixnpv9v"
+        ],
+        "shoes": [],
+        "nonce": 32,
+        "gameplay": {
+          "WFV4Q9-1": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "10D",
+            "startNonce": 1,
+            "guesses": [
+              "lo",
+              "hi"
+            ],
+            "ending": "lost",
+            "autoTarget": null
+          },
+          "WFV4Q9-2": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "4C",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-1"
+            },
+            "startNonce": 3,
+            "guesses": [
+              "hi",
+              "lo",
+              "lo"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-3": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "9H",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-2"
+            },
+            "startNonce": 6,
+            "guesses": [
+              "lo"
+            ],
+            "ending": "lost",
+            "autoTarget": null
+          },
+          "WFV4Q9-4": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "QD",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-3"
+            },
+            "startNonce": 7,
+            "guesses": [
+              "lo",
+              "lo"
+            ],
+            "ending": "lost",
+            "autoTarget": null
+          },
+          "WFV4Q9-5": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "10H",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-4"
+            },
+            "startNonce": 9,
+            "guesses": [
+              "lo",
+              "lo",
+              "hi"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-6": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "JS",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-5"
+            },
+            "startNonce": 12,
+            "guesses": [
+              "lo",
+              "lo",
+              "hi"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-7": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "KS",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-6"
+            },
+            "startNonce": 15,
+            "guesses": [
+              "lo",
+              "hi",
+              "lo"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-8": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "QS",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-7"
+            },
+            "startNonce": 18,
+            "guesses": [
+              "lo",
+              "lo",
+              "hi"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-9": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "JC",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-8"
+            },
+            "startNonce": 21,
+            "guesses": [
+              "lo",
+              "lo",
+              "lo"
+            ],
+            "ending": "lost",
+            "autoTarget": null
+          },
+          "WFV4Q9-10": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "JH",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-9"
+            },
+            "startNonce": 24,
+            "guesses": [
+              "lo",
+              "lo"
+            ],
+            "ending": "lost",
+            "autoTarget": null
+          },
+          "WFV4Q9-11": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "AH",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-10"
+            },
+            "startNonce": 26,
+            "guesses": [
+              "lo",
+              "hi",
+              "lo"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          },
+          "WFV4Q9-12": {
+            "kind": "hilo/rounded-v1",
+            "complete": true,
+            "stake": 23,
+            "initialCard": "2C",
+            "cardFrom": {
+              "seedId": "sd_9zr9b8nbe2r28i8m",
+              "roundId": "WFV4Q9-11"
+            },
+            "startNonce": 29,
+            "guesses": [
+              "hi",
+              "hi",
+              "lo"
+            ],
+            "ending": "cashout",
+            "autoTarget": null
+          }
+        }
+      }
+    },
+    {
+      "name": "trading-carry",
+      "pair": {
+        "seedId": "sd_93nbi5pedgx49krz",
+        "gameId": "bull-run",
+        "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+        "root": null,
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_93nbi5pedgx49krz",
+        "gameId": "bull-run",
+        "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+        "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 7,
+        "lastShoes": [],
+        "root": null,
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1020
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_q6j9nnptfbdb4nky",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 12
+                },
+                {
+                  "n": 4294967296,
+                  "v": 2662745868
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 100,
+              "up": true
+            },
+            "detail": {
+              "side": "up",
+              "move": 100,
+              "seed": 2662745868,
+              "before": 31,
+              "after": 62,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 99,
+              "carryAfter": 99,
+              "staked": 31,
+              "chips": 31,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1004
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_znesbnsxubqpmgis",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-2",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 790
+                },
+                {
+                  "n": 4294967296,
+                  "v": 2712065134
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 50,
+              "up": false
+            },
+            "detail": {
+              "side": "up",
+              "move": -50,
+              "seed": 2712065134,
+              "before": 62,
+              "after": 31,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 99,
+              "carryAfter": 99,
+              "staked": 31,
+              "chips": 0,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1005
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_9t7fn3zmvr96n4yg",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-3",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 2,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 958
+                },
+                {
+                  "n": 4294967296,
+                  "v": 3210066431
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 92,
+              "up": false
+            },
+            "detail": {
+              "side": "up",
+              "move": -92,
+              "seed": 3210066431,
+              "before": 31,
+              "after": 2,
+              "ride": false,
+              "cashout": {
+                "value": 2,
+                "fee": 1,
+                "payout": 1,
+                "by": "auto"
+              },
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 99,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 0,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1007
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_qzete9krkbbi4223",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-4",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 3,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 101
+                },
+                {
+                  "n": 4294967296,
+                  "v": 829794025
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 1,
+              "up": true
+            },
+            "detail": {
+              "side": "up",
+              "move": 1,
+              "seed": 829794025,
+              "before": 31,
+              "after": 31,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 1,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 31,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1010
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_qfbtpp9qgsa9uj4r",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-5",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 4,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 457
+                },
+                {
+                  "n": 4294967296,
+                  "v": 3624981467
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 90,
+              "up": true
+            },
+            "detail": {
+              "side": "up",
+              "move": 90,
+              "seed": 3624981467,
+              "before": 31,
+              "after": 59,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 1,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 0,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1011
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_bb6p5naxxh9vzxfs",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-6",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 5,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 517
+                },
+                {
+                  "n": 4294967296,
+                  "v": 512908511
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 100,
+              "up": false
+            },
+            "detail": {
+              "side": "up",
+              "move": -100,
+              "seed": 512908511,
+              "before": 59,
+              "after": 0,
+              "ride": false,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 1,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 0,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1013
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_b9ucnhzvsj7abzhg",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-7",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 6,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 914
+                },
+                {
+                  "n": 4294967296,
+                  "v": 1615364972
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 81,
+              "up": false
+            },
+            "detail": {
+              "side": "up",
+              "move": -81,
+              "seed": 1615364972,
+              "before": 31,
+              "after": 6,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 1,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 31,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1016
+        },
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_whmkqdxduh9dz823",
+          "gameId": "bull-run",
+          "roundId": "WFV4Q9-8",
+          "seedId": "sd_93nbi5pedgx49krz",
+          "serverSeedHash": "9318f45367000f76fe592917fbd3961c0a1993f65dc72d6a610cf32ee32e9fe4",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "535f5e4ad32980c8321212cff45f01a8425a9136a6f4072538647aaa5fe31623",
+          "steps": [
+            {
+              "nonce": 7,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 990,
+                  "v": 789
+                },
+                {
+                  "n": 4294967296,
+                  "v": 2816032609
+                }
+              ],
+              "words": 2
+            }
+          ],
+          "shoes": [],
+          "outcome": {
+            "result": {
+              "kind": "percent",
+              "value": 49,
+              "up": false
+            },
+            "detail": {
+              "side": "up",
+              "move": -49,
+              "seed": 2816032609,
+              "before": 6,
+              "after": 3,
+              "ride": true,
+              "mapping": "trading/carry99-v1",
+              "carryBefore": 1,
+              "carryAfter": 1,
+              "staked": 31,
+              "chips": 0,
+              "refunded": 0
+            }
+          },
+          "engineVersion": 1,
+          "at": 1017
+        }
+      ],
+      "shoes": [],
+      "own": {
+        "authorizedDraws": {
+          "sd_93nbi5pedgx49krz": {
+            "0": {
+              "kind": "trading-trade"
+            },
+            "1": {
+              "kind": "trading-trade"
+            },
+            "2": {
+              "kind": "trading-trade"
+            },
+            "3": {
+              "kind": "trading-trade"
+            },
+            "4": {
+              "kind": "trading-trade"
+            },
+            "5": {
+              "kind": "trading-trade"
+            },
+            "6": {
+              "kind": "trading-trade"
+            },
+            "7": {
+              "kind": "trading-trade"
+            }
+          }
+        },
+        "proofs": [
+          "pf_q6j9nnptfbdb4nky",
+          "pf_znesbnsxubqpmgis",
+          "pf_9t7fn3zmvr96n4yg",
+          "pf_qzete9krkbbi4223",
+          "pf_qfbtpp9qgsa9uj4r",
+          "pf_bb6p5naxxh9vzxfs",
+          "pf_b9ucnhzvsj7abzhg",
+          "pf_whmkqdxduh9dz823"
+        ],
+        "shoes": [],
+        "nonce": 8,
+        "gameplay": {
+          "WFV4Q9-1": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 31,
+            "chips": 31,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 99,
+            "carryKnown": true,
+            "startNonce": 0
+          },
+          "WFV4Q9-2": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 62,
+            "chips": 0,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 99,
+            "carryKnown": false,
+            "startNonce": 1,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-1"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-1"
+            }
+          },
+          "WFV4Q9-3": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 31,
+            "chips": 0,
+            "staked": 31,
+            "side": "up",
+            "ride": false,
+            "carry": 99,
+            "carryKnown": false,
+            "startNonce": 2,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-2"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-2"
+            }
+          },
+          "WFV4Q9-4": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 31,
+            "chips": 31,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 1,
+            "carryKnown": false,
+            "startNonce": 3,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-3"
+            }
+          },
+          "WFV4Q9-5": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 31,
+            "chips": 0,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 1,
+            "carryKnown": false,
+            "startNonce": 4,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-4"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-4"
+            }
+          },
+          "WFV4Q9-6": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 59,
+            "chips": 0,
+            "staked": 31,
+            "side": "up",
+            "ride": false,
+            "carry": 1,
+            "carryKnown": false,
+            "startNonce": 5,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-5"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-5"
+            }
+          },
+          "WFV4Q9-7": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 31,
+            "chips": 31,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 1,
+            "carryKnown": false,
+            "startNonce": 6,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-6"
+            }
+          },
+          "WFV4Q9-8": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "trade",
+            "value": 6,
+            "chips": 0,
+            "staked": 31,
+            "side": "up",
+            "ride": true,
+            "carry": 1,
+            "carryKnown": false,
+            "startNonce": 7,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-7"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-7"
+            }
+          },
+          "WFV4Q9-9": {
+            "kind": "trading/carry99-v1",
+            "complete": true,
+            "operation": "cashout",
+            "value": 14,
+            "chips": 11,
+            "staked": 42,
+            "side": "up",
+            "ride": true,
+            "carry": 1,
+            "carryKnown": false,
+            "carryFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-8"
+            },
+            "portfolioFrom": {
+              "seedId": "sd_93nbi5pedgx49krz",
+              "roundId": "WFV4Q9-8"
+            },
+            "startNonce": 8,
+            "by": "player"
+          }
+        }
+      }
+    },
+    {
+      "name": "baccarat",
+      "pair": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "baccarat",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "root": {
+          "hash": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc",
+          "lines": [
+            "baccarat:10:3880e97d55bb0d9c836efd945a387f2796dc0edf1a6cb5717baaead4aca4b8b0",
+            "baccarat:11:e26f20435a44f0542b75d8193a5c60b58f177e452158c1d2dff5db1aadb66e12",
+            "baccarat:12:4b53770b009f7cbee266493d45128528ef14b6094e286e0a5a120f0eebd0d551",
+            "baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+            "baccarat:2:67d8ecc3b997cf92e3bcecbcf81eed4246adf49cc461763e71aa199b638fffda",
+            "baccarat:3:4e6cecc0059c0feea6d87a01db7b735c9c01e0b48a67ea6be4b4cd5af33669f2",
+            "baccarat:4:5e1bfbce369f961319e256a107d2ce08abdfc554d9ff56b36b56f7b05ac15d71",
+            "baccarat:5:7aeee13211418043d1022201eec3728394936bdaff4268be22ea8f15a3a52bcc",
+            "baccarat:6:2d03096e82b9b9b73d19aab472c23eacdee12f2ebdf14051bc55a048ee1f7257",
+            "baccarat:7:25437d85703fe6744bab087de74288052e70bdf0b33c05586c2237c867481aa6",
+            "baccarat:8:f79b281b956d59cd246dfe14d7865152e3853fe0d17723d501cbbb98c05887b6",
+            "baccarat:9:f97c33e96b07c1d6d815477982f391e564fdf53ba2ccea3198b952fdbbe1d9eb"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "baccarat",
+        "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": -1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 2
+          },
+          {
+            "table": 2,
+            "shoeNo": 1
+          },
+          {
+            "table": 3,
+            "shoeNo": 1
+          },
+          {
+            "table": 4,
+            "shoeNo": 1
+          },
+          {
+            "table": 5,
+            "shoeNo": 1
+          },
+          {
+            "table": 6,
+            "shoeNo": 1
+          },
+          {
+            "table": 7,
+            "shoeNo": 1
+          },
+          {
+            "table": 8,
+            "shoeNo": 1
+          },
+          {
+            "table": 9,
+            "shoeNo": 1
+          },
+          {
+            "table": 10,
+            "shoeNo": 1
+          },
+          {
+            "table": 11,
+            "shoeNo": 1
+          },
+          {
+            "table": 12,
+            "shoeNo": 1
+          }
+        ],
+        "root": {
+          "hash": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc",
+          "lines": [
+            "baccarat:10:3880e97d55bb0d9c836efd945a387f2796dc0edf1a6cb5717baaead4aca4b8b0",
+            "baccarat:11:e26f20435a44f0542b75d8193a5c60b58f177e452158c1d2dff5db1aadb66e12",
+            "baccarat:12:4b53770b009f7cbee266493d45128528ef14b6094e286e0a5a120f0eebd0d551",
+            "baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+            "baccarat:2:67d8ecc3b997cf92e3bcecbcf81eed4246adf49cc461763e71aa199b638fffda",
+            "baccarat:3:4e6cecc0059c0feea6d87a01db7b735c9c01e0b48a67ea6be4b4cd5af33669f2",
+            "baccarat:4:5e1bfbce369f961319e256a107d2ce08abdfc554d9ff56b36b56f7b05ac15d71",
+            "baccarat:5:7aeee13211418043d1022201eec3728394936bdaff4268be22ea8f15a3a52bcc",
+            "baccarat:6:2d03096e82b9b9b73d19aab472c23eacdee12f2ebdf14051bc55a048ee1f7257",
+            "baccarat:7:25437d85703fe6744bab087de74288052e70bdf0b33c05586c2237c867481aa6",
+            "baccarat:8:f79b281b956d59cd246dfe14d7865152e3853fe0d17723d501cbbb98c05887b6",
+            "baccarat:9:f97c33e96b07c1d6d815477982f391e564fdf53ba2ccea3198b952fdbbe1d9eb"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1011
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_2xkbgc2mtvqwq24q",
+          "gameId": "baccarat",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_vzji8yp76jyw7cci",
+          "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+          "steps": [],
+          "shoes": [
+            {
+              "shoe": "sh_mz7n982smcwanr6s",
+              "table": 1,
+              "from": 8,
+              "to": 13
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "banker"
+            },
+            "detail": {
+              "variant": "classic",
+              "table": 1,
+              "shoe": 1,
+              "hand": 2,
+              "player": [
+                "8S",
+                "2D",
+                "KD"
+              ],
+              "banker": [
+                "7H",
+                "7D"
+              ],
+              "playerTotal": 0,
+              "bankerTotal": 4,
+              "winner": "banker",
+              "strikes": [],
+              "multiplier": 1,
+              "fee": 0,
+              "payoutProof": {
+                "version": "baccarat/payout-v1",
+                "bets": {
+                  "player": 1001,
+                  "banker": 1001,
+                  "tie": 101,
+                  "player_pair": 101,
+                  "banker_pair": 101
+                },
+                "payouts": [
+                  {
+                    "spot": "player",
+                    "stake": 1001,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 0
+                  },
+                  {
+                    "spot": "banker",
+                    "stake": 1001,
+                    "payout": 1951,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 0
+                  },
+                  {
+                    "spot": "tie",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 0
+                  },
+                  {
+                    "spot": "player_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 0
+                  },
+                  {
+                    "spot": "banker_pair",
+                    "stake": 101,
+                    "payout": 1212,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 0
+                  }
+                ],
+                "products": {
+                  "player": 1,
+                  "banker": 1,
+                  "tie": 1,
+                  "playerPair": 1,
+                  "bankerPair": 1
+                },
+                "staked": 2305,
+                "fee": 0,
+                "returned": 3163
+              }
+            }
+          },
+          "engineVersion": 1,
+          "at": 1009
+        }
+      ],
+      "shoes": [
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_mz7n982smcwanr6s",
+            "gameId": "baccarat",
+            "table": 1,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 1,
+              "prevLink": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "a32ee84c385e56c1716b1148ee48639991e28311d75b030ac4d0971179206602",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 146,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": {
+            "shoe": "sh_mz7n982smcwanr6s",
+            "status": "shuffled",
+            "link": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+            "salt": "5764961d4aed2a4a33740401d2e97b26024214bd7ebf657926ed878ac6ffa891",
+            "order": "CQIkWWdaXQbCKRXtxfOviWANKuCnyEqMucPTtKmzeGDRLOUrmulAnXGbZoyamrDossErxmtjeZhnMlvnZXuBWhVJyIkfKoDJrtcVqviEpOVJMQcTPbMBYhILEHvlpgikGUwqXxUWExszkHAdLoOwwuUhTNHTbgmFVKJxNPivszufVNtWpmBDIRintkMhMARHNSjvGczYhFmFhJgDpYBlDwPELyXCFZgpJbkyBlLeQudZjbFGzPSKfMWeYVFgfwTRnfHiYjmHjlBGNGpAESgZDLUZxcfkdrXyQkTtOiRNECJazQxqcdpCXzsoUwZealwUfucJVSwogjFLAqNqCsTcShPzPDdSAoHqYIyvAvtUrWgHOTrVBMdrCOqIsSbaFeyQIRKPQYsapolYnKjaSBGdeORIajixebLn",
+            "cut": {
+              "at": 146,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 3,
+              "shown": "2H"
+            },
+            "rounds": [
+              {
+                "roundId": null,
+                "from": 3,
+                "to": 8
+              },
+              {
+                "roundId": "WFV4Q9-1",
+                "from": 8,
+                "to": 13
+              }
+            ],
+            "at": 1010
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_3ewug2gtcjqdrgss",
+            "gameId": "baccarat",
+            "table": 1,
+            "shoeNo": 2,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 2,
+              "prevLink": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "07031196563131e171bf0fd26d862c5d659b24a915c7890f12b01d38c5c6794b",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 142,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1010
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_tykqnsbvifrb377k",
+            "gameId": "baccarat",
+            "table": 2,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_v2newds8gbyzs7x3",
+              "index": 1,
+              "prevLink": "67d8ecc3b997cf92e3bcecbcf81eed4246adf49cc461763e71aa199b638fffda",
+              "terminal": "67d8ecc3b997cf92e3bcecbcf81eed4246adf49cc461763e71aa199b638fffda",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "6d3ce2a478e518588ae4d456db722d25c6dfa2c84053674923881b9bba18f1bb",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 249,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_fsv7kkx6i6ugc3zm",
+            "gameId": "baccarat",
+            "table": 3,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_hsaczkjbtdfsexfx",
+              "index": 1,
+              "prevLink": "4e6cecc0059c0feea6d87a01db7b735c9c01e0b48a67ea6be4b4cd5af33669f2",
+              "terminal": "4e6cecc0059c0feea6d87a01db7b735c9c01e0b48a67ea6be4b4cd5af33669f2",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "c9823db0f74439f6c1b38b1adb31fb58f93adb50448ac3cba3e0f6eb35b4c7c8",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 107,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_j3gjjgzse4n2jebv",
+            "gameId": "baccarat",
+            "table": 4,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_5cicycbq8pngme9y",
+              "index": 1,
+              "prevLink": "5e1bfbce369f961319e256a107d2ce08abdfc554d9ff56b36b56f7b05ac15d71",
+              "terminal": "5e1bfbce369f961319e256a107d2ce08abdfc554d9ff56b36b56f7b05ac15d71",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "0f3dbd1bbf150e0cb418c4f89b6adcc61fc0b730db2f704f624e65b4f6c629a7",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 140,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_tagyn3xvz57r2s4n",
+            "gameId": "baccarat",
+            "table": 5,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_v8qpjc9tmtk4w2p7",
+              "index": 1,
+              "prevLink": "7aeee13211418043d1022201eec3728394936bdaff4268be22ea8f15a3a52bcc",
+              "terminal": "7aeee13211418043d1022201eec3728394936bdaff4268be22ea8f15a3a52bcc",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "20ff005aa60d922fae7089b53f8a7bfc4c3127bb347fc8e2db8bdfdb231f4392",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 153,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_i566bcwqzyt2fr7u",
+            "gameId": "baccarat",
+            "table": 6,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_azm3arvwrhb85w88",
+              "index": 1,
+              "prevLink": "2d03096e82b9b9b73d19aab472c23eacdee12f2ebdf14051bc55a048ee1f7257",
+              "terminal": "2d03096e82b9b9b73d19aab472c23eacdee12f2ebdf14051bc55a048ee1f7257",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "4613cc738b275e3d55652d1d56acf3e1e65a3c34ca831efde89a1b6af4fcdc5a",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 280,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_yxggsuxa9d8a3dq4",
+            "gameId": "baccarat",
+            "table": 7,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_4pxd2a65qbgjgwng",
+              "index": 1,
+              "prevLink": "25437d85703fe6744bab087de74288052e70bdf0b33c05586c2237c867481aa6",
+              "terminal": "25437d85703fe6744bab087de74288052e70bdf0b33c05586c2237c867481aa6",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "9ec9048b3db81c7f35176646ebfeffac8a6f4ff354a572b49813e09eb3900bd3",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 98,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_pxtwytrx2mpabnc7",
+            "gameId": "baccarat",
+            "table": 8,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_ma2amh8sztxbg3jb",
+              "index": 1,
+              "prevLink": "f79b281b956d59cd246dfe14d7865152e3853fe0d17723d501cbbb98c05887b6",
+              "terminal": "f79b281b956d59cd246dfe14d7865152e3853fe0d17723d501cbbb98c05887b6",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "6ebdc393c4b6b101ae8f28f7d8017589ef31816755913ffcff5f862bd54ca646",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 333,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_jiki9jzv23j6vt7i",
+            "gameId": "baccarat",
+            "table": 9,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_bnyq3mfib7hvaz76",
+              "index": 1,
+              "prevLink": "f97c33e96b07c1d6d815477982f391e564fdf53ba2ccea3198b952fdbbe1d9eb",
+              "terminal": "f97c33e96b07c1d6d815477982f391e564fdf53ba2ccea3198b952fdbbe1d9eb",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "c7be26ee5dfda0f1c4593858b41e0f0b0ad3881ed66916d8224c3da8ea2f642b",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 67,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_cecdcpbpubr6v8d3",
+            "gameId": "baccarat",
+            "table": 10,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_78yg6nmtnk94mdbw",
+              "index": 1,
+              "prevLink": "3880e97d55bb0d9c836efd945a387f2796dc0edf1a6cb5717baaead4aca4b8b0",
+              "terminal": "3880e97d55bb0d9c836efd945a387f2796dc0edf1a6cb5717baaead4aca4b8b0",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "225c5bf52446f03308a6f0bd9f6644b1b53132f504930ef34b0f2dd03ad5218f",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 166,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_hcbe75swkmmm86yr",
+            "gameId": "baccarat",
+            "table": 11,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_tcdsemewv98svay6",
+              "index": 1,
+              "prevLink": "e26f20435a44f0542b75d8193a5c60b58f177e452158c1d2dff5db1aadb66e12",
+              "terminal": "e26f20435a44f0542b75d8193a5c60b58f177e452158c1d2dff5db1aadb66e12",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "c6bbc8f2f25750ea4360f4c3354f4152d2fa6565fe4f9ced84927e5fb7a3064b",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 276,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_cpcf6ewam2kifwvf",
+            "gameId": "baccarat",
+            "table": 12,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_5d5ry45zbc9r3ket",
+              "index": 1,
+              "prevLink": "4b53770b009f7cbee266493d45128528ef14b6094e286e0a5a120f0eebd0d551",
+              "terminal": "4b53770b009f7cbee266493d45128528ef14b6094e286e0a5a120f0eebd0d551",
+              "root": "ac0cc34c6a67e8b5bb4e180daba1e9f02f682a80142ee71ce5d01777f44b26cc"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "02e8272aae94ea5554ff00a43915b3b6e1188f4af3f7277be19c5dae48069d82",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 193,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "at": 1001
+          },
+          "reveal": null
+        }
+      ],
+      "own": {
+        "authorizedDraws": {
+          "sd_vzji8yp76jyw7cci": {}
+        },
+        "proofs": [
+          "pf_2xkbgc2mtvqwq24q"
+        ],
+        "shoes": [
+          "sh_mz7n982smcwanr6s",
+          "sh_3ewug2gtcjqdrgss",
+          "sh_tykqnsbvifrb377k",
+          "sh_fsv7kkx6i6ugc3zm",
+          "sh_j3gjjgzse4n2jebv",
+          "sh_tagyn3xvz57r2s4n",
+          "sh_i566bcwqzyt2fr7u",
+          "sh_yxggsuxa9d8a3dq4",
+          "sh_pxtwytrx2mpabnc7",
+          "sh_jiki9jzv23j6vt7i",
+          "sh_cecdcpbpubr6v8d3",
+          "sh_hcbe75swkmmm86yr",
+          "sh_cpcf6ewam2kifwvf"
+        ],
+        "nonce": 0,
+        "cuts": {
+          "sh_mz7n982smcwanr6s": "auto"
+        },
+        "hands": {
+          "sh_mz7n982smcwanr6s": [
+            {
+              "roundId": null,
+              "from": 3,
+              "to": 8
+            },
+            {
+              "roundId": "WFV4Q9-1",
+              "from": 8,
+              "to": 13
+            }
+          ]
+        },
+        "tables": {
+          "WFV4Q9-1": 1
+        },
+        "refused": {
+          "sh_mz7n982smcwanr6s": [
+            {
+              "before": 8,
+              "requested": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "granted": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "startNonce": 0,
+              "seedId": "sd_vzji8yp76jyw7cci"
+            }
+          ]
+        },
+        "shuffles": {
+          "sh_mz7n982smcwanr6s": [
+            13
+          ]
+        }
+      }
+    },
+    {
+      "name": "blitz-baccarat",
+      "pair": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "blitz-baccarat",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "root": {
+          "hash": "2f4983f32c037feb6e85c2f61aecbdd98d3b6429d8e9b700b357b026b44b003c",
+          "lines": [
+            "blitz-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "blitz-baccarat",
+        "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 2
+          }
+        ],
+        "root": {
+          "hash": "2f4983f32c037feb6e85c2f61aecbdd98d3b6429d8e9b700b357b026b44b003c",
+          "lines": [
+            "blitz-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1011
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_8pngme9yivn7hzg6",
+          "gameId": "blitz-baccarat",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_vzji8yp76jyw7cci",
+          "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 8908
+                },
+                {
+                  "n": 52,
+                  "v": 30
+                },
+                {
+                  "n": 10000,
+                  "v": 6666
+                },
+                {
+                  "n": 51,
+                  "v": 33
+                },
+                {
+                  "n": 10000,
+                  "v": 9639
+                },
+                {
+                  "n": 50,
+                  "v": 46
+                },
+                {
+                  "n": 10000,
+                  "v": 1276
+                },
+                {
+                  "n": 49,
+                  "v": 19
+                },
+                {
+                  "n": 10000,
+                  "v": 9496
+                },
+                {
+                  "n": 48,
+                  "v": 15
+                },
+                {
+                  "n": 10000,
+                  "v": 3898
+                }
+              ],
+              "words": 11
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 3152
+                },
+                {
+                  "n": 52,
+                  "v": 12
+                },
+                {
+                  "n": 10000,
+                  "v": 8920
+                },
+                {
+                  "n": 51,
+                  "v": 16
+                },
+                {
+                  "n": 10000,
+                  "v": 1129
+                },
+                {
+                  "n": 50,
+                  "v": 13
+                },
+                {
+                  "n": 10000,
+                  "v": 5587
+                }
+              ],
+              "words": 7
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 11,
+              "to": 16
+            },
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 16,
+              "to": 21
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "banker"
+            },
+            "detail": {
+              "variant": "multiplier",
+              "table": 1,
+              "shoe": 1,
+              "hand": 2,
+              "player": [
+                "KH",
+                "KD",
+                "JH"
+              ],
+              "banker": [
+                "4H",
+                "10H"
+              ],
+              "playerTotal": 0,
+              "bankerTotal": 4,
+              "winner": "banker",
+              "strikes": [
+                {
+                  "card": "KS",
+                  "multiplier": 8
+                },
+                {
+                  "card": "5H",
+                  "multiplier": 2
+                },
+                {
+                  "card": "3H",
+                  "multiplier": 4
+                }
+              ],
+              "multiplier": 1,
+              "fee": 465,
+              "payoutProof": {
+                "version": "baccarat/payout-v1",
+                "bets": {
+                  "player": 1001,
+                  "banker": 1001,
+                  "tie": 101,
+                  "player_pair": 101,
+                  "banker_pair": 101
+                },
+                "payouts": [
+                  {
+                    "spot": "player",
+                    "stake": 1001,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "banker",
+                    "stake": 1001,
+                    "payout": 1951,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "tie",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "player_pair",
+                    "stake": 101,
+                    "payout": 1010,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "banker_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  }
+                ],
+                "products": {
+                  "player": 1,
+                  "banker": 1,
+                  "tie": 1,
+                  "playerPair": 1,
+                  "bankerPair": 1
+                },
+                "staked": 2305,
+                "fee": 465,
+                "returned": 2961
+              }
+            }
+          },
+          "engineVersion": 1,
+          "at": 1009
+        }
+      ],
+      "shoes": [
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_c934v5wq5cicycbq",
+            "gameId": "blitz-baccarat",
+            "table": 1,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 1,
+              "prevLink": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "2f4983f32c037feb6e85c2f61aecbdd98d3b6429d8e9b700b357b026b44b003c"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "d00c688dba2d0e2e03dd2f361f633c254c60618933c2a523c71912cf93685b98",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 233,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1001
+          },
+          "reveal": {
+            "shoe": "sh_c934v5wq5cicycbq",
+            "status": "shuffled",
+            "link": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+            "salt": "f8e9253881d9213aa9c7a6183fe695b4d973702b94e2aa97f2e3554b16e76746",
+            "order": "KhfWVXftkwVdNHaCXqfGcuNpofpoCwchwgILgtPIPXHnxmAtIgyxzkRYMrUScnUFKLmvBtszEJNOFcVqaQRUuBlbNwQyaWgjZpAyiOSihvFEMpMdDqCJYtULAMzyKdLBCmkuDmFXNvffjQuqxojbgQeGaIRMGexPuJoWihrqkqlEFdADKMVARukrSAgZvYNoPkwNnbMrpHOwRsvVnGdCUoSJEXAiEeteFyEzruWCjLZeBpHJcHUnlosaeZQmWXgATFKGQHsIKwmXroTbPeEcSRYyXsvQkKlxTdhrPLxDmmlWdjTRrcpidhEVizqtfnVBZabLuqCbZyjaaDSYwTkGJBJxRFYOsJGVUOnOTZelDhTHlQKzOBbIiUcYnDpCWSIiWjvGfzyHYBjNIZgsMzTSLvthDsPbPxlO",
+            "cut": {
+              "at": 233,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 11,
+              "shown": "QS"
+            },
+            "rounds": [
+              {
+                "roundId": null,
+                "from": 11,
+                "to": 16
+              },
+              {
+                "roundId": "WFV4Q9-1",
+                "from": 16,
+                "to": 21
+              }
+            ],
+            "at": 1010
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_v8qpjc9tmtk4w2p7",
+            "gameId": "blitz-baccarat",
+            "table": 1,
+            "shoeNo": 2,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 2,
+              "prevLink": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "2f4983f32c037feb6e85c2f61aecbdd98d3b6429d8e9b700b357b026b44b003c"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "9f526a6ee7b0a3d139e5604d4f922457a8555209250c26b06b4ebb4877613843",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 219,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1010
+          },
+          "reveal": null
+        }
+      ],
+      "own": {
+        "authorizedDraws": {
+          "sd_vzji8yp76jyw7cci": {
+            "0": {
+              "kind": "baccarat-free"
+            },
+            "1": {
+              "kind": "baccarat-deal"
+            }
+          }
+        },
+        "proofs": [
+          "pf_8pngme9yivn7hzg6"
+        ],
+        "shoes": [
+          "sh_c934v5wq5cicycbq",
+          "sh_v8qpjc9tmtk4w2p7"
+        ],
+        "nonce": 2,
+        "cuts": {
+          "sh_c934v5wq5cicycbq": "auto"
+        },
+        "hands": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "roundId": null,
+              "from": 11,
+              "to": 16
+            },
+            {
+              "roundId": "WFV4Q9-1",
+              "from": 16,
+              "to": 21
+            }
+          ]
+        },
+        "tables": {
+          "WFV4Q9-1": 1
+        },
+        "refused": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "before": 16,
+              "requested": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "granted": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "startNonce": 1,
+              "seedId": "sd_vzji8yp76jyw7cci"
+            }
+          ]
+        },
+        "shuffles": {
+          "sh_c934v5wq5cicycbq": [
+            21
+          ]
+        }
+      }
+    },
+    {
+      "name": "blitz-baccarat-max",
+      "pair": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "blitz-baccarat-max",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "root": {
+          "hash": "4e3728ebb6a567b4a9bf01c3f9dbe8d646b13a10e0d22d2ac6fe83ada0ad789c",
+          "lines": [
+            "blitz-baccarat-max:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "blitz-baccarat-max",
+        "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 3
+          }
+        ],
+        "root": {
+          "hash": "4e3728ebb6a567b4a9bf01c3f9dbe8d646b13a10e0d22d2ac6fe83ada0ad789c",
+          "lines": [
+            "blitz-baccarat-max:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1011
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_43bfn69iazm3arvw",
+          "gameId": "blitz-baccarat-max",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_vzji8yp76jyw7cci",
+          "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 1622
+                },
+                {
+                  "n": 52,
+                  "v": 43
+                },
+                {
+                  "n": 10000,
+                  "v": 80
+                },
+                {
+                  "n": 51,
+                  "v": 25
+                },
+                {
+                  "n": 10000,
+                  "v": 9229
+                },
+                {
+                  "n": 50,
+                  "v": 34
+                },
+                {
+                  "n": 10000,
+                  "v": 251
+                },
+                {
+                  "n": 49,
+                  "v": 40
+                },
+                {
+                  "n": 10000,
+                  "v": 9360
+                }
+              ],
+              "words": 9
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 1487
+                },
+                {
+                  "n": 52,
+                  "v": 37
+                },
+                {
+                  "n": 10000,
+                  "v": 1595
+                },
+                {
+                  "n": 51,
+                  "v": 40
+                },
+                {
+                  "n": 10000,
+                  "v": 224
+                },
+                {
+                  "n": 50,
+                  "v": 13
+                },
+                {
+                  "n": 10000,
+                  "v": 9929
+                },
+                {
+                  "n": 49,
+                  "v": 26
+                },
+                {
+                  "n": 10000,
+                  "v": 6053
+                }
+              ],
+              "words": 9
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 5,
+              "to": 11
+            },
+            {
+              "shoe": "sh_8pngme9yivn7hzg6",
+              "table": 1,
+              "from": 11,
+              "to": 17
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "player"
+            },
+            "detail": {
+              "variant": "max",
+              "table": 1,
+              "shoe": 2,
+              "hand": 1,
+              "player": [
+                "KC",
+                "AS",
+                "6C"
+              ],
+              "banker": [
+                "4S",
+                "7H",
+                "AS"
+              ],
+              "playerTotal": 7,
+              "bankerTotal": 2,
+              "winner": "player",
+              "strikes": [
+                {
+                  "card": "QD",
+                  "multiplier": 4
+                },
+                {
+                  "card": "3C",
+                  "multiplier": 3
+                },
+                {
+                  "card": "3H",
+                  "multiplier": 10
+                },
+                {
+                  "card": "4D",
+                  "multiplier": 5
+                }
+              ],
+              "multiplier": 1,
+              "fee": 1155,
+              "payoutProof": {
+                "version": "baccarat/payout-v1",
+                "bets": {
+                  "player": 1001,
+                  "banker": 1001,
+                  "tie": 101,
+                  "player_pair": 101,
+                  "banker_pair": 101
+                },
+                "payouts": [
+                  {
+                    "spot": "player",
+                    "stake": 1001,
+                    "payout": 2002,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 501
+                  },
+                  {
+                    "spot": "banker",
+                    "stake": 1001,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 501
+                  },
+                  {
+                    "spot": "tie",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 51
+                  },
+                  {
+                    "spot": "player_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 51
+                  },
+                  {
+                    "spot": "banker_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 51
+                  }
+                ],
+                "products": {
+                  "player": 1,
+                  "banker": 1,
+                  "tie": 1,
+                  "playerPair": 1,
+                  "bankerPair": 1
+                },
+                "staked": 2305,
+                "fee": 1155,
+                "returned": 2002
+              }
+            }
+          },
+          "engineVersion": 1,
+          "at": 1010
+        }
+      ],
+      "shoes": [
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_c934v5wq5cicycbq",
+            "gameId": "blitz-baccarat-max",
+            "table": 1,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 1,
+              "prevLink": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "4e3728ebb6a567b4a9bf01c3f9dbe8d646b13a10e0d22d2ac6fe83ada0ad789c"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "83a3cae17f6a5ff85fc5334815f637d6a9ed1fb584fc17413edc98d6452dd9c4",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 209,
+            "endAt": null,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1001
+          },
+          "reveal": {
+            "shoe": "sh_c934v5wq5cicycbq",
+            "status": "ended",
+            "link": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+            "salt": "47d575b2a9abb2b918e7307ccb9429f08a76ffbfe8f1879fb523739cd31f4b86",
+            "order": "sPCFgCKgzNEWiOjvspOhokEgqMvVUdOGALsKrqjZypLomIFjcNIMnfQGhCrrsVDXbkToBkictMaNmavXJjsAvMycFXflhAJeeqSSbYPYbJnuYOdwEewgDOMCEwbSVuuNNxEvVQRlJxmGLspPUcLkBerehGJodfgTwwuGmWZiFUuflDIPJwyYWLBfhtrUJqqxURsGwnAKiZfifTeUUDbiemDpgmIpCXIKQnxxWRpPEXntgvIjyIMHKFySFhndEroSBZdYvQWztwGutmaBzSQIRRNXeKHatLWqzxbdNTTQVRnYTzVCqoDluWLxSyAHkVUFZzsagBiktBnabhcGlWPMxzoHbjklzHZXmcfOAFYpaASDHMHTKuRcrdhBvYPjdjyNLXJiKaZCrDkAyOClQToEcQtqZHRVOplP",
+            "cut": {
+              "at": 209,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 5,
+              "shown": "4S"
+            },
+            "rounds": [
+              {
+                "roundId": null,
+                "from": 5,
+                "to": 11
+              }
+            ],
+            "at": 1003
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_8pngme9yivn7hzg6",
+            "gameId": "blitz-baccarat-max",
+            "table": 1,
+            "shoeNo": 2,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 2,
+              "prevLink": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "4e3728ebb6a567b4a9bf01c3f9dbe8d646b13a10e0d22d2ac6fe83ada0ad789c"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "1ca64eb589c4115c6c7f76be5bd52a6ecb37e917728b2a47eb49db3e280e7ca3",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 145,
+            "endAt": null,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1003
+          },
+          "reveal": {
+            "shoe": "sh_8pngme9yivn7hzg6",
+            "status": "ended",
+            "link": "6c2005a20af183301d6ecc8039c9e12de8701d3b50521232ca0d0f4bfdc4cd8f",
+            "salt": "a760b050108efc4b6a646993a8a9693ba7eb11bfc46b83fa8772df8ca0f5af1e",
+            "order": "FWAEPoLoXNUJWwbglZwcNySEmhsHBcvTKukINbsIsKebpVRYCgEuvQXWaEdTrOgfljUZrtCwJoUEVMIiWmFTNLcRjeVcOHCpOwCtyaafXmGnZKZAfYqmMxTmrVYDceNHYBgSOrIBLPKHPQzkswNqRdlzWsjSzDATsACgTYWmvcvDwLBiUHttRrnuLVpoSwyqbMnaHHiqoQzyBObNoJjUOoDkFaKhUPSZZqiQvEyOlfLuqpADiuvCFhALoMQPdxxdqJxtaDwVrkiGnazDvXnRbJeykpRGCDiGWjXYjbighIxIGmhgxJyMMPVcfFpxAkhtSCgFlHIBrFndErncRevjSJTYzlGWJRBfedGsLUQqhfeXtkKXspyIklFXhEMSNpQZznQfbmdBUjuKeauTdtMxZAVOPYlPKuGz",
+            "cut": {
+              "at": 145,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 11,
+              "shown": "10C"
+            },
+            "rounds": [
+              {
+                "roundId": "WFV4Q9-1",
+                "from": 11,
+                "to": 17
+              }
+            ],
+            "at": 1010
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_v8qpjc9tmtk4w2p7",
+            "gameId": "blitz-baccarat-max",
+            "table": 1,
+            "shoeNo": 3,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 3,
+              "prevLink": "6c2005a20af183301d6ecc8039c9e12de8701d3b50521232ca0d0f4bfdc4cd8f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "4e3728ebb6a567b4a9bf01c3f9dbe8d646b13a10e0d22d2ac6fe83ada0ad789c"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "27cbf25c982f0ae9973922e222784053a210190183c19896a8117d28aa4256d3",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 330,
+            "endAt": null,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1010
+          },
+          "reveal": null
+        }
+      ],
+      "own": {
+        "authorizedDraws": {
+          "sd_vzji8yp76jyw7cci": {
+            "0": {
+              "kind": "baccarat-free"
+            },
+            "1": {
+              "kind": "baccarat-deal"
+            }
+          }
+        },
+        "proofs": [
+          "pf_43bfn69iazm3arvw"
+        ],
+        "shoes": [
+          "sh_c934v5wq5cicycbq",
+          "sh_8pngme9yivn7hzg6",
+          "sh_v8qpjc9tmtk4w2p7"
+        ],
+        "nonce": 2,
+        "cuts": {
+          "sh_c934v5wq5cicycbq": "auto",
+          "sh_8pngme9yivn7hzg6": "auto"
+        },
+        "hands": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "roundId": null,
+              "from": 5,
+              "to": 11
+            }
+          ],
+          "sh_8pngme9yivn7hzg6": [
+            {
+              "roundId": "WFV4Q9-1",
+              "from": 11,
+              "to": 17
+            }
+          ]
+        },
+        "tables": {
+          "WFV4Q9-1": 1
+        },
+        "refused": {
+          "sh_8pngme9yivn7hzg6": [
+            {
+              "before": 11,
+              "requested": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "granted": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "startNonce": 1,
+              "seedId": "sd_vzji8yp76jyw7cci"
+            }
+          ]
+        },
+        "shuffles": {
+          "sh_8pngme9yivn7hzg6": [
+            17
+          ]
+        }
+      }
+    },
+    {
+      "name": "jade-baccarat",
+      "pair": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "jade-baccarat",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "root": {
+          "hash": "f0b5407b98a6452e31c7c8696689dabbc706e32bff19fdc052480a4645a66ded",
+          "lines": [
+            "jade-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "jade-baccarat",
+        "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 2
+          }
+        ],
+        "root": {
+          "hash": "f0b5407b98a6452e31c7c8696689dabbc706e32bff19fdc052480a4645a66ded",
+          "lines": [
+            "jade-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1011
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_8pngme9yivn7hzg6",
+          "gameId": "jade-baccarat",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_vzji8yp76jyw7cci",
+          "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 5855
+                },
+                {
+                  "n": 52,
+                  "v": 51
+                },
+                {
+                  "n": 10000,
+                  "v": 6002
+                },
+                {
+                  "n": 51,
+                  "v": 31
+                },
+                {
+                  "n": 10000,
+                  "v": 633
+                },
+                {
+                  "n": 50,
+                  "v": 35
+                },
+                {
+                  "n": 10000,
+                  "v": 3541
+                },
+                {
+                  "n": 49,
+                  "v": 27
+                },
+                {
+                  "n": 10000,
+                  "v": 5788
+                },
+                {
+                  "n": 48,
+                  "v": 39
+                },
+                {
+                  "n": 10000,
+                  "v": 5997
+                },
+                {
+                  "n": 47,
+                  "v": 0
+                },
+                {
+                  "n": 10000,
+                  "v": 9064
+                },
+                {
+                  "n": 46,
+                  "v": 31
+                },
+                {
+                  "n": 10000,
+                  "v": 8859
+                },
+                {
+                  "n": 45,
+                  "v": 28
+                },
+                {
+                  "n": 10000,
+                  "v": 1050
+                }
+              ],
+              "words": 17
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 1624
+                },
+                {
+                  "n": 52,
+                  "v": 26
+                },
+                {
+                  "n": 10000,
+                  "v": 6592
+                },
+                {
+                  "n": 51,
+                  "v": 15
+                },
+                {
+                  "n": 10000,
+                  "v": 311
+                },
+                {
+                  "n": 50,
+                  "v": 39
+                },
+                {
+                  "n": 10000,
+                  "v": 2978
+                },
+                {
+                  "n": 49,
+                  "v": 15
+                },
+                {
+                  "n": 10000,
+                  "v": 5023
+                },
+                {
+                  "n": 48,
+                  "v": 30
+                },
+                {
+                  "n": 10000,
+                  "v": 6068
+                },
+                {
+                  "n": 47,
+                  "v": 22
+                },
+                {
+                  "n": 10000,
+                  "v": 8112
+                },
+                {
+                  "n": 46,
+                  "v": 31
+                },
+                {
+                  "n": 10000,
+                  "v": 375
+                },
+                {
+                  "n": 45,
+                  "v": 18
+                },
+                {
+                  "n": 10000,
+                  "v": 4956
+                }
+              ],
+              "words": 17
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 7,
+              "to": 12
+            },
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 12,
+              "to": 18
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "banker",
+              "multiplier": 2
+            },
+            "detail": {
+              "variant": "jade",
+              "table": 1,
+              "shoe": 1,
+              "hand": 2,
+              "player": [
+                "AD",
+                "4H",
+                "7C"
+              ],
+              "banker": [
+                "AC",
+                "2D",
+                "KD"
+              ],
+              "playerTotal": 2,
+              "bankerTotal": 3,
+              "winner": "banker",
+              "strikes": [
+                {
+                  "card": "AD",
+                  "multiplier": 2
+                },
+                {
+                  "card": "4H",
+                  "multiplier": 2
+                },
+                {
+                  "card": "3C",
+                  "multiplier": 2
+                },
+                {
+                  "card": "6H",
+                  "multiplier": 2
+                },
+                {
+                  "card": "9D",
+                  "multiplier": 2
+                },
+                {
+                  "card": "2D",
+                  "multiplier": 2
+                },
+                {
+                  "card": "QD",
+                  "multiplier": 2
+                },
+                {
+                  "card": "KH",
+                  "multiplier": 2
+                }
+              ],
+              "multiplier": 2,
+              "fee": 465,
+              "payoutProof": {
+                "version": "baccarat/payout-v1",
+                "bets": {
+                  "player": 1001,
+                  "banker": 1001,
+                  "tie": 101,
+                  "player_pair": 101,
+                  "banker_pair": 101
+                },
+                "payouts": [
+                  {
+                    "spot": "player",
+                    "stake": 1001,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "banker",
+                    "stake": 1001,
+                    "payout": 2952,
+                    "outcome": "win",
+                    "multiplier": 2,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "tie",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "player_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "banker_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  }
+                ],
+                "products": {
+                  "player": 4,
+                  "banker": 2,
+                  "tie": 8,
+                  "playerPair": 4,
+                  "bankerPair": 2
+                },
+                "staked": 2305,
+                "fee": 465,
+                "returned": 2952
+              }
+            }
+          },
+          "engineVersion": 1,
+          "at": 1009
+        }
+      ],
+      "shoes": [
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_c934v5wq5cicycbq",
+            "gameId": "jade-baccarat",
+            "table": 1,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 1,
+              "prevLink": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "f0b5407b98a6452e31c7c8696689dabbc706e32bff19fdc052480a4645a66ded"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "9ffbd76eb6fa2a5e5e5732bc21a5bcb725c5bd8c083ddc33e4a2700a66365fd0",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 211,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1001
+          },
+          "reveal": {
+            "shoe": "sh_c934v5wq5cicycbq",
+            "status": "shuffled",
+            "link": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+            "salt": "2cb09921efd871403c9717d082b8b69e2163f6a1b6aaa5c25cce42719f49c2a4",
+            "order": "dpkIbANOCNkxfDzVJMJanVtxhCZvYwRmrRoSMrLAnrHlvYPllwFToINQCUBKLDQzXHSKQevsFIOsoHNgxWTCEolrtijQWnIIpAWFIKUVnhJbBMjPoZaQxHFfuVAeKlitMtHSWTmEjdAoLYXBMZpJGWQVjAfFqcqjOqVkBacJiAESJczeuZphqGXZyLsvqPEbgiNCdsXIfwgGURxepwjFzTZvlBKybdLanQbtmdHgyGuWxOAehkPdpRhLzYruSdMXiVrNgNyYnDtgsMXkCJPcGagrpPauyzfniyDBtqcbuUShOWaRIUyEkGeTsBDsjKBwmFlPkYffDxkDmTYULEmsvKPvCznurOivUoMDJzVHeymugwTEZFSqwYlbONZXwoXRTEWGcdOhpfHQiqGKbtRSUaeLRmcChcjx",
+            "cut": {
+              "at": 211,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 7,
+              "shown": "6S"
+            },
+            "rounds": [
+              {
+                "roundId": null,
+                "from": 7,
+                "to": 12
+              },
+              {
+                "roundId": "WFV4Q9-1",
+                "from": 12,
+                "to": 18
+              }
+            ],
+            "at": 1010
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_v8qpjc9tmtk4w2p7",
+            "gameId": "jade-baccarat",
+            "table": 1,
+            "shoeNo": 2,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 2,
+              "prevLink": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "f0b5407b98a6452e31c7c8696689dabbc706e32bff19fdc052480a4645a66ded"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "5267add7cba20393b75ae33d96197a230d7c18af801c63675951d4479cdc2391",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 171,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1010
+          },
+          "reveal": null
+        }
+      ],
+      "own": {
+        "authorizedDraws": {
+          "sd_vzji8yp76jyw7cci": {
+            "0": {
+              "kind": "baccarat-free"
+            },
+            "1": {
+              "kind": "baccarat-deal"
+            }
+          }
+        },
+        "proofs": [
+          "pf_8pngme9yivn7hzg6"
+        ],
+        "shoes": [
+          "sh_c934v5wq5cicycbq",
+          "sh_v8qpjc9tmtk4w2p7"
+        ],
+        "nonce": 2,
+        "cuts": {
+          "sh_c934v5wq5cicycbq": "auto"
+        },
+        "hands": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "roundId": null,
+              "from": 7,
+              "to": 12
+            },
+            {
+              "roundId": "WFV4Q9-1",
+              "from": 12,
+              "to": 18
+            }
+          ]
+        },
+        "tables": {
+          "WFV4Q9-1": 1
+        },
+        "refused": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "before": 12,
+              "requested": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "granted": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "startNonce": 1,
+              "seedId": "sd_vzji8yp76jyw7cci"
+            }
+          ]
+        },
+        "shuffles": {
+          "sh_c934v5wq5cicycbq": [
+            18
+          ]
+        }
+      }
+    },
+    {
+      "name": "gold-baccarat",
+      "pair": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "gold-baccarat",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "root": {
+          "hash": "099ffa92324588759c269994c673568af39cc9ac42bea4cb9013ba331fde2774",
+          "lines": [
+            "gold-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "clientSeedAt": 1001,
+        "nonce": 0
+      },
+      "seed": {
+        "seedId": "sd_vzji8yp76jyw7cci",
+        "gameId": "gold-baccarat",
+        "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+        "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+        "clientSeed": "public-g9-test-seed",
+        "clientSeedBy": "player",
+        "lastNonce": 1,
+        "lastShoes": [
+          {
+            "table": 1,
+            "shoeNo": 2
+          }
+        ],
+        "root": {
+          "hash": "099ffa92324588759c269994c673568af39cc9ac42bea4cb9013ba331fde2774",
+          "lines": [
+            "gold-baccarat:1:acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f"
+          ]
+        },
+        "committedAt": 1000,
+        "clientSeedAt": 1001,
+        "revealedAt": 1011
+      },
+      "proofs": [
+        {
+          "v": 1,
+          "alg": "fairshoe/v1",
+          "lib": "fairshoe@1.2.0",
+          "id": "pf_8pngme9yivn7hzg6",
+          "gameId": "gold-baccarat",
+          "roundId": "WFV4Q9-1",
+          "seedId": "sd_vzji8yp76jyw7cci",
+          "serverSeedHash": "7ddd9c8409d9b04b208a7065a4f1d76102d874e08abbc39646ad44dc8b777121",
+          "clientSeed": "public-g9-test-seed",
+          "clientSeedBy": "player",
+          "serverSeed": "e34de2fa3769af373bce26bbad614aebac4bf4d049c46f852a28ed0cd26e6a6f",
+          "steps": [
+            {
+              "nonce": 0,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 8968
+                },
+                {
+                  "n": 52,
+                  "v": 29
+                },
+                {
+                  "n": 10000,
+                  "v": 8970
+                },
+                {
+                  "n": 51,
+                  "v": 25
+                },
+                {
+                  "n": 10000,
+                  "v": 6213
+                },
+                {
+                  "n": 50,
+                  "v": 4
+                },
+                {
+                  "n": 10000,
+                  "v": 2106
+                },
+                {
+                  "n": 49,
+                  "v": 16
+                },
+                {
+                  "n": 10000,
+                  "v": 8622
+                },
+                {
+                  "n": 48,
+                  "v": 10
+                },
+                {
+                  "n": 10000,
+                  "v": 1531
+                }
+              ],
+              "words": 11
+            },
+            {
+              "nonce": 1,
+              "kind": "act",
+              "status": "ok",
+              "draws": [
+                {
+                  "n": 10000,
+                  "v": 5875
+                },
+                {
+                  "n": 52,
+                  "v": 10
+                },
+                {
+                  "n": 10000,
+                  "v": 7117
+                },
+                {
+                  "n": 51,
+                  "v": 38
+                },
+                {
+                  "n": 10000,
+                  "v": 877
+                },
+                {
+                  "n": 50,
+                  "v": 14
+                },
+                {
+                  "n": 10000,
+                  "v": 2486
+                },
+                {
+                  "n": 49,
+                  "v": 33
+                },
+                {
+                  "n": 10000,
+                  "v": 4451
+                },
+                {
+                  "n": 48,
+                  "v": 33
+                },
+                {
+                  "n": 10000,
+                  "v": 7631
+                }
+              ],
+              "words": 11
+            }
+          ],
+          "shoes": [
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 4,
+              "to": 9
+            },
+            {
+              "shoe": "sh_c934v5wq5cicycbq",
+              "table": 1,
+              "from": 9,
+              "to": 13
+            }
+          ],
+          "outcome": {
+            "result": {
+              "kind": "side",
+              "side": "banker"
+            },
+            "detail": {
+              "variant": "gold",
+              "table": 1,
+              "shoe": 1,
+              "hand": 2,
+              "player": [
+                "KH",
+                "KC"
+              ],
+              "banker": [
+                "JC",
+                "8C"
+              ],
+              "playerTotal": 0,
+              "bankerTotal": 8,
+              "winner": "banker",
+              "strikes": [
+                {
+                  "card": "JS",
+                  "multiplier": 3
+                },
+                {
+                  "card": "AC",
+                  "multiplier": 2
+                },
+                {
+                  "card": "4H",
+                  "multiplier": 2
+                },
+                {
+                  "card": "JD",
+                  "multiplier": 2
+                },
+                {
+                  "card": "QD",
+                  "multiplier": 3
+                }
+              ],
+              "multiplier": 1,
+              "fee": 465,
+              "payoutProof": {
+                "version": "baccarat/payout-v1",
+                "bets": {
+                  "player": 1001,
+                  "banker": 1001,
+                  "tie": 101,
+                  "player_pair": 101,
+                  "banker_pair": 101
+                },
+                "payouts": [
+                  {
+                    "spot": "player",
+                    "stake": 1001,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "banker",
+                    "stake": 1001,
+                    "payout": 1951,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 201
+                  },
+                  {
+                    "spot": "tie",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "player_pair",
+                    "stake": 101,
+                    "payout": 1010,
+                    "outcome": "win",
+                    "multiplier": 1,
+                    "fee": 21
+                  },
+                  {
+                    "spot": "banker_pair",
+                    "stake": 101,
+                    "payout": 0,
+                    "outcome": "lose",
+                    "multiplier": 1,
+                    "fee": 21
+                  }
+                ],
+                "products": {
+                  "player": 1,
+                  "banker": 1,
+                  "tie": 1,
+                  "playerPair": 1,
+                  "bankerPair": 1
+                },
+                "staked": 2305,
+                "fee": 465,
+                "returned": 2961
+              }
+            }
+          },
+          "engineVersion": 1,
+          "at": 1009
+        }
+      ],
+      "shoes": [
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_c934v5wq5cicycbq",
+            "gameId": "gold-baccarat",
+            "table": 1,
+            "shoeNo": 1,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 1,
+              "prevLink": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "099ffa92324588759c269994c673568af39cc9ac42bea4cb9013ba331fde2774"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "28d3d1acf02cbfb7036a2d6f45c4e6328d4756fe6c8bbeb8a3e5f98525ef0594",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 257,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1001
+          },
+          "reveal": {
+            "shoe": "sh_c934v5wq5cicycbq",
+            "status": "shuffled",
+            "link": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+            "salt": "dbefa2ca64b10fb5821781e647f0d0f0dbe9391dc328259fc9d20a1b209e110a",
+            "order": "uTAHrFjxKbWlKFfhJhMGCyOmofldcASogZnpmwdgIDUIIavcRDRrYLYEXiPUcAgAsZETaaGRLeQLukztQNhDYOGyHiqBPLjTlPIZSRgqhprBTdvqFWqXvdyHaniDTmjHyfZxCoMWVBXDqbZKpBHaXCVNlJEBLnMhURfWsbllbhLGyopmMwzgmVHObtXjtFskNcewTHxzJVgjElutSWChPDwJzccfwfxGvKToQdAQPhFkYGmQzNxaqMGrsVWpIJvQCcBAKkSOaOZxzuSMDtpwiCQsvoLtOunkkZJJSjEroEesNeFxYjxGPVplWRMuYEkqzrefNqnoOUyAKUUdekFbKEIbNNTtZgUCzbPnVnJvKRnicpmagiFXdfUBiODCjYLYQrwRuAsdIeHWywiIVsXmyMrePXvSSBut",
+            "cut": {
+              "at": 257,
+              "by": "auto"
+            },
+            "burn": {
+              "cards": 4,
+              "shown": "3D"
+            },
+            "rounds": [
+              {
+                "roundId": null,
+                "from": 4,
+                "to": 9
+              },
+              {
+                "roundId": "WFV4Q9-1",
+                "from": 9,
+                "to": 13
+              }
+            ],
+            "at": 1010
+          }
+        },
+        {
+          "commit": {
+            "alg": "fairshoe/v1",
+            "shoe": "sh_v8qpjc9tmtk4w2p7",
+            "gameId": "gold-baccarat",
+            "table": 1,
+            "shoeNo": 2,
+            "decks": 8,
+            "origin": {
+              "kind": "chain",
+              "seedId": "sd_vzji8yp76jyw7cci",
+              "chainId": "ch_xt76qnnd8qqxe4y2",
+              "index": 2,
+              "prevLink": "494e5b67b68d959eb136256e2308b37ee829d5369bbd00382ac8dc6fba5bfb14",
+              "terminal": "acae73f6ac41f3e370defdf9feb41d2bc1794c7d90b5191a7aa1ec6836ff330f",
+              "root": "099ffa92324588759c269994c673568af39cc9ac42bea4cb9013ba331fde2774"
+            },
+            "clientSeed": "public-g9-test-seed",
+            "clientSeedBy": "player",
+            "shoeHash": "59c7206e2f0f7f301a40d3d47c862ea881a3a09944da739d889d1840780e7cd7",
+            "cutRange": [
+              52,
+              364
+            ],
+            "cutPolicy": "player",
+            "autoCut": 113,
+            "endAt": 364,
+            "burnRule": "bac-value",
+            "guard": "rtp-995",
+            "guardWeights": "baccarat-multiplier/1",
+            "at": 1010
+          },
+          "reveal": null
+        }
+      ],
+      "own": {
+        "authorizedDraws": {
+          "sd_vzji8yp76jyw7cci": {
+            "0": {
+              "kind": "baccarat-free"
+            },
+            "1": {
+              "kind": "baccarat-deal"
+            }
+          }
+        },
+        "proofs": [
+          "pf_8pngme9yivn7hzg6"
+        ],
+        "shoes": [
+          "sh_c934v5wq5cicycbq",
+          "sh_v8qpjc9tmtk4w2p7"
+        ],
+        "nonce": 2,
+        "cuts": {
+          "sh_c934v5wq5cicycbq": "auto"
+        },
+        "hands": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "roundId": null,
+              "from": 4,
+              "to": 9
+            },
+            {
+              "roundId": "WFV4Q9-1",
+              "from": 9,
+              "to": 13
+            }
+          ]
+        },
+        "tables": {
+          "WFV4Q9-1": 1
+        },
+        "refused": {
+          "sh_c934v5wq5cicycbq": [
+            {
+              "before": 9,
+              "requested": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "granted": {
+                "player": 1001,
+                "banker": 1001,
+                "tie": 101,
+                "player_pair": 101,
+                "banker_pair": 101
+              },
+              "startNonce": 1,
+              "seedId": "sd_vzji8yp76jyw7cci"
+            }
+          ]
+        },
+        "shuffles": {
+          "sh_c934v5wq5cicycbq": [
+            13
+          ]
+        }
+      }
+    }
+  ]
+}

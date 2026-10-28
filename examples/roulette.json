@@ -35,7 +35,7 @@
     {
       "v": 1,
       "alg": "fairshoe/v1",
-      "lib": "fairshoe@1.1.0",
+      "lib": "fairshoe@1.2.0",
       "serverSeedHash": "630dcd2966c4336691125448bbb25b4ff412a49c732db2c8abc1b8581bd710dd",
       "clientSeed": "player-seed-01",
       "clientSeedBy": "player",
